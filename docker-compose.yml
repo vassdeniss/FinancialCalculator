@@ -1,0 +1,6 @@
+﻿services:
+  financialcalculator.web:
+    image: financialcalculator.web
+    build:
+      context: .
+      dockerfile: FinancialCalculator.Web/Dockerfile
