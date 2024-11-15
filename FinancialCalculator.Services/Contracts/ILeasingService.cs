@@ -3,7 +3,7 @@
 public interface ILeasingService
 {
     // TODO: Research APR
-    public decimal CalculateAPR();
+    decimal CalculateAPR();
     
     /// <summary>
     /// Calculates the total amount paid over the lease term, including the initial payment, monthly payments, and processing fee.
@@ -14,7 +14,7 @@ public interface ILeasingService
     /// <param name="leaseTermMonths">The term of the lease in months.</param>
     /// <param name="processingFeeRate">The processing fee rate as a percentage of the item price.</param>
     /// <returns>The total amount paid with all fees as a decimal value.</returns>
-    public decimal CalculateTotalPaid(
+    decimal CalculateTotalPaid(
         decimal itemPrice, 
         decimal initialPayment, 
         decimal monthlyPayment,
