@@ -10,7 +10,7 @@ public class CreditServiceTests
     [SetUp]
     public void Setup()
     {
-        _creditService = new CreditService();
+        this._creditService = new CreditService();
     }
 
     // Valid data test cases
@@ -26,7 +26,7 @@ public class CreditServiceTests
         decimal? expectedTotalInitialFees)
     {
         // Act
-        decimal result = _creditService.CalculateInitialFees(loanAmount, applicationFee, applicationFeeType, processingFee, processingFeeType, otherFees, otherFeesType);
+        decimal result = this._creditService.CalculateInitialFees(loanAmount, applicationFee, applicationFeeType, processingFee, processingFeeType, otherFees, otherFeesType);
 
         // Assert
         Assert.That(result, Is.EqualTo(expectedTotalInitialFees));
@@ -45,7 +45,7 @@ public class CreditServiceTests
         // Act & Assert
         Assert.Throws<ArgumentException>(() =>
         {
-            _creditService.CalculateInitialFees(loanAmount, applicationFee, FeeType.Currency, processingFee, FeeType.Percentage, otherFees, FeeType.Currency);
+            this._creditService.CalculateInitialFees(loanAmount, applicationFee, FeeType.Currency, processingFee, FeeType.Percentage, otherFees, FeeType.Currency);
         }, "Loan amount must be less than or equal to 999,999,999.");
     }
 
@@ -61,7 +61,7 @@ public class CreditServiceTests
         // Act & Assert
         Assert.Throws<ArgumentException>(() =>
         {
-            _creditService.CalculateInitialFees(loanAmount, applicationFee, FeeType.Currency, processingFee, FeeType.Percentage, otherFees, FeeType.Currency);
+            this._creditService.CalculateInitialFees(loanAmount, applicationFee, FeeType.Currency, processingFee, FeeType.Percentage, otherFees, FeeType.Currency);
         }, "Loan amount must be greater than or equal to 100.");
     }
 
@@ -79,7 +79,7 @@ public class CreditServiceTests
         // Act & Assert
         Assert.Throws<ArgumentException>(() =>
         {
-            _creditService.CalculateInitialFees(loanAmount, applicationFee, applicationFeeType, processingFee, processingFeeType, otherFees, otherFeesType);
+            this._creditService.CalculateInitialFees(loanAmount, applicationFee, applicationFeeType, processingFee, processingFeeType, otherFees, otherFeesType);
         }, "Application fee must be greater than zero.");
     }
 
@@ -97,7 +97,7 @@ public class CreditServiceTests
         // Act & Assert
         Assert.Throws<ArgumentException>(() =>
         {
-            _creditService.CalculateInitialFees(loanAmount, applicationFee, applicationFeeType, processingFee, processingFeeType, otherFees, otherFeesType);
+            this._creditService.CalculateInitialFees(loanAmount, applicationFee, applicationFeeType, processingFee, processingFeeType, otherFees, otherFeesType);
         }, "Processing fee must be greater than zero.");
     }
 
@@ -115,7 +115,7 @@ public class CreditServiceTests
         // Act & Assert
         Assert.Throws<ArgumentException>(() =>
         {
-            _creditService.CalculateInitialFees(loanAmount, applicationFee, applicationFeeType, processingFee, processingFeeType, otherFees, otherFeesType);
+            this._creditService.CalculateInitialFees(loanAmount, applicationFee, applicationFeeType, processingFee, processingFeeType, otherFees, otherFeesType);
         }, "Other fees must be greater than zero.");
     }
 }
