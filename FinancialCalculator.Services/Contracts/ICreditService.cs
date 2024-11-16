@@ -38,7 +38,7 @@ public interface ICreditService
     /// <param name="otherFeesType">Specifies if the other fees are fixed or percentage-based.</param>
     /// <returns>The total initial fees calculated.</returns>
     decimal CalculateInitialFees(
-        int loanAmount,
+        decimal loanAmount,
         decimal? applicationFee, FeeType applicationFeeType,
         decimal? processingFee, FeeType processingFeeType,
         decimal? otherFees, FeeType otherFeesType);

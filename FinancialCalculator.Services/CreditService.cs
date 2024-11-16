@@ -23,16 +23,25 @@ public class CreditService : ICreditService
 
     /// <inheritdoc />
     public decimal CalculateInitialFees(
-        int loanAmount,
+        decimal loanAmount,
         decimal? applicationFee, FeeType applicationFeeType,
         decimal? processingFee, FeeType processingFeeType,
         decimal? otherFees, FeeType otherFeesType)
     {
-        // Validations required:
-        // - All fields must be greater than zero if not null.
-        // - No single percentage field (processingFeePercentage, applicationFeePercentage, otherFeePercentage) can be greater than 40%.
-        // - Ensure the total fees (both percentage converted to currency and currency) are less than half of the loan amount.
-
+        // All fields must be greater than zero if not null. (fancy pattern match :) )
+        if (applicationFee is <= 0 || processingFee is <= 0 || otherFees is <= 0)
+        {
+            throw new ArgumentException("All fees must be greater than zero if specified.");
+        }
+        
+        // No single percentage field can be greater than 40%.
+        if ((applicationFeeType == FeeType.Percentage && applicationFee is > 40) ||
+            (processingFeeType == FeeType.Percentage && processingFee is > 40) ||
+            (otherFeesType == FeeType.Percentage && otherFees is > 40))
+        {
+            throw new ArgumentException("Percentage-based fees cannot exceed 40%.");
+        }
+        
         // Treat as 0 if any fee value is null
         decimal applicationFeeValue = applicationFee ?? 0;
         decimal processingFeeValue = processingFee ?? 0;
@@ -53,6 +62,13 @@ public class CreditService : ICreditService
             : otherFeesValue;
 
         decimal totalInitialFees = applicationFeeCalculated + processingFeeCalculated + otherFeesCalculated;
+
+        // Ensure the total fees (both percentage converted to currency and currency) are less than half of the loan amount.
+        if (totalInitialFees >= loanAmount / 2)
+        {
+            throw new ArgumentException("Total initial fees must be less than half of the loan amount.");
+        }
+        
         return totalInitialFees;
     }
 
@@ -106,7 +122,7 @@ public class CreditService : ICreditService
     /// <param name="loanAmount">The loan principal.</param>
     /// <param name="percentage">The percentage value to convert.</param>
     /// <returns>The corresponding value in currency.</returns>
-    private static decimal ConvertPercentageToCurrency(int loanAmount, decimal percentage)
+    private static decimal ConvertPercentageToCurrency(decimal loanAmount, decimal percentage)
     {
         return loanAmount * (percentage / 100);
     }
