@@ -42,9 +42,6 @@ public interface ICreditService
         decimal? applicationFee, FeeType applicationFeeType,
         decimal? processingFee, FeeType processingFeeType,
         decimal? otherFees, FeeType otherFeesType);
-    decimal CalculateAPR();
-    decimal CalculateMonthlyPayment();
-    decimal CalculateTotalInterestPaid();
-    decimal CalculateTotalPayments();
-    decimal CalculateTotalPaidWithInterestAndFees();
+
+    decimal CalculateAverageMonthlyPayment();
 }
