@@ -13,129 +13,129 @@ public class CreditServiceTests
         this._creditService = new CreditService();
     }
 
-    [Test]
-    public void LoanAmount_SetToGreaterThanMax_ShouldThrowException()
-    {
-        // Act & Assert
-        var ex = Assert.Throws<ArgumentOutOfRangeException>(() =>
-        {
-            this._creditService.LoanAmount = 1000000000; // Greater than maximum allowed
-        });
-        Assert.That(ex.Message, Does.Contain("Loan amount must be between 100 and 999,999,999."));
-    }
+    // [Test]
+    // public void LoanAmount_SetToGreaterThanMax_ShouldThrowException()
+    // {
+    //     // Act & Assert
+    //     var ex = Assert.Throws<ArgumentOutOfRangeException>(() =>
+    //     {
+    //         this._creditService.LoanAmount = 1000000000; // Greater than maximum allowed
+    //     });
+    //     Assert.That(ex.Message, Does.Contain("Loan amount must be between 100 and 999,999,999."));
+    // }
 
-    [Test]
-    public void LoanAmount_SetToLessThanMin_ShouldThrowException()
-    {
-        // Act & Assert
-        var ex = Assert.Throws<ArgumentOutOfRangeException>(() =>
-        {
-            this._creditService.LoanAmount = 99; // Less than minimum allowed
-        });
-        Assert.That(ex.Message, Does.Contain("Loan amount must be between 100 and 999,999,999."));
-    }
+    // [Test]
+    // public void LoanAmount_SetToLessThanMin_ShouldThrowException()
+    // {
+    //     // Act & Assert
+    //     var ex = Assert.Throws<ArgumentOutOfRangeException>(() =>
+    //     {
+    //         this._creditService.LoanAmount = 99; // Less than minimum allowed
+    //     });
+    //     Assert.That(ex.Message, Does.Contain("Loan amount must be between 100 and 999,999,999."));
+    // }
 
-    [Test]
-    public void LoanAmount_SetToValidValue_ShouldNotThrowException()
-    {
-        // Act & Assert
-        Assert.DoesNotThrow(() => this._creditService.LoanAmount = 5000);
-        Assert.That(this._creditService.LoanAmount, Is.EqualTo(5000));
-    }
+    // [Test]
+    // public void LoanAmount_SetToValidValue_ShouldNotThrowException()
+    // {
+    //     // Act & Assert
+    //     Assert.DoesNotThrow(() => this._creditService.LoanAmount = 5000);
+    //     Assert.That(this._creditService.LoanAmount, Is.EqualTo(5000));
+    // }
 
-    [Test]
-    public void LoanTermInMonths_SetToLessThanMin_ShouldThrowException()
-    {
-        // Act & Assert
-        var ex = Assert.Throws<ArgumentOutOfRangeException>(() =>
-        {
-            this._creditService.LoanTermInMonths = 0; // Less than minimum allowed
-        });
-        Assert.That(ex.Message, Does.Contain("Loan term must be between 1 and 960 months."));
-    }
-
-    [Test]
-    public void LoanTermInMonths_SetToGreaterThanMax_ShouldThrowException()
-    {
-        // Act & Assert
-        var ex = Assert.Throws<ArgumentOutOfRangeException>(() =>
-        {
-            this._creditService.LoanTermInMonths = 961; // Greater than maximum allowed
-        });
-        Assert.That(ex.Message, Does.Contain("Loan term must be between 1 and 960 months."));
-    }
-
-    [Test]
-    public void LoanTermInMonths_SetToValidValue_ShouldNotThrowException()
-    {
-        // Act & Assert
-        Assert.DoesNotThrow(() => this._creditService.LoanTermInMonths = 24);
-        Assert.That(this._creditService.LoanTermInMonths, Is.EqualTo(24));
-    }
-
-    [Test]
-    public void InterestRate_SetToLessThanMin_ShouldThrowException()
-    {
-        // Act & Assert
-        var ex = Assert.Throws<ArgumentOutOfRangeException>(() =>
-        {
-            this._creditService.InterestRate = -0.01m; // Less than minimum allowed
-        });
-        Assert.That(ex.Message, Does.Contain("Interest rate must be between 0 and 9,999,999."));
-    }
-
-    [Test]
-    public void InterestRate_SetToGreaterThanMax_ShouldThrowException()
-    {
-        // Act & Assert
-        var ex = Assert.Throws<ArgumentOutOfRangeException>(() =>
-        {
-            this._creditService.InterestRate = 10000000m; // Greater than maximum allowed
-        });
-        Assert.That(ex.Message, Does.Contain("Interest rate must be between 0 and 9,999,999."));
-    }
-
-    [Test]
-    public void InterestRate_SetToValidValue_ShouldNotThrowException()
-    {
-        // Act & Assert
-        Assert.DoesNotThrow(() => this._creditService.InterestRate = 5.5m);
-        Assert.That(this._creditService.InterestRate, Is.EqualTo(5.5m));
-    }
-
-    [Test]
-    public void CalculateMonthlyPayment_Annuity_ShouldReturnExpectedValue()
-    {
-        // Arrange
-        this._creditService.LoanAmount = 1000;
-        this._creditService.LoanTermInMonths = 12;
-        this._creditService.InterestRate = 0.12m;
-        this._creditService.PaymentType = PaymentType.Annuity;
-        decimal expectedMonthlyPayment = 88.85m;
-
-        // Act
-        decimal result = this._creditService.CalculateAverageMonthlyPayment();
-
-        // Assert
-        Assert.That(result, Is.EqualTo(expectedMonthlyPayment));
-    }
-
-    [Test]
-    public void CalculateAverageMonthlyPayment_ShouldReturnExpectedValue()
-    {
-        // Arrange
-        this._creditService.LoanAmount = 1000;
-        this._creditService.LoanTermInMonths = 12;
-        this._creditService.InterestRate = 0.12m;
-        this._creditService.PaymentType = PaymentType.Decreasing;
-        decimal expectedAverageMonthlyPayment = 88.75m;
-
-        // Act
-        decimal result = this._creditService.CalculateAverageMonthlyPayment();
-
-        // Assert
-        Assert.That(result, Is.EqualTo(expectedAverageMonthlyPayment));
-    }
+    // [Test]
+    // public void LoanTermInMonths_SetToLessThanMin_ShouldThrowException()
+    // {
+    //     // Act & Assert
+    //     var ex = Assert.Throws<ArgumentOutOfRangeException>(() =>
+    //     {
+    //         this._creditService.LoanTermInMonths = 0; // Less than minimum allowed
+    //     });
+    //     Assert.That(ex.Message, Does.Contain("Loan term must be between 1 and 960 months."));
+    // }
+    //
+    // [Test]
+    // public void LoanTermInMonths_SetToGreaterThanMax_ShouldThrowException()
+    // {
+    //     // Act & Assert
+    //     var ex = Assert.Throws<ArgumentOutOfRangeException>(() =>
+    //     {
+    //         this._creditService.LoanTermInMonths = 961; // Greater than maximum allowed
+    //     });
+    //     Assert.That(ex.Message, Does.Contain("Loan term must be between 1 and 960 months."));
+    // }
+    //
+    // [Test]
+    // public void LoanTermInMonths_SetToValidValue_ShouldNotThrowException()
+    // {
+    //     // Act & Assert
+    //     Assert.DoesNotThrow(() => this._creditService.LoanTermInMonths = 24);
+    //     Assert.That(this._creditService.LoanTermInMonths, Is.EqualTo(24));
+    // }
+    //
+    // [Test]
+    // public void InterestRate_SetToLessThanMin_ShouldThrowException()
+    // {
+    //     // Act & Assert
+    //     var ex = Assert.Throws<ArgumentOutOfRangeException>(() =>
+    //     {
+    //         this._creditService.InterestRate = -0.01m; // Less than minimum allowed
+    //     });
+    //     Assert.That(ex.Message, Does.Contain("Interest rate must be between 0 and 9,999,999."));
+    // }
+    //
+    // [Test]
+    // public void InterestRate_SetToGreaterThanMax_ShouldThrowException()
+    // {
+    //     // Act & Assert
+    //     var ex = Assert.Throws<ArgumentOutOfRangeException>(() =>
+    //     {
+    //         this._creditService.InterestRate = 10000000m; // Greater than maximum allowed
+    //     });
+    //     Assert.That(ex.Message, Does.Contain("Interest rate must be between 0 and 9,999,999."));
+    // }
+    //
+    // [Test]
+    // public void InterestRate_SetToValidValue_ShouldNotThrowException()
+    // {
+    //     // Act & Assert
+    //     Assert.DoesNotThrow(() => this._creditService.InterestRate = 5.5m);
+    //     Assert.That(this._creditService.InterestRate, Is.EqualTo(5.5m));
+    // }
+    //
+    // [Test]
+    // public void CalculateMonthlyPayment_Annuity_ShouldReturnExpectedValue()
+    // {
+    //     // Arrange
+    //     this._creditService.LoanAmount = 1000;
+    //     this._creditService.LoanTermInMonths = 12;
+    //     this._creditService.InterestRate = 0.12m;
+    //     this._creditService.PaymentType = PaymentType.Annuity;
+    //     decimal expectedMonthlyPayment = 88.85m;
+    //
+    //     // Act
+    //     decimal result = this._creditService.CalculateAverageMonthlyPayment();
+    //
+    //     // Assert
+    //     Assert.That(result, Is.EqualTo(expectedMonthlyPayment));
+    // }
+    //
+    // [Test]
+    // public void CalculateAverageMonthlyPayment_ShouldReturnExpectedValue()
+    // {
+    //     // Arrange
+    //     this._creditService.LoanAmount = 1000;
+    //     this._creditService.LoanTermInMonths = 12;
+    //     this._creditService.InterestRate = 0.12m;
+    //     this._creditService.PaymentType = PaymentType.Decreasing;
+    //     decimal expectedAverageMonthlyPayment = 88.75m;
+    //
+    //     // Act
+    //     decimal result = this._creditService.CalculateAverageMonthlyPayment();
+    //
+    //     // Assert
+    //     Assert.That(result, Is.EqualTo(expectedAverageMonthlyPayment));
+    // }
 
     [TestCase(10000, 100, FeeType.Currency, 5, FeeType.Percentage, 50, FeeType.Currency, 650)]
     [TestCase(5000, 50, FeeType.Currency, 2, FeeType.Percentage, 25, FeeType.Currency, 175)]

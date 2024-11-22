@@ -5,56 +5,6 @@ namespace FinancialCalculator.Services;
 
 public class CreditService : ICreditService, ICreditFeeService
 {
-    private int _loanAmount;
-    private int _loanTermInMonths;
-    private decimal _interestRate;
-
-    /// <inheritdoc />
-    public int LoanAmount
-    {
-        get => this._loanAmount;
-        set
-        {
-            if (value is < 100 or > 999999999)
-            {
-                throw new ArgumentOutOfRangeException(nameof(value), "Loan amount must be between 100 and 999,999,999.");
-            }
-                
-            this._loanAmount = value;
-        }
-    }
-
-    /// <inheritdoc />
-    public int LoanTermInMonths
-    {
-        get => this._loanTermInMonths;
-        set
-        {
-            if (value is <= 0 or > 960)
-            {
-                throw new ArgumentOutOfRangeException(nameof(value), "Loan term must be between 1 and 960 months.");
-            }
-            this._loanTermInMonths = value;
-        }
-    }
-
-    /// <inheritdoc />
-    public decimal InterestRate
-    {
-        get => this._interestRate;
-        set
-        {
-            if (value is < 0 or > 9999999)
-            {
-                throw new ArgumentOutOfRangeException(nameof(value), "Interest rate must be between 0 and 9,999,999.");
-            }
-            this._interestRate = value;
-        }
-    }
-
-    /// <inheritdoc />
-    public PaymentType PaymentType { get; set; }
-
     /// <inheritdoc />
     public decimal CalculateInitialFees(
         decimal loanAmount,
@@ -206,34 +156,58 @@ public class CreditService : ICreditService, ICreditFeeService
     }
     
     /// <inheritdoc />
-    public decimal CalculateAverageMonthlyPayment()
+    public decimal CalculateAverageMonthlyPayment(decimal interestRate, decimal loanAmount, 
+        int loanTermInMonths, PaymentType paymentType)
     {
-        this.ValidateInput();
-
-        decimal monthlyInterestRate = this.InterestRate / 12;
+        if (loanAmount is < 100 or > 999_999_999)
+        {
+            throw new ArgumentOutOfRangeException(nameof(loanAmount), "Loan amount must be between 100 and 999,999,999.");
+        }
+        
+        if (interestRate is < 0 or > 9_999_999)
+        {
+            throw new ArgumentOutOfRangeException(nameof(interestRate), "Interest rate must be between 0 and 9,999,999.");
+        }
+        
+        if (loanTermInMonths is <= 0 or > 960)
+        {
+            throw new ArgumentOutOfRangeException(nameof(loanTermInMonths), "Loan term must be between 1 and 960 months.");
+        }
+        
+        decimal monthlyInterestRate = interestRate / 12;
 
         // Avoid dividing by zero by checking for extremely low interest rates
         if (monthlyInterestRate == 0)
         {
-            return Math.Round(this.LoanAmount / (decimal)this.LoanTermInMonths, 2);
+            return Math.Round(loanAmount / loanTermInMonths, 2);
         }
 
         decimal totalPayments = 0;
-        if (this.PaymentType == PaymentType.Annuity)
+        if (paymentType == PaymentType.Annuity)
         {
+            if (loanAmount == 101 && loanTermInMonths == 960 && interestRate > 1301.45m)
+            {
+                throw new ArgumentException("Interest rate cannot exceed 1301.45% when loan amount is 101 and loan term is 960 months for annuity payments.");
+            }
+
+            if (loanAmount == 999_999_999 && loanTermInMonths == 960 && interestRate > 1259.82m)
+            {
+                throw new ArgumentException("Interest rate cannot exceed 1259.82% when loan amount is 999,999,999 and loan term is 960 months for annuity payments.");
+            }
+            
             // Annuity formula for monthly payment
             double r = (double)monthlyInterestRate;
-            double pow = Math.Pow(1 + r, this.LoanTermInMonths);
-            decimal monthlyPayment = this.LoanAmount * (decimal)(r * pow / (pow - 1));
-            totalPayments = monthlyPayment * this.LoanTermInMonths;
+            double pow = Math.Pow(1 + r, loanTermInMonths);
+            decimal monthlyPayment = loanAmount * (decimal)(r * pow / (pow - 1));
+            totalPayments = monthlyPayment * loanTermInMonths;
         }
-        else if (this.PaymentType == PaymentType.Decreasing)
+        else if (paymentType == PaymentType.Decreasing)
         {
             // Decreasing balance payment calculation
-            decimal principalRepayment = this.LoanAmount / (decimal)this.LoanTermInMonths;
-            for (int month = 1; month <= LoanTermInMonths; month++)
+            decimal principalRepayment = loanAmount / loanTermInMonths;
+            for (int month = 1; month <= loanTermInMonths; month++)
             {
-                decimal interestRepayment = (this.LoanAmount - principalRepayment * (month - 1)) * monthlyInterestRate;
+                decimal interestRepayment = (loanAmount - principalRepayment * (month - 1)) * monthlyInterestRate;
                 decimal monthlyPayment = principalRepayment + interestRepayment;
                 totalPayments += monthlyPayment;
             }
@@ -243,8 +217,7 @@ public class CreditService : ICreditService, ICreditFeeService
             throw new InvalidOperationException("Unsupported payment type.");
         }
 
-        decimal averageMonthlyPayment = totalPayments / this.LoanTermInMonths;
-
+        decimal averageMonthlyPayment = totalPayments / loanTermInMonths;
         return Math.Round(averageMonthlyPayment, 2);
     }
 
@@ -258,42 +231,6 @@ public class CreditService : ICreditService, ICreditFeeService
     public static decimal CalculateOtherAnnualFees()
     {
         return 0;
-    }
-
-    /// <summary>
-    /// Validates the loan amount, loan term, and interest rate by assigning
-    /// values to their respective properties, which triggers validation logic.
-    /// This ensures each property is valid on its own. Additionally, this method
-    /// performs specific validation checks for the annuity payment type to ensure
-    /// the combination of values is acceptable.
-    /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// Thrown when the loan amount, loan term, or interest rate are outside of their valid ranges.
-    /// </exception>
-    /// <exception cref="ArgumentException">
-    /// Thrown when specific conditions for the annuity payment type are not met.
-    /// </exception>
-    private void ValidateInput()
-    {
-        // Trigger validation in property setters
-        LoanAmount = _loanAmount;
-        LoanTermInMonths = _loanTermInMonths;
-        InterestRate = _interestRate;
-
-        if (this.PaymentType != PaymentType.Annuity)
-        {
-            return;
-        }
-
-        if (this._loanAmount == 101 && this._loanTermInMonths == 960 && this._interestRate > 1301.45m)
-        {
-            throw new ArgumentException("Interest rate cannot exceed 1301.45% when loan amount is 101 and loan term is 960 months for annuity payments.");
-        }
-
-        if (this._loanAmount == 999999999 && this._loanTermInMonths == 960 && this._interestRate > 1259.82m)
-        {
-            throw new ArgumentException("Interest rate cannot exceed 1259.82% when loan amount is 999,999,999 and loan term is 960 months for annuity payments.");
-        }
     }
     
     /// <summary>

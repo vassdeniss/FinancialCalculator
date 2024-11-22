@@ -5,48 +5,39 @@ namespace FinancialCalculator.Services.Contracts;
 public interface ICreditService
 {
     /// <summary>
-    /// Gets or sets the loan amount.
-    /// The loan amount must be between 100 and 999,999,999.
+    /// Calculates the average monthly payment for a loan based on the specified parameters.
     /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// Thrown when the loan amount is less than 100 or greater than 999,999,999.
-    /// </exception>
-    int LoanAmount { get; set; }
-    
-    /// <summary>
-    /// Gets or sets the loan term in months.
-    /// The loan term must be between 1 and 960 months.
-    /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// Thrown when the loan term is less than 1 or greater than 960 months.
-    /// </exception>
-    int LoanTermInMonths { get; set; }
-    
-    /// <summary>
-    /// Gets or sets the annual nominal interest rate as a decimal (e.g., 0.05 for 5%).
-    /// The interest rate must be greater than or equal to 0 and less than or equal to 9,999,999.
-    /// </summary>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// Thrown when the interest rate is less than 0 or greater than 9,999,999.
-    /// </exception>
-    decimal InterestRate { get; set; }
-    
-    /// <summary>
-    /// Gets or sets the type of payment schedule.
-    /// Determines whether the loan payments are annuity or declining balance.
-    /// </summary>
-    PaymentType PaymentType { get; set; }
-    
-    /// <summary>
-    /// Calculates the average monthly payment for a loan based on the payment type (Annuity or Decreasing).
-    /// This method first validates the input values, then calculates the total payments depending on the
-    /// payment type, and finally returns the average monthly payment rounded to two decimal places.
-    /// </summary>
+    /// <param name="interestRate">The annual interest rate for the loan, expressed as a decimal.</param>
+    /// <param name="loanAmount">The loan principal amount.</param>
+    /// <param name="loanTermInMonths">The loan term in months.</param>
+    /// <param name="paymentType">The type of payment structure, either
+    /// <see cref="PaymentType.Annuity"/> or <see cref="PaymentType.Decreasing"/>.</param>
     /// <returns>
-    /// The average monthly payment for the loan, rounded to two decimal places.
+    /// The average monthly payment, rounded to two decimal places.
     /// </returns>
-    /// <exception cref="InvalidOperationException">
-    /// Thrown when an unsupported payment type is specified.
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when:
+    /// <list type="bullet">
+    /// <item><description><paramref name="loanAmount"/> is less than 100 or greater than 999,999,999.</description> </item>
+    /// <item><description><paramref name="interestRate"/> is less than 0 or greater than 9,999,999.</description> </item>
+    /// <item><description><paramref name="loanTermInMonths"/> is less than 1 or greater than 960.</description></item>
+    /// </list>
     /// </exception>
-    decimal CalculateAverageMonthlyPayment();
+    /// <exception cref="ArgumentException">
+    /// Thrown when:
+    /// <list type="bullet">
+    /// <item><description>For annuity payments, <paramref name="loanAmount"/> is 101, <paramref name="loanTermInMonths"/>
+    /// is 960, and <paramref name="interestRate"/> exceeds 1301.45.</description> </item>
+    /// <item><description>For annuity payments, <paramref name="loanAmount"/> is 999,999,999,
+    /// <paramref name="loanTermInMonths"/> is 960, and <paramref name="interestRate"/> exceeds 1259.82.</description> </item>
+    /// </list>
+    /// </exception>
+    /// <exception cref="InvalidOperationException">Thrown if <paramref name="paymentType"/> is not supported.</exception>
+    /// <remarks>
+    /// For <see cref="PaymentType.Annuity"/>, the annuity formula is used to calculate the monthly payments.
+    /// For <see cref="PaymentType.Decreasing"/>, payments decrease over time as the principal is repaid.
+    /// If the monthly interest rate is 0, the average monthly payment is calculated as the loan amount divided by the loan term in months.
+    /// </remarks>
+    decimal CalculateAverageMonthlyPayment(decimal interestRate, decimal loanAmount, 
+        int loanTermInMonths, PaymentType paymentType);
 }
