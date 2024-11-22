@@ -157,6 +157,55 @@ public class CreditService : ICreditService, ICreditFeeService
     }
     
     /// <inheritdoc />
+    public decimal CalculateMonthlyFees(
+        decimal loanAmount,
+        decimal? managementFee, FeeType managementFeeType,
+        decimal? otherFees, FeeType otherFeesType,
+        int loanTermInMonths)
+    {
+        if (loanTermInMonths <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(loanTermInMonths), "Loan term must be greater than 0.");
+        }
+        
+        // All fields must be greater than zero if not null.
+        if (managementFee is <= 0 || otherFees is <= 0)
+        {
+            throw new ArgumentException("All fees must be greater than zero if specified.");
+        }
+        
+        // No single percentage field can be greater than 40%.
+        if ((managementFeeType == FeeType.Percentage && managementFee is > 40) ||
+            (otherFeesType == FeeType.Percentage && otherFees is > 40))
+        {
+            throw new ArgumentException("Percentage-based fees cannot exceed 40%.");
+        }
+        
+        // Treat as 0 if any fee value is null
+        decimal managementFeeValue = managementFee ?? 0;
+        decimal otherFeesValue = otherFees ?? 0;
+
+        // If a percentage is specified, convert to currency, if not use value directly
+        decimal managementFeeCalculated = managementFeeType == FeeType.Percentage
+            ? ConvertPercentageToCurrency(loanAmount, managementFeeValue)
+            : managementFeeValue;
+
+        decimal otherFeesCalculated = otherFeesType == FeeType.Percentage
+            ? ConvertPercentageToCurrency(loanAmount, otherFeesValue)
+            : otherFeesValue;
+        
+        decimal totalMonthlyFees = (managementFeeCalculated + otherFeesCalculated) * loanTermInMonths;
+
+        // Ensure the total fees (both percentage converted to currency and currency) are less than half of the loan amount.
+        if (totalMonthlyFees >= loanAmount / 2)
+        {
+            throw new ArgumentException("Total monthly fees must be less than half of the loan amount.");
+        }
+
+        return totalMonthlyFees;
+    }
+    
+    /// <inheritdoc />
     public decimal CalculateAverageMonthlyPayment()
     {
         this.ValidateInput();
