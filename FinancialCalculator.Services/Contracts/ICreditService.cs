@@ -5,19 +5,30 @@ namespace FinancialCalculator.Services.Contracts;
 public interface ICreditService
 {
     /// <summary>
-    /// Gets or sets the total loan amount borrowed.
+    /// Gets or sets the loan amount.
+    /// The loan amount must be between 100 and 999,999,999.
     /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when the loan amount is less than 100 or greater than 999,999,999.
+    /// </exception>
     int LoanAmount { get; set; }
     
     /// <summary>
     /// Gets or sets the loan term in months.
-    /// Represents the total number of months over which the loan will be repaid.
+    /// The loan term must be between 1 and 960 months.
     /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when the loan term is less than 1 or greater than 960 months.
+    /// </exception>
     int LoanTermInMonths { get; set; }
     
     /// <summary>
     /// Gets or sets the annual nominal interest rate as a decimal (e.g., 0.05 for 5%).
+    /// The interest rate must be greater than or equal to 0 and less than or equal to 9,999,999.
     /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// Thrown when the interest rate is less than 0 or greater than 9,999,999.
+    /// </exception>
     decimal InterestRate { get; set; }
     
     /// <summary>
@@ -25,23 +36,17 @@ public interface ICreditService
     /// Determines whether the loan payments are annuity or declining balance.
     /// </summary>
     PaymentType PaymentType { get; set; }
-
+    
     /// <summary>
-    /// Calculates the total initial fees for the loan based on specified fees and types.
+    /// Calculates the average monthly payment for a loan based on the payment type (Annuity or Decreasing).
+    /// This method first validates the input values, then calculates the total payments depending on the
+    /// payment type, and finally returns the average monthly payment rounded to two decimal places.
     /// </summary>
-    /// <param name="loanAmount">The principal loan amount.</param>
-    /// <param name="applicationFee">Optional application fee.</param>
-    /// <param name="applicationFeeType">Specifies if the application fee is fixed or percentage-based.</param>
-    /// <param name="processingFee">Optional processing fee.</param>
-    /// <param name="processingFeeType">Specifies if the processing fee is fixed or percentage-based.</param>
-    /// <param name="otherFees">Optional other fees.</param>
-    /// <param name="otherFeesType">Specifies if the other fees are fixed or percentage-based.</param>
-    /// <returns>The total initial fees calculated.</returns>
-    decimal CalculateInitialFees(
-        decimal loanAmount,
-        decimal? applicationFee, FeeType applicationFeeType,
-        decimal? processingFee, FeeType processingFeeType,
-        decimal? otherFees, FeeType otherFeesType);
-
+    /// <returns>
+    /// The average monthly payment for the loan, rounded to two decimal places.
+    /// </returns>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when an unsupported payment type is specified.
+    /// </exception>
     decimal CalculateAverageMonthlyPayment();
 }
