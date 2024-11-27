@@ -5,39 +5,47 @@ namespace FinancialCalculator.Services.Contracts;
 public interface ICreditService
 {
     /// <summary>
-    /// Calculates the average monthly payment for a loan based on the specified parameters.
+    /// Calculates the monthly payment for a loan based on the loan amount, annual interest rate, and number of payments.
     /// </summary>
-    /// <param name="interestRate">The annual interest rate for the loan, expressed as a decimal.</param>
-    /// <param name="loanAmount">The loan principal amount.</param>
-    /// <param name="loanTermInMonths">The loan term in months.</param>
-    /// <param name="paymentType">The type of payment structure, either
-    /// <see cref="PaymentType.Annuity"/> or <see cref="PaymentType.Decreasing"/>.</param>
+    /// <param name="loanAmount">
+    /// The principal amount of the loan. This must be greater than or equal
+    /// to <see cref="FinancialCalculator.Common.CreditConstraints.MinLoanAmount"/>.
+    /// </param>
+    /// <param name="annualInterestRate">
+    /// The annual interest rate as a percentage (e.g., 5 for 5%). This must be greater
+    /// than or equal to <see cref="FinancialCalculator.Common.CreditConstraints.MinAnnualInterestRateAmount"/>.
+    /// </param>
+    /// <param name="payments">
+    /// The total number of monthly payments to be made. This must be greater than or
+    /// equal to <see cref="FinancialCalculator.Common.CreditConstraints.MinPaymentsAmount"/>.
+    /// </param>
     /// <returns>
-    /// The average monthly payment, rounded to two decimal places.
+    /// The calculated monthly payment amount as a <c>decimal</c>.
     /// </returns>
     /// <exception cref="ArgumentOutOfRangeException">
     /// Thrown when:
     /// <list type="bullet">
-    /// <item><description><paramref name="loanAmount"/> is less than 100 or greater than 999,999,999.</description> </item>
-    /// <item><description><paramref name="interestRate"/> is less than 0 or greater than 9,999,999.</description> </item>
-    /// <item><description><paramref name="loanTermInMonths"/> is less than 1 or greater than 960.</description></item>
+    /// <item><description><paramref name="loanAmount"/> is less than <see cref="FinancialCalculator.Common.CreditConstraints.MinLoanAmount"/>.</description></item>
+    /// <item><description><paramref name="annualInterestRate"/> is less than <see cref="FinancialCalculator.Common.CreditConstraints.MinAnnualInterestRateAmount"/>.</description></item>
+    /// <item><description><paramref name="payments"/> is less than <see cref="FinancialCalculator.Common.CreditConstraints.MinPaymentsAmount"/>.</description></item>
     /// </list>
     /// </exception>
-    /// <exception cref="ArgumentException">
-    /// Thrown when:
-    /// <list type="bullet">
-    /// <item><description>For annuity payments, <paramref name="loanAmount"/> is 101, <paramref name="loanTermInMonths"/>
-    /// is 960, and <paramref name="interestRate"/> exceeds 1301.45.</description> </item>
-    /// <item><description>For annuity payments, <paramref name="loanAmount"/> is 999,999,999,
-    /// <paramref name="loanTermInMonths"/> is 960, and <paramref name="interestRate"/> exceeds 1259.82.</description> </item>
-    /// </list>
-    /// </exception>
-    /// <exception cref="InvalidOperationException">Thrown if <paramref name="paymentType"/> is not supported.</exception>
     /// <remarks>
-    /// For <see cref="PaymentType.Annuity"/>, the annuity formula is used to calculate the monthly payments.
-    /// For <see cref="PaymentType.Decreasing"/>, payments decrease over time as the principal is repaid.
-    /// If the monthly interest rate is 0, the average monthly payment is calculated as the loan amount divided by the loan term in months.
+    /// The formula used to calculate the monthly payment is based on the annuity formula:
+    ///         P * r(1 + r)^n
+    /// M = ----------------------
+    ///         (1 + r)^n - 1
+    /// Where:
+    /// <list type="bullet">
+    /// <item><description>M: Monthly payment.</description></item>
+    /// <item><description>P: Loan amount (principal).</description></item>
+    /// <item><description>r: Monthly interest rate (annual interest rate divided by 12).</description></item>
+    /// <item><description>n: Total number of payments.</description></item>
+    /// </list>
     /// </remarks>
-    decimal CalculateAverageMonthlyPayment(decimal interestRate, decimal loanAmount, 
-        int loanTermInMonths, PaymentType paymentType);
+    decimal CalculateMonthlyPayment(decimal loanAmount, double annualInterestRate, int payments);
+
+    // TODO
+    decimal CalculateRemainingBalance(decimal loanAmount, double annualInterestRate,
+        int numberOfPayments, decimal monthlyPayment);
 }

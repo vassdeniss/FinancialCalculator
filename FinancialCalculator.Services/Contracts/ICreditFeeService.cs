@@ -2,6 +2,7 @@
 
 namespace FinancialCalculator.Services.Contracts;
 
+[Obsolete("Awaiting refactor.")]
 public interface ICreditFeeService
 {
     /// <summary>
@@ -82,9 +83,7 @@ public interface ICreditFeeService
     /// <item><description>The monthly fees are less than half of the loan amount.</description></item>
     /// </list>
     /// </exception>
-    /// <exception cref="ArgumentOutOfRangeException">
-    /// Thrown when <paramref name="loanTermInMonths"/> is less than or equal to 0.
-    /// </exception>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown when <paramref name="loanTermInMonths"/> is less than or equal to 0.</exception>
     public decimal CalculateMonthlyFees(
         decimal loanAmount,
         decimal? managementFee, FeeType managementFeeType,
