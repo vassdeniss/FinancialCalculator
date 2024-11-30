@@ -1,0 +1,34 @@
+﻿@model CreditResult
+
+@{
+    ViewBag.Title = "Credit Results";
+    Layout = null;
+}
+
+<h1>Credit Results</h1>
+<table>
+    <tr>
+        <td><strong>Annual Percentage Cost (APR):</strong></td>
+        <td>@Model.Apr:F2 %</td>
+    </tr>
+    <tr>
+        <td><strong>Average Monthly Payment:</strong></td>
+        <td>@Model.AverageMonthlyPayment:F2</td>
+    </tr>
+    <tr>
+        <td><strong>Total Repaid with Interest:</strong></td>
+        <td>@Model.TotalPayments:F2</td>
+    </tr>
+    <tr>
+        <td><strong>Fees and Commissions:</strong></td>
+        <td>0.00</td>
+    </tr>
+    <tr>
+        <td><strong>Total Interest Paid:</strong></td>
+        <td>@Model.TotalInterest:F2</td>
+    </tr>
+    <tr>
+        <td><strong>Contributions (Total Principal Repaid):</strong></td>
+        <td>@Model.TotalPrincipal:F2</td>
+    </tr>
+</table>
