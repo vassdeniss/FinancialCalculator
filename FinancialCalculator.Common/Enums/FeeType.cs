@@ -1,4 +1,4 @@
-﻿namespace FinancialCalculator.Services.Enums;
+﻿namespace FinancialCalculator.Common.Enums;
 
 public enum FeeType
 {

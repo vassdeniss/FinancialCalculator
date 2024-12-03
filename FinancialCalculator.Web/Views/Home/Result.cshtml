@@ -1,4 +1,5 @@
-﻿@model CreditResult
+﻿@using FinancialCalculator.Common
+@model CreditResult
 
 @{
     ViewBag.Title = "Credit Results";
@@ -9,26 +10,50 @@
 <table>
     <tr>
         <td><strong>Annual Percentage Cost (APR):</strong></td>
-        <td>@Model.Apr:F2 %</td>
+        <td>@Model.Apr%</td>
     </tr>
     <tr>
         <td><strong>Average Monthly Payment:</strong></td>
-        <td>@Model.AverageMonthlyPayment:F2</td>
+        <td>@Model.AverageMonthlyPayment</td>
     </tr>
     <tr>
         <td><strong>Total Repaid with Interest:</strong></td>
-        <td>@Model.TotalPayments:F2</td>
+        <td>@Model.TotalPayments</td>
     </tr>
     <tr>
         <td><strong>Fees and Commissions:</strong></td>
-        <td>0.00</td>
+        <td>@Model.TotalFees</td>
     </tr>
     <tr>
         <td><strong>Total Interest Paid:</strong></td>
-        <td>@Model.TotalInterest:F2</td>
+        <td>@Model.TotalInterest</td>
     </tr>
     <tr>
         <td><strong>Contributions (Total Principal Repaid):</strong></td>
-        <td>@Model.TotalPrincipal:F2</td>
+        <td>@Math.Round(Model.TotalPrincipal + Model.TotalInterest, 2)</td>
     </tr>
+</table>
+<h2>Amortization Schedule</h2>
+<table border="1" style="text-align: center; vertical-align: middle;">
+    <tr>
+        <th>Month</th>
+        <th>Date</th>
+        <th>Remaining Balance</th>
+        <th>Payment</th>
+        <th>Principal</th>
+        <th>Interest</th>
+        <th>Fees</th>
+    </tr>
+    @foreach (AmortizationEntry entry in Model.AmortizationSchedule)
+    {
+    <tr>
+        <td>@entry.Month</td>
+        <td>@entry.Date</td>
+        <td>@Math.Round(entry.RemainingBalance, 2)</td>
+        <td>@Math.Round(entry.Payment, 2)</td>
+        <td>@Math.Round(entry.Principal, 2)</td>
+        <td>@Math.Round(entry.Interest, 2)</td>
+        <td>@Math.Round(entry.Fees, 2)</td>
+    </tr>
+    }
 </table>

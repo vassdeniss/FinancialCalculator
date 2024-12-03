@@ -1,207 +1,130 @@
-﻿using FinancialCalculator.Services.Contracts;
-using FinancialCalculator.Services.Enums;
+﻿using FinancialCalculator.Common.Enums;
+using FinancialCalculator.Services.Contracts;
+using FinancialCalculator.Services.DTO;
 
 using static FinancialCalculator.Common.CreditConstraints;
 
 namespace FinancialCalculator.Services;
 
-public class CreditService : ICreditService, ICreditFeeService
+public class CreditService : ICreditService
 {
-    public decimal CalculateMonthlyPayment(decimal loanAmount, double annualInterestRate, int payments)
-    {
-        if (loanAmount < MinLoanAmount)
-        {
-            throw new ArgumentOutOfRangeException(nameof(loanAmount), ErrorLoanAmount);
-        }
-        
-        if (annualInterestRate < MinAnnualInterestRateAmount)
-        {
-            throw new ArgumentOutOfRangeException(nameof(annualInterestRate), ErrorAnnualInterestRateAmount);
-        }
-        
-        if (payments < MinPaymentsAmount)
-        {
-            throw new ArgumentOutOfRangeException(nameof(payments), ErrorPaymentsAmount);
-        }
-        
-        double monthlyInterestRate = annualInterestRate / 100 / 12;
-
-        decimal compoundInterestFactor = (decimal)Math.Pow(1 + monthlyInterestRate, payments);
-        decimal numerator = loanAmount * (decimal)monthlyInterestRate * compoundInterestFactor;
-        decimal denominator = compoundInterestFactor - 1;
-
-        return numerator / denominator;
-    }
-
-    public decimal CalculateRemainingBalance(decimal loanAmount, double annualInterestRate, int numberOfPayments,
-        decimal monthlyPayment)
-    {
-        throw new NotImplementedException();
-    }
-
-
-    // ----- TODO: REFACTOR -----
-    [Obsolete("Awaiting refactor.")]
-    public decimal CalculateInitialFees(
-        decimal loanAmount,
-        decimal? applicationFee, FeeType applicationFeeType,
-        decimal? processingFee, FeeType processingFeeType,
-        decimal? otherFees, FeeType otherFeesType)
-    {
-        // All fields must be greater than zero if not null.
-        if (applicationFee is <= 0 || processingFee is <= 0 || otherFees is <= 0)
-        {
-            throw new ArgumentException("All fees must be greater than zero if specified.");
-        }
-
-        // No single percentage field can be greater than 40%.
-        if ((applicationFeeType == FeeType.Percentage && applicationFee is > 40) ||
-            (processingFeeType == FeeType.Percentage && processingFee is > 40) ||
-            (otherFeesType == FeeType.Percentage && otherFees is > 40))
-        {
-            throw new ArgumentException("Percentage-based fees cannot exceed 40%.");
-        }
-
-        // Treat as 0 if any fee value is null
-        decimal applicationFeeValue = applicationFee ?? 0;
-        decimal processingFeeValue = processingFee ?? 0;
-        decimal otherFeesValue = otherFees ?? 0;
-
-        // If a percentage is specified, convert to currency, if not use value directly
-        decimal applicationFeeCalculated = applicationFeeType == FeeType.Percentage
-            ? ConvertPercentageToCurrency(loanAmount, applicationFeeValue)
-            : applicationFeeValue;
-
-        decimal processingFeeCalculated = processingFeeType == FeeType.Percentage
-            ? ConvertPercentageToCurrency(loanAmount, processingFeeValue)
-            : processingFeeValue;
-
-        decimal otherFeesCalculated = otherFeesType == FeeType.Percentage
-            ? ConvertPercentageToCurrency(loanAmount, otherFeesValue)
-            : otherFeesValue;
-
-        decimal totalInitialFees = applicationFeeCalculated + processingFeeCalculated + otherFeesCalculated;
-
-        // Ensure the total fees (both percentage converted to currency and currency) are less than half of the loan amount.
-        if (totalInitialFees >= loanAmount / 2)
-        {
-            throw new ArgumentException("Total initial fees must be less than half of the loan amount.");
-        }
-
-        return totalInitialFees;
-    }
+    private readonly IFeeCalculationService _feeCalculationService = new FeeCalculationService();
+    private readonly IPaymentCalculationService _paymentCalculationService = new PaymentCalculationService();
+    private readonly IAmortizationSchedule _amortizationSchedule = new AmortizationSchedule();
 
     /// <inheritdoc />
-    [Obsolete("Awaiting refactor.")]
-    public decimal CalculateAnnualFees(
-        decimal loanAmount,
-        decimal? managementFee, FeeType managementFeeType,
-        decimal? otherFees, FeeType otherFeesType,
-        int loanTermInMonths)
+    public CreditResultDto CalculateCreditResult(CreditInputDto input)
     {
-        if (loanTermInMonths <= 0)
+        if (input.LoanAmount < MinLoanAmount)
         {
-            throw new ArgumentOutOfRangeException(nameof(loanTermInMonths), "Loan term must be greater than 0.");
-        }
-        
-        // All fields must be greater than zero if not null.
-        if (managementFee is <= 0 || otherFees is <= 0)
-        {
-            throw new ArgumentException("All fees must be greater than zero if specified.");
-        }
-        
-        // No single percentage field can be greater than 40%.
-        if ((managementFeeType == FeeType.Percentage && managementFee is > 40) ||
-            (otherFeesType == FeeType.Percentage && otherFees is > 40))
-        {
-            throw new ArgumentException("Percentage-based fees cannot exceed 40%.");
-        }
-        
-        // Treat as 0 if any fee value is null
-        decimal managementFeeValue = managementFee ?? 0;
-        decimal otherFeesValue = otherFees ?? 0;
-
-        // If a percentage is specified, convert to currency, if not use value directly
-        decimal managementFeeCalculated = managementFeeType == FeeType.Percentage
-            ? ConvertPercentageToCurrency(loanAmount, managementFeeValue)
-            : managementFeeValue;
-
-        decimal otherFeesCalculated = otherFeesType == FeeType.Percentage
-            ? ConvertPercentageToCurrency(loanAmount, otherFeesValue)
-            : otherFeesValue;
-
-        // Total annual fees over the loan term
-        int totalYears = loanTermInMonths / 12;
-        decimal totalAnnualFees = (managementFeeCalculated + otherFeesCalculated) * totalYears;
-
-        // Ensure the total fees (both percentage converted to currency and currency) are less than half of the loan amount.
-        if (totalAnnualFees >= loanAmount / 2)
-        {
-            throw new ArgumentException("Total annual fees must be less than half of the loan amount.");
+            throw new ArgumentOutOfRangeException(nameof(input.LoanAmount), ErrorLoanAmount);
         }
 
-        return totalAnnualFees;
-    }
-    
-    /// <inheritdoc />
-    [Obsolete("Awaiting refactor.")]
-    public decimal CalculateMonthlyFees(
-        decimal loanAmount,
-        decimal? managementFee, FeeType managementFeeType,
-        decimal? otherFees, FeeType otherFeesType,
-        int loanTermInMonths)
-    {
-        if (loanTermInMonths <= 0)
+        if (input.LoanTermInMonths < MinLoanTermInMonths || input.LoanTermInMonths > MaxLoanTermInMonths)
         {
-            throw new ArgumentOutOfRangeException(nameof(loanTermInMonths), "Loan term must be greater than 0.");
-        }
-        
-        // All fields must be greater than zero if not null.
-        if (managementFee is <= 0 || otherFees is <= 0)
-        {
-            throw new ArgumentException("All fees must be greater than zero if specified.");
-        }
-        
-        // No single percentage field can be greater than 40%.
-        if ((managementFeeType == FeeType.Percentage && managementFee is > 40) ||
-            (otherFeesType == FeeType.Percentage && otherFees is > 40))
-        {
-            throw new ArgumentException("Percentage-based fees cannot exceed 40%.");
-        }
-        
-        // Treat as 0 if any fee value is null
-        decimal managementFeeValue = managementFee ?? 0;
-        decimal otherFeesValue = otherFees ?? 0;
-
-        // If a percentage is specified, convert to currency, if not use value directly
-        decimal managementFeeCalculated = managementFeeType == FeeType.Percentage
-            ? ConvertPercentageToCurrency(loanAmount, managementFeeValue)
-            : managementFeeValue;
-
-        decimal otherFeesCalculated = otherFeesType == FeeType.Percentage
-            ? ConvertPercentageToCurrency(loanAmount, otherFeesValue)
-            : otherFeesValue;
-        
-        decimal totalMonthlyFees = (managementFeeCalculated + otherFeesCalculated) * loanTermInMonths;
-
-        // Ensure the total fees (both percentage converted to currency and currency) are less than half of the loan amount.
-        if (totalMonthlyFees >= loanAmount / 2)
-        {
-            throw new ArgumentException("Total monthly fees must be less than half of the loan amount.");
+            throw new ArgumentOutOfRangeException(nameof(input.LoanTermInMonths), ErrorLoanTermInMonths);
         }
 
-        return totalMonthlyFees;
-    }
-    
-    /// <summary>
-    /// Converts a percentage to a currency amount based on the loan amount.
-    /// </summary>
-    /// <param name="loanAmount">The loan principal.</param>
-    /// <param name="percentage">The percentage value to convert.</param>
-    /// <returns>The corresponding value in currency.</returns>
-    [Obsolete("Awaiting refactor.")]
-    private static decimal ConvertPercentageToCurrency(decimal loanAmount, decimal percentage)
-    {
-        return loanAmount * (percentage / 100);
+        if (input.AnnualInterestRate < MinAnnualInterestRateAmount)
+        {
+            throw new ArgumentOutOfRangeException(nameof(input.AnnualInterestRate), ErrorAnnualInterestRateAmount);
+        }
+
+        if (input.PromotionalPeriodMonths < MinPromoLoanTermInMonths ||
+            input.PromotionalPeriodMonths > MaxPromoLoanTermInMonths)
+        {
+            throw new ArgumentOutOfRangeException(nameof(input.PromotionalPeriodMonths), ErrorPromoLoanTermInMonths);
+        }
+
+        if (input.PromotionalPeriodMonths >= input.LoanTermInMonths)
+        {
+            throw new ArgumentOutOfRangeException(nameof(input.PromotionalPeriodMonths),
+                ErrorPromoLoanTermInMonthsTooHigh);
+        }
+
+        if (input.AnnualPromotionalInterestRate < MinAnnualPromoInterestRateAmount)
+        {
+            throw new ArgumentOutOfRangeException(nameof(input.AnnualPromotionalInterestRate),
+                ErrorAnnualPromoInterestRateAmount);
+        }
+
+        if ((input.PromotionalPeriodMonths > MinAnnualInterestRateAmount && input.AnnualPromotionalInterestRate == 0) ||
+            (input.PromotionalPeriodMonths == 0 &&
+             input.AnnualPromotionalInterestRate > MinAnnualPromoInterestRateAmount))
+        {
+            throw new ArgumentException(ErrorPromotionalFields);
+        }
+
+        if (input.GracePeriodMonths < MinGracePeriodMonths ||
+            input.GracePeriodMonths > MaxGracePeriodMonths)
+        {
+            throw new ArgumentOutOfRangeException(nameof(input.GracePeriodMonths), ErrorGracePeriodMonths);
+        }
+
+        decimal totalInitialFees =
+            this._feeCalculationService.CalculateFee(input.ApplicationFee, input.ApplicationFeeType, input.LoanAmount)
+            + this._feeCalculationService.CalculateFee(input.ProcessingFee, input.ProcessingFeeType, input.LoanAmount)
+            + this._feeCalculationService.CalculateFee(input.OtherInitialFees, input.OtherInitialFeesType, input.LoanAmount);
+
+        // Adjust repayment term after grace period
+        int repaymentTerm = input.LoanTermInMonths - input.GracePeriodMonths;
+
+        // Determine remaining promotional months after grace period
+        int remainingPromotionalMonths = input.PromotionalPeriodMonths > input.GracePeriodMonths
+            ? input.PromotionalPeriodMonths - input.GracePeriodMonths
+            : 0;
+
+        Tuple<decimal, decimal> resultPayments;
+        if (repaymentTerm > 0)
+        {
+            if (remainingPromotionalMonths > 0)
+            {
+                // Calculate payments with remaining promotional period
+                resultPayments = input.PaymentType switch
+                {
+                    PaymentType.Annuity => this._paymentCalculationService.CalculateMonthlyPaymentWithPromotional(
+                        input.LoanAmount,
+                        remainingPromotionalMonths,
+                        input.AnnualPromotionalInterestRate,
+                        input.AnnualInterestRate,
+                        repaymentTerm),
+
+                    PaymentType.Decreasing => new Tuple<decimal, decimal>(input.LoanAmount / repaymentTerm, 0.0m),
+
+                    _ => throw new ArgumentException("Invalid payment type.")
+                };
+            }
+            else
+            {
+                // No promotional period after grace period
+                resultPayments = input.PaymentType switch
+                {
+                    PaymentType.Annuity => this._paymentCalculationService.CalculateMonthlyPaymentWithoutPromotional(
+                        input.LoanAmount,
+                        input.AnnualInterestRate,
+                        repaymentTerm),
+
+                    PaymentType.Decreasing => new Tuple<decimal, decimal>(input.LoanAmount / repaymentTerm, 0.0m),
+
+                    _ => throw new ArgumentException("Invalid payment type.")
+                };
+            }
+        }
+        else
+        {
+            resultPayments = new Tuple<decimal, decimal>(0m, 0m);
+        }
+
+        return this._amortizationSchedule.GenerateAmortizationSchedule(
+            input.LoanAmount,
+            input.LoanTermInMonths,
+            input.GracePeriodMonths,
+            remainingPromotionalMonths,
+            input.AnnualPromotionalInterestRate,
+            input.AnnualInterestRate,
+            resultPayments.Item1,
+            resultPayments.Item2,
+            input,
+            totalInitialFees);
     }
 }

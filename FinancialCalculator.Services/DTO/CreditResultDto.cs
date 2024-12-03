@@ -1,8 +1,8 @@
 ﻿using FinancialCalculator.Common;
 
-namespace FinancialCalculator.Web.Models;
+namespace FinancialCalculator.Services.DTO;
 
-public class CreditResult
+public class CreditResultDto
 {
     public decimal TotalPayments { get; init; }
     
@@ -18,5 +18,5 @@ public class CreditResult
     
     public decimal Apr { get; init; }
 
-    public List<AmortizationEntry> AmortizationSchedule { get; init; } = new();
+    public List<AmortizationEntry> AmortizationSchedule { get; init; } = [];
 }

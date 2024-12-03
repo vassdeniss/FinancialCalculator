@@ -4,129 +4,105 @@
 
 <h1>Credit Calculator</h1>
 <h4>Calculate monthly installments and APR (annual percentage expense)</h4>
-<form method="post" action="/Calculate">
+<form method="post" asp-action="Calculate">
     <h2>Loan Details</h2>
     <div>
         <label for="loanAmount">Loan Amount*:</label>
-        <input type="number" id="loanAmount" name="loanAmount" step="0.01" min="100" required />
+        <input type="number" id="loanAmount" name="LoanAmount" step="0.01" min="100" required />
     </div>
     <div>
         <label for="loanTerm">Loan Term (months)*:</label>
-        <input type="number" id="loanTerm" name="loanTerm" min="1" max="960" required />
+        <input type="number" id="loanTerm" name="LoanTermInMonths" min="1" max="960" required />
     </div>
     <div>
         <label for="annualInterestRate">Annual Interest Rate (%)*:</label>
-        <input type="number" id="annualInterestRate" name="annualInterestRate" step="0.01" min="0" required />
+        <input type="number" id="annualInterestRate" name="AnnualInterestRate" step="0.01" min="0" required />
     </div>
-
-    <!-- Promotional Period -->
     <div>
         <label for="promotionalPeriod">Promotional Period (months):</label>
-        <input type="number" id="promotionalPeriod" name="promotionalPeriod" min="0" max="300" value="0" required />
+        <input type="number" id="promotionalPeriod" name="PromotionalPeriodMonths" min="0" max="300" value="0" required />
     </div>
     <div>
         <label for="annualPromotionalInterestRate">Promotional Interest Rate (%):</label>
-        <input type="number" id="annualPromotionalInterestRate" name="annualPromotionalInterestRate" step="0.01" min="0" value="0" required />
+        <input type="number" id="annualPromotionalInterestRate" name="AnnualPromotionalInterestRate" step="0.01" min="0" value="0" required />
     </div>
     <div>
         <label for="gracePeriod">Grace Period (months):</label>
-        <input type="number" id="gracePeriod" name="gracePeriod" min="0" max="12" value="0" required />
+        <input type="number" id="gracePeriod" name="GracePeriodMonths" min="0" value="0" required />
     </div>
-
-    <!-- Payment Type -->
     <div>
         <label for="paymentType">Payment Type:</label>
-        <select id="paymentType" name="paymentType" required>
+        <select id="paymentType" name="PaymentType" required>
             <option value="annuity">Annuity (Fixed Payments)</option>
             <option value="decreasing">Decreasing Payments</option>
         </select>
     </div>
-
     <h2>Fees and Taxes</h2>
-
     <div class="fee-section">
         <h3>Initial Fees (One-Time Fees)</h3>
         <div class="fee-item">
             <label for="applicationFee">Application Fee:</label>
-            <input type="number" id="applicationFee" name="applicationFee" step="0.01" min="0" value="0" />
-            <select id="applicationFeeType" name="applicationFeeType">
-                <option value="amount">Currency</option>
-                <option value="percent">Percent</option>
+            <input type="number" id="applicationFee" name="ApplicationFee" step="0.01" min="0" value="0" />
+            <select id="applicationFeeType" name="ApplicationFeeType">
+                <option value="Currency">Currency</option>
+                <option value="Percentage">Percent</option>
             </select>
         </div>
-
-        <!-- Processing Fee -->
         <div class="fee-item">
             <label for="processingFee">Processing Fee:</label>
-            <input type="number" id="processingFee" name="processingFee" step="0.01" min="0" value="0" />
-            <select id="processingFeeType" name="processingFeeType">
-                <option value="amount">Currency</option>
-                <option value="percent">Percent</option>
+            <input type="number" id="processingFee" name="ProcessingFee" step="0.01" min="0" value="0" />
+            <select id="processingFeeType" name="ProcessingFeeType">
+                <option value="Currency">Currency</option>
+                <option value="Percentage">Percent</option>
             </select>
         </div>
-
-        <!-- Other Fees -->
         <div class="fee-item">
             <label for="otherInitialFees">Other Fees:</label>
-            <input type="number" id="otherInitialFees" name="otherInitialFees" step="0.01" min="0" value="0" />
-            <select id="otherInitialFeesType" name="otherInitialFeesType">
-                <option value="amount">Currency</option>
-                <option value="percent">Percent</option>
+            <input type="number" id="otherInitialFees" name="OtherInitialFees" step="0.01" min="0" value="0" />
+            <select id="otherInitialFeesType" name="OtherInitialFeesType">
+                <option value="Currency">Currency</option>
+                <option value="Percentage">Percent</option>
             </select>
         </div>
     </div>
-
-    <!-- Monthly Fees Section -->
     <div class="fee-section">
         <h3>Monthly Fees</h3>
-
-        <!-- Monthly Management Fee -->
         <div class="fee-item">
             <label for="monthlyManagementFee">Monthly Management Fee:</label>
-            <input type="number" id="monthlyManagementFee" name="monthlyManagementFee" step="0.01" min="0" value="0" />
-            <select id="monthlyManagementFeeType" name="monthlyManagementFeeType">
-                <option value="amount">Currency</option>
-                <option value="percent">Percent</option>
+            <input type="number" id="monthlyManagementFee" name="MonthlyManagementFee" step="0.01" min="0" value="0" />
+            <select id="monthlyManagementFeeType" name="MonthlyManagementFeeType">
+                <option value="Currency">Currency</option>
+                <option value="Percentage">Percent</option>
             </select>
         </div>
-
-        <!-- Other Monthly Fees -->
         <div class="fee-item">
             <label for="otherMonthlyFees">Other Monthly Fees:</label>
-            <input type="number" id="otherMonthlyFees" name="otherMonthlyFees" step="0.01" min="0" value="0" />
-            <select id="otherMonthlyFeesType" name="otherMonthlyFeesType">
-                <option value="amount">Currency</option>
-                <option value="percent">Percent</option>
+            <input type="number" id="otherMonthlyFees" name="OtherMonthlyFees" step="0.01" min="0" value="0" />
+            <select id="otherMonthlyFeesType" name="OtherMonthlyFeesType">
+                <option value="Currency">Currency</option>
+                <option value="Percentage">Percent</option>
             </select>
         </div>
     </div>
-
-    <!-- Annual Fees Section -->
     <div class="fee-section">
         <h3>Annual Fees</h3>
-
-        <!-- Annual Management Fee -->
         <div class="fee-item">
             <label for="annualManagementFee">Annual Management Fee:</label>
-            <input type="number" id="annualManagementFee" name="annualManagementFee" step="0.01" min="0" value="0" />
-            <select id="annualManagementFeeType" name="annualManagementFeeType">
-                <option value="amount">Currency</option>
-                <option value="percent">Percent</option>
+            <input type="number" id="annualManagementFee" name="AnnualManagementFee" step="0.01" min="0" value="0" />
+            <select id="annualManagementFeeType" name="AnnualManagementFeeType">
+                <option value="Currency">Currency</option>
+                <option value="Percentage">Percent</option>
             </select>
         </div>
-
-        <!-- Other Annual Fees -->
         <div class="fee-item">
             <label for="otherAnnualFees">Other Annual Fees:</label>
-            <input type="number" id="otherAnnualFees" name="otherAnnualFees" step="0.01" min="0" value="0" />
-            <select id="otherAnnualFeesType" name="otherAnnualFeesType">
-                <option value="amount">Currency</option>
-                <option value="percent">Percent</option>
+            <input type="number" id="otherAnnualFees" name="OtherAnnualFees" step="0.01" min="0" value="0" />
+            <select id="otherAnnualFeesType" name="OtherAnnualFeesType">
+                <option value="Currency">Currency</option>
+                <option value="Percentage">Percent</option>
             </select>
         </div>
     </div>
-
-    <!-- Submit Button -->
     <div>
         <button type="submit">Calculate</button>
     </div>

@@ -1,7 +1,11 @@
+using FinancialCalculator.Services;
+using FinancialCalculator.Services.Contracts;
+
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddTransient<ICreditService, CreditService>();
+     
 WebApplication app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
