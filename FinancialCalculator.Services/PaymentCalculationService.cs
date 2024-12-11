@@ -2,7 +2,7 @@
 
 namespace FinancialCalculator.Services;
 
-class PaymentCalculationService : IPaymentCalculationService
+public class PaymentCalculationService : IPaymentCalculationService
 {
     /// <inheritdoc />
     public Tuple<decimal, decimal> CalculateMonthlyPaymentWithPromotional(
