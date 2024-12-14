@@ -1,0 +1,215 @@
+﻿/* Navbar links and button styling */
+.navbar a,
+.dropbtn {
+    color: white;
+    padding: 14px 20px;
+    text-decoration: none;
+    background-color: #5b5b5b; /* Same background color for all buttons */
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* Arrow styling */
+.arrow {
+    margin-left: 5px;
+}
+
+/* Dropdown content styling (hidden by default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #5b5b5b;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+    color: white;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Show the dropdown on hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Hover effects for dropdown and regular buttons */
+.dropbtn:hover,
+.dropdown-content a:hover,
+.navbar a:hover {
+    background-color: #555;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #5b5b5b;
+    padding: 15px;
+}
+
+.navbar .logo a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+}
+
+.nav-links li {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.nav-links a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+}
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background: #5b7f7f;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 36px;
+}
+
+section {
+    padding: 20px;
+    margin: 20px 0;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 16px;
+    color: #666;
+}
+
+footer {
+    text-align: center;
+    background-color: #333;
+    color: white;
+    padding: 10px;
+}
+
+footer p {
+    font-size: 14px;
+}
+.content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.text {
+    flex: 1;
+    padding: 20px;
+}
+
+.image {
+    width: 40%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.text h2 {
+    margin-bottom: 15px;
+}
+
+.text p {
+    line-height: 1.6;
+}
+
+/* Редуване на позицията на изображенията */
+section:nth-child(odd) .image {
+    order: 1; /* За изображенията отдясно */
+}
+
+section:nth-child(even) .image {
+    order: -1; /* За изображенията отляво */
+}
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #333;
+    color: white;
+}
+
+.footer-left img {
+    height: 50px;
+}
+
+.footer-buttons button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.footer-buttons button:hover {
+    text-decoration: underline;
+}
+
+.footer-socials a {
+    margin: 0 10px;
+    color: white;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.footer-socials a:hover {
+    color: #4caf50;
+}
+
+#scrollTopButton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 15px;
+    font-size: 24px;
+    background-color: #5b7f7f;
+    color: white;
+    border: none;
+    border-radius: 50%; /* Makes the button circular */
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+#scrollTopButton:hover {
+    opacity: 1;
+}

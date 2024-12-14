@@ -1,22 +1,39 @@
-html {
-  font-size: 14px;
+/* Нулиране на отстоянията за всички елементи */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
+/* Премахване на отстоянията за цялата страница */
+html,
 body {
-  margin-bottom: 60px;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  height: 100%; /* За да покрива цялата височина на страницата */
+  overflow-x: hidden; /* Скрива хоризонталния скролбар, ако се появи */
 }
+
+/*html {*/
+/*  font-size: 14px;*/
+/*}*/
+
+/*@media (min-width: 768px) {*/
+/*  html {*/
+/*    font-size: 16px;*/
+/*  }*/
+/*}*/
+
+/*.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {*/
+/*  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;*/
+/*}*/
+
+/*html {*/
+/*  position: relative;*/
+/*  min-height: 100%;*/
+/*}*/
+
+/*body {*/
+/*  margin-bottom: 60px;*/
+/*}*/

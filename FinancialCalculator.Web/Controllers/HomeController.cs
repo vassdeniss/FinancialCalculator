@@ -13,7 +13,12 @@ public class HomeController : Controller
     {
         return this.View();
     }
-    
+
+    [HttpGet]
+    public IActionResult About()
+    {
+        return this.View();
+    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
