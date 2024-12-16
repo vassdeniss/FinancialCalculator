@@ -1,0 +1,137 @@
+﻿/* Layout */
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin: 0; /* Remove any margin */
+    padding: 0; /* Remove padding */
+}
+
+.text-content {
+    flex: 1;
+    padding: 20px;
+}
+
+.carousel {
+    flex: 1;
+    position: relative;
+    width: 100%;
+    height: 500px; /* Increase for larger carousel */
+    overflow: hidden;
+    margin-right: 0; /* Remove any margin on the right */
+}
+
+.carousel img {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.carousel img.active {
+    opacity: 1;
+}
+/* Format the h2 */
+.text-content h2 {
+    font-size: 36px; /* Larger font size */
+    font-weight: bold;
+    position: relative;
+    padding-left: 20px; /* Space for the line */
+}
+
+.text-content h2::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 5px;
+    height: 60%; /* Adjust height as needed */
+    background-color: #5b7f7f; /* Black line */
+    transform: translateY(-50%);
+}
+
+/* Format the paragraph text */
+.text-content p {
+    font-size: 16px; /* Default font size for paragraph */
+    line-height: 1.6; /* Better line spacing for readability */
+    color: #333; /* Dark text color for contrast */
+    margin-top: 20px; /* Add space between title and text */
+}
+/* Cube container */
+.cube-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Three columns */
+    gap: 30px; /* Space between the cubes */
+    justify-items: center;
+    margin-top: 50px; /* Adds space from the top */
+}
+
+/* Individual cube */
+.cube {
+    width: 350px; /* Increased size */
+    height: 200px; /* Increased size */
+    background-color: #5b8989;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.cube .content {
+    text-align: center;
+    padding: 10px;
+}
+
+/* Hover effect */
+.cube:hover {
+    transform: translateY(-15px); /* Lift effect with more distance */
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+/* Center the accordion container */
+.accordion {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+/* Style for the toggle buttons */
+.accordion-toggle {
+    background-color: #f5efef;
+    color: #141414;
+    padding: 10px;
+    text-align: left;
+    border: none;
+    width: 80%; /* Adjust width if needed */
+    cursor: pointer;
+    font-size: 16px;
+    margin: 10px 0;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Hidden content */
+.accordion-content {
+    display: none;
+    padding: 10px;
+    background-color: #f1f1f1;
+    margin: 5px 0;
+    border-radius: 5px;
+    width: 80%; /* Align with the toggle button width */
+}
+
+/* Icon for the toggle button */
+.accordion-toggle:after {
+    content: ' +';
+    float: right;
+}
+
+.accordion-toggle.active:after {
+    content: ' -';
+}
