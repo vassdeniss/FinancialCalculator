@@ -43,7 +43,7 @@ public class PaymentCalculationService : IPaymentCalculationService
         decimal numerator = loanAmount * (decimal)monthlyInterestRate * compoundInterestFactor;
         decimal denominator = compoundInterestFactor - 1;
 
-        return numerator / denominator;
+        return Math.Round(numerator / denominator,2);
     }
 
     /// <inheritdoc />
