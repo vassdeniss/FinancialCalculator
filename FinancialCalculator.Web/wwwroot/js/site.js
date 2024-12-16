@@ -56,3 +56,12 @@ toggles.forEach((toggle) => {
         }
     });
 });
+
+function toggleFields(groupId) {
+    const group = document.getElementById(groupId);
+    if (group.classList.contains('hidden')) {
+        group.classList.remove('hidden');
+    } else {
+        group.classList.add('hidden');
+    }
+}

@@ -2,108 +2,130 @@
     ViewData["Title"] = "Credit Calculator";
 }
 
-<h1>Credit Calculator</h1>
-<h4>Calculate monthly installments and APR (annual percentage expense)</h4>
-<form method="post" asp-action="Calculate">
-    <h2>Loan Details</h2>
-    <div>
-        <label for="loanAmount">Loan Amount*:</label>
-        <input type="number" id="loanAmount" name="LoanAmount" step="0.01" min="100" required />
-    </div>
-    <div>
-        <label for="loanTerm">Loan Term (months)*:</label>
-        <input type="number" id="loanTerm" name="LoanTermInMonths" min="1" max="960" required />
-    </div>
-    <div>
-        <label for="annualInterestRate">Annual Interest Rate (%)*:</label>
-        <input type="number" id="annualInterestRate" name="AnnualInterestRate" step="0.01" min="0" required />
-    </div>
-    <div>
-        <label for="promotionalPeriod">Promotional Period (months):</label>
-        <input type="number" id="promotionalPeriod" name="PromotionalPeriodMonths" min="0" max="300" value="0" required />
-    </div>
-    <div>
-        <label for="annualPromotionalInterestRate">Promotional Interest Rate (%):</label>
-        <input type="number" id="annualPromotionalInterestRate" name="AnnualPromotionalInterestRate" step="0.01" min="0" value="0" required />
-    </div>
-    <div>
-        <label for="gracePeriod">Grace Period (months):</label>
-        <input type="number" id="gracePeriod" name="GracePeriodMonths" min="0" value="0" required />
-    </div>
-    <div>
-        <label for="paymentType">Payment Type:</label>
-        <select id="paymentType" name="PaymentType" required>
-            <option value="annuity">Annuity (Fixed Payments)</option>
-            <option value="decreasing">Decreasing Payments</option>
-        </select>
-    </div>
-    <h2>Fees and Taxes</h2>
-    <div class="fee-section">
-        <h3>Initial Fees (One-Time Fees)</h3>
-        <div class="fee-item">
-            <label for="applicationFee">Application Fee:</label>
-            <input type="number" id="applicationFee" name="ApplicationFee" step="0.01" min="0" value="0" />
-            <select id="applicationFeeType" name="ApplicationFeeType">
-                <option value="Currency">Currency</option>
-                <option value="Percentage">Percent</option>
-            </select>
+@section Styles {
+    <link rel="stylesheet" href="~/css/credit.css" />
+}
+
+@*TODO: footer is broken on this page*@
+<section>
+    <form method="post" asp-action="Calculate" class="calculator">
+        <!-- Заглавие над формуляра -->
+        <div class="calculator-title">Кредитен калкулатор</div>
+        <h4>Пресметнете месечни вноски и ГПР (годишен процент на разходите)</h4><br>
+
+        <!-- Първите четири полета, разположени две по две -->
+        <div class="field-group two-columns">
+            <div class="field">
+                <input type="number" id="loanAmount" name="LoanAmount" step="0.01" min="100" required placeholder=" " />
+                <label for="loanAmount">Размер на кредита*</label>
+            </div>
+            <div class="field">
+                <input type="number" id="loanTerm" name="LoanTermInMonths" min="1" max="960" required placeholder=" " />
+                <label for="loanTerm">Срок(месеци)*</label>
+            </div>
+            <div class="field">
+                <input type="number" id="annualInterestRate" name="AnnualInterestRate" step="0.01" min="0" required placeholder=" " />
+                <label for="annualInterestRate">Лихва(%)*</label>
+            </div>
+            @*TODO: needs custiom field for a select only*@
+            @* <div class="field"> *@
+            @*     <label for="paymentType">Избери</label> *@
+            @*     <select id="paymentType" name="PaymentType" required> *@
+            @*         <option value="annuity">Annuity (Fixed Payments)</option> *@
+            @*         <option value="decreasing">Decreasing Payments</option> *@
+            @*     </select> *@
+            @* </div> *@
         </div>
-        <div class="fee-item">
-            <label for="processingFee">Processing Fee:</label>
-            <input type="number" id="processingFee" name="ProcessingFee" step="0.01" min="0" value="0" />
-            <select id="processingFeeType" name="ProcessingFeeType">
-                <option value="Currency">Currency</option>
-                <option value="Percentage">Percent</option>
-            </select>
+
+        <!-- Останалите полета, разположени вертикално -->
+        <span class="toggle-btn" onclick="toggleFields('group2')">▼ Промоционален период(месеци)</span>
+        <div id="group2" class="field-group hidden">
+            <div class="field full-width">
+                <input type="number" id="promotionalPeriod" name="PromotionalPeriodMonths" min="0" max="300" required placeholder=" " />
+                <label for="promotionalPeriod">Промоционален период(месеци)</label>
+            </div>
+            <div class="field full-width">
+                <input type="number" id="annualPromotionalInterestRate" name="AnnualPromotionalInterestRate" step="0.01" min="0" required placeholder=" " />
+                <label for="annualPromotionalInterestRate">Промоционална лихва(%)</label>
+            </div>
+            <div class="field-with-select full-width">
+                <input type="number" id="gracePeriod" name="GracePeriodMonths" min="0" required placeholder=" " />
+                <label for="gracePeriod">Гратисен период(месеци)</label>
+            </div>
         </div>
-        <div class="fee-item">
-            <label for="otherInitialFees">Other Fees:</label>
-            <input type="number" id="otherInitialFees" name="OtherInitialFees" step="0.01" min="0" value="0" />
-            <select id="otherInitialFeesType" name="OtherInitialFeesType">
-                <option value="Currency">Currency</option>
-                <option value="Percentage">Percent</option>
-            </select>
+
+        <span class="toggle-btn" onclick="toggleFields('group3')">▼ Такси</span>
+        <div id="group3" class="field-group hidden">
+            <div class="field-group full-width">
+                <div class="full-width"><p style="font-size: 16px; font-weight: bold;">Първоначални такси</p></div>
+            </div>
+            <!-- Три вертикални полета -->
+            <div class="field-with-select full-width">
+                <input type="number" id="applicationFee" name="ApplicationFee" step="0.01" min="0" placeholder=" " />
+                <label for="applicationFee">Такса кандидатстване</label>
+                <select id="applicationFeeType" name="ApplicationFeeType">
+                    <option value="Currency">Валута</option>
+                    <option value="Percentage">%</option>
+                </select>
+            </div>
+            <div class="field-with-select full-width">
+                <input type="number" id="processingFee" name="ProcessingFee" step="0.01" min="0" placeholder=" " />
+                <label for="processingFee">Такса обработка</label>
+                <select id="processingFeeType" name="ProcessingFeeType">
+                    <option value="Currency">Валута</option>
+                    <option value="Percentage">%</option>
+                </select>
+            </div>
+            <div class="field-with-select full-width">
+                <input type="number" id="otherInitialFees" name="OtherInitialFees" step="0.01" min="0" placeholder=" " />
+                <label for="otherInitialFees">Други такси</label>
+                <select id="otherInitialFeesType" name="OtherInitialFeesType">
+                    <option value="Currency">Валута</option>
+                    <option value="Percentage">%</option>
+                </select>
+            </div>
+
+            <div class="field-group full-width">
+                <div class="full-width"><p style="font-size: 16px; font-weight: bold;">Годишни такси</p></div>
+            </div>
+            <!-- Две по две полета -->
+            <div class="field-with-select">
+                <input type="number" id="annualManagementFee" name="AnnualManagementFee" step="0.01" min="0" placeholder=" " />
+                <label for="annualManagementFee">Годишна такса управление</label>
+                <select id="annualManagementFeeType" name="AnnualManagementFeeType">
+                    <option value="Currency">Валута</option>
+                    <option value="Percentage">%</option>
+                </select>
+            </div>
+            <div class="field-with-select">
+                <input type="number" id="otherAnnualFees" name="OtherAnnualFees" step="0.01" min="0" placeholder=" " />
+                <label for="otherAnnualFees">Други годишни такси</label>
+                <select id="otherAnnualFeesType" name="OtherAnnualFeesType">
+                    <option value="Currency">Валута</option>
+                    <option value="Percentage">%</option>
+                </select>
+            </div>
+            <div class="field-group full-width">
+                <div class="full-width"><p style="font-size: 16px; font-weight: bold;">Месечни такси</p></div>
+            </div>
+            <div class="field-with-select">
+                <input type="number" id="monthlyManagementFee" name="MonthlyManagementFee" step="0.01" min="0" placeholder=" " />
+                <label for="monthlyManagementFee">Месечна такса управление</label>
+                <select id="monthlyManagementFeeType" name="MonthlyManagementFeeType">
+                    <option value="Currency">Валута</option>
+                    <option value="Percentage">%</option>
+                </select>
+            </div>
+            <div class="field-with-select">
+                <input ttype="number" id="otherMonthlyFees" name="OtherMonthlyFees" step="0.01" min="0" placeholder=" " />
+                <label for="otherMonthlyFees">Други месечни такси</label>
+                <select id="otherMonthlyFeesType" name="OtherMonthlyFeesType">
+                    <option value="Currency">Валута</option>
+                    <option value="Percentage">%</option>
+                </select>
+            </div>
         </div>
-    </div>
-    <div class="fee-section">
-        <h3>Monthly Fees</h3>
-        <div class="fee-item">
-            <label for="monthlyManagementFee">Monthly Management Fee:</label>
-            <input type="number" id="monthlyManagementFee" name="MonthlyManagementFee" step="0.01" min="0" value="0" />
-            <select id="monthlyManagementFeeType" name="MonthlyManagementFeeType">
-                <option value="Currency">Currency</option>
-                <option value="Percentage">Percent</option>
-            </select>
-        </div>
-        <div class="fee-item">
-            <label for="otherMonthlyFees">Other Monthly Fees:</label>
-            <input type="number" id="otherMonthlyFees" name="OtherMonthlyFees" step="0.01" min="0" value="0" />
-            <select id="otherMonthlyFeesType" name="OtherMonthlyFeesType">
-                <option value="Currency">Currency</option>
-                <option value="Percentage">Percent</option>
-            </select>
-        </div>
-    </div>
-    <div class="fee-section">
-        <h3>Annual Fees</h3>
-        <div class="fee-item">
-            <label for="annualManagementFee">Annual Management Fee:</label>
-            <input type="number" id="annualManagementFee" name="AnnualManagementFee" step="0.01" min="0" value="0" />
-            <select id="annualManagementFeeType" name="AnnualManagementFeeType">
-                <option value="Currency">Currency</option>
-                <option value="Percentage">Percent</option>
-            </select>
-        </div>
-        <div class="fee-item">
-            <label for="otherAnnualFees">Other Annual Fees:</label>
-            <input type="number" id="otherAnnualFees" name="OtherAnnualFees" step="0.01" min="0" value="0" />
-            <select id="otherAnnualFeesType" name="OtherAnnualFeesType">
-                <option value="Currency">Currency</option>
-                <option value="Percentage">Percent</option>
-            </select>
-        </div>
-    </div>
-    <div>
-        <button type="submit">Calculate</button>
-    </div>
-</form>
+        <p>*Задължителни полета</p><br />
+        <button type="submit">Изчисли</button>
+    </form>
+</section>

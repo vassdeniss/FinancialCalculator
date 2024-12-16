@@ -23,7 +23,7 @@
                     Калкулатори <span class="arrow">▼</span>
                 </button>
                 <div class="dropdown-content">
-                    <a href="calculator1.html">Кредитен калкулатор</a>
+                    <a asp-controller="Credit" asp-action="Index">Кредитен калкулатор</a>
                     <a href="calculator2.html">Калкулатор за рефинансиране</a>
                     <a href="calculator3.html">Лизингов калкулатор</a>
                 </div>
@@ -35,36 +35,7 @@
                 <span></span>
             </div>
         </nav>
-        @* <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3"> *@
-        @*     <div class="container-fluid"> *@
-        @*         <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Financial Calculators</a> *@
-        @*         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent" *@
-        @*                 aria-expanded="false" aria-label="Toggle navigation"> *@
-        @*             <span class="navbar-toggler-icon"></span> *@
-        @*         </button> *@
-        @*         <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between"> *@
-        @*             <ul class="navbar-nav flex-grow-1"> *@
-        @*                 <li class="nav-item"> *@
-        @*                     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a> *@
-        @*                 </li> *@
-        @*                 <li class="nav-item"> *@
-        @*                     <a class="nav-link text-dark" asp-area="" asp-controller="Credit" asp-action="Index">Credit Calculator</a> *@
-        @*                 </li> *@
-        @*                 <li class="nav-item"> *@
-        @*                     <a class="nav-link text-dark" asp-area="" asp-controller="Refinance" asp-action="Index">Refinance Calculator</a> *@
-        @*                 </li> *@
-        @*                 <li class="nav-item"> *@
-        @*                     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="About">За нас</a> *@
-        @*                 </li> *@
-        @*             </ul> *@
-        @*         </div> *@
-        @*     </div> *@
-        @* </nav> *@
-        @* <div class="container"> *@
-        @*     <main role="main" class="pb-3"> *@
         @RenderBody()
-        @*     </main> *@
-        @* </div> *@
         <footer class="footer">
             <div class="footer-left">
                 <img src="~/logo.jpg" alt="Logo" class="footer-logo" />
@@ -82,11 +53,6 @@
             </div>
         </footer>
         <button onclick="scrollToTop()" id="scrollTopButton">&#x25B2;</button>
-        @* <footer class="border-top footer text-muted"> *@
-        @*     <div class="container"> *@
-        @*         &copy; 2024 - FinancialCalculator.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a> *@
-        @*     </div> *@
-        @* </footer> *@
         @* <script src="~/lib/jquery/dist/jquery.min.js"></script> *@
         @* <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> *@
         <script src="~/js/site.js" asp-append-version="true"></script>

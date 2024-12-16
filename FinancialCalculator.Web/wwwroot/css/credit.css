@@ -1,0 +1,152 @@
+﻿.calculator {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.calculator-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #006e6e;
+}
+
+.field-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.field-group.two-columns {
+    justify-content: space-between;
+}
+
+.field {
+    position: relative;
+    width: calc(50% - 5px);
+    /* Полета за две по две */
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 50px;
+    outline: none;
+    font-size: 16px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: #fff;
+}
+
+.field input {
+    border: none;
+    outline: none;
+    flex-grow: 1;
+    font-size: 16px;
+    padding-right: 10px;
+}
+
+.field:focus-within {
+    border-color: #006e6e;
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+}
+
+.field-with-select {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 50px;
+    outline: none;
+    font-size: 16px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    background-color: #fff;
+    position: relative;
+}
+
+.field-with-select input {
+    border: none;
+    outline: none;
+    flex-grow: 1;
+    font-size: 16px;
+    padding-right: 10px;
+}
+
+.field-with-select select {
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    outline: none;
+    cursor: pointer;
+    margin-left: 10px;
+    padding-left: 10px;
+    border-left: 1px solid #ccc;
+}
+
+.field-with-select:focus-within {
+    border-color: #006e6e;
+    box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+}
+
+.field-with-select label {
+    position: absolute;
+    top: 12px;
+    left: 20px;
+    font-size: 16px;
+    color: #aaa;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.field label {
+    position: absolute;
+    top: 12px;
+    left: 20px;
+    font-size: 16px;
+    color: #aaa;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.field input:focus + label,
+.field input:not(:placeholder-shown) + label,
+.field-with-select input:focus + label,
+.field-with-select input:not(:placeholder-shown) + label {
+    top: -10px;
+    left: 15px;
+    font-size: 12px;
+    color: #006e6e;
+}
+
+.hidden {
+    display: none;
+}
+
+.toggle-btn {
+    display: inline-block;
+    cursor: pointer;
+    color: #006e6e;
+    text-decoration: underline;
+    margin-bottom: 10px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #006e6e;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #5b7f7f;
+}
