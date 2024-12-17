@@ -1,65 +1,68 @@
-﻿using FinancialCalculator.Services.Contracts;
+﻿using System.Numerics;
+using FinancialCalculator.Common;
+using FinancialCalculator.Services.Contracts;
 
 namespace FinancialCalculator.Services;
 
 public class PaymentCalculationService : IPaymentCalculationService
 {
     /// <inheritdoc />
-    public Tuple<decimal, decimal> CalculateMonthlyPaymentWithPromotional(
-        decimal loanAmount, 
+    public Tuple<BigDecimal, BigDecimal> CalculateMonthlyPaymentWithPromotional(
+        BigDecimal loanAmount, 
         int promotionalPeriodMonths, 
-        double annualPromotionalInterestRate, 
-        double annualInterestRate, 
+        BigDecimal annualPromotionalInterestRate, 
+        BigDecimal annualInterestRate, 
         int loanTermInMonths)
     {
-        decimal promoMonthlyPayment = this.CalculateMonthlyPayment(loanAmount, annualPromotionalInterestRate, loanTermInMonths);
+        BigDecimal promoMonthlyPayment = this.CalculateMonthlyPayment(loanAmount, annualPromotionalInterestRate, loanTermInMonths);
         
-        decimal remainingBalance = this.CalculateRemainingBalance(loanAmount, annualPromotionalInterestRate, promotionalPeriodMonths, promoMonthlyPayment);
+        BigDecimal remainingBalance = this.CalculateRemainingBalance(loanAmount, annualPromotionalInterestRate, promotionalPeriodMonths, promoMonthlyPayment);
         int remainingTerm = loanTermInMonths - promotionalPeriodMonths;
-        decimal normalMonthlyPayment = this.CalculateMonthlyPayment(remainingBalance, annualInterestRate, remainingTerm);
+        BigDecimal normalMonthlyPayment = this.CalculateMonthlyPayment(remainingBalance, annualInterestRate, remainingTerm);
 
-        return new Tuple<decimal, decimal>(promoMonthlyPayment, normalMonthlyPayment);
+        return new Tuple<BigDecimal, BigDecimal>(promoMonthlyPayment, normalMonthlyPayment);
     }
     
     /// <inheritdoc />
-    public Tuple<decimal, decimal> CalculateMonthlyPaymentWithoutPromotional(
-        decimal loanAmount, 
-        double annualInterestRate, 
+    public Tuple<BigDecimal, BigDecimal> CalculateMonthlyPaymentWithoutPromotional(
+        BigDecimal loanAmount, 
+        BigDecimal annualInterestRate, 
         int loanTermInMonths)
     {
-        decimal normalMonthlyPayment = this.CalculateMonthlyPayment(loanAmount, annualInterestRate, loanTermInMonths);
-        return new Tuple<decimal, decimal>(0.0m, normalMonthlyPayment);
+        BigDecimal normalMonthlyPayment = this.CalculateMonthlyPayment(loanAmount, annualInterestRate, loanTermInMonths);
+        return new Tuple<BigDecimal, BigDecimal>(BigDecimal.Zero, normalMonthlyPayment);
     }
     
     /// <inheritdoc />
-    public decimal CalculateMonthlyPayment(
-        decimal loanAmount, 
-        double annualInterestRate, 
+    public BigDecimal CalculateMonthlyPayment(
+        BigDecimal loanAmount, 
+        BigDecimal annualInterestRate, 
         int payments)
     {
-        double monthlyInterestRate = annualInterestRate / 100 / 12;
+        BigDecimal monthlyInterestRate = annualInterestRate / new BigDecimal(100) / new BigDecimal(12);
 
-        decimal compoundInterestFactor = (decimal)Math.Pow(1 + monthlyInterestRate, payments);
-        decimal numerator = loanAmount * (decimal)monthlyInterestRate * compoundInterestFactor;
-        decimal denominator = compoundInterestFactor - 1;
+        BigDecimal num = BigDecimal.One + monthlyInterestRate;
+        BigDecimal compoundInterestFactor = num.Power(new BigInteger(payments));
+        BigDecimal numerator = loanAmount * monthlyInterestRate * compoundInterestFactor;
+        BigDecimal denominator = compoundInterestFactor - BigDecimal.One;
 
-        return Math.Round(numerator / denominator,2);
+        return numerator / denominator;
     }
 
     /// <inheritdoc />
-    public decimal CalculateRemainingBalance(
-        decimal loanAmount, 
-        double annualInterestRate, 
+    public BigDecimal CalculateRemainingBalance(
+        BigDecimal loanAmount, 
+        BigDecimal annualInterestRate, 
         int payments,
-        decimal monthlyPayment)
+        BigDecimal monthlyPayment)
     {
-        decimal monthlyInterestRate = (decimal)(annualInterestRate / 100 / 12);
+        BigDecimal monthlyInterestRate = annualInterestRate / new BigDecimal(100) / new BigDecimal(12);
         
-        decimal balance = loanAmount;
+        BigDecimal balance = loanAmount;
         for (int i = 0; i < payments; i++)
         {
-            decimal interestPayment = balance * monthlyInterestRate;
-            decimal principalPayment = monthlyPayment - interestPayment;
+            BigDecimal interestPayment = balance * monthlyInterestRate;
+            BigDecimal principalPayment = monthlyPayment - interestPayment;
             balance -= principalPayment;
         }
 

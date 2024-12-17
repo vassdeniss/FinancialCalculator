@@ -1,4 +1,5 @@
-﻿using FinancialCalculator.Common.Enums;
+﻿using FinancialCalculator.Common;
+using FinancialCalculator.Common.Enums;
 using FinancialCalculator.Services.Contracts;
 using FinancialCalculator.Services.DTO;
 
@@ -15,17 +16,18 @@ public class CreditService : ICreditService
     /// <inheritdoc />
     public CreditResultDto CalculateCreditResult(CreditInputDto input)
     {
-        if (input.LoanAmount < MinLoanAmount)
+        if (input.LoanAmount.CompareTo(new BigDecimal(MinLoanAmount)) < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(input.LoanAmount), ErrorLoanAmount);
         }
 
-        if (input.LoanTermInMonths < MinLoanTermInMonths || input.LoanTermInMonths > MaxLoanTermInMonths)
+        if (input.LoanTermInMonths < MinLoanTermInMonths 
+            || input.LoanTermInMonths > MaxLoanTermInMonths)
         {
             throw new ArgumentOutOfRangeException(nameof(input.LoanTermInMonths), ErrorLoanTermInMonths);
         }
 
-        if (input.AnnualInterestRate < MinAnnualInterestRateAmount)
+        if (input.AnnualInterestRate.CompareTo(new BigDecimal(MinAnnualInterestRateAmount)) < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(input.AnnualInterestRate), ErrorAnnualInterestRateAmount);
         }
@@ -42,15 +44,15 @@ public class CreditService : ICreditService
                 ErrorPromoLoanTermInMonthsTooHigh);
         }
 
-        if (input.AnnualPromotionalInterestRate < MinAnnualPromoInterestRateAmount)
+        if (input.AnnualPromotionalInterestRate.CompareTo(new BigDecimal(MinAnnualPromoInterestRateAmount)) < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(input.AnnualPromotionalInterestRate),
                 ErrorAnnualPromoInterestRateAmount);
         }
 
-        if ((input.PromotionalPeriodMonths > MinAnnualInterestRateAmount && input.AnnualPromotionalInterestRate == 0) ||
+        if ((input.PromotionalPeriodMonths > MinAnnualInterestRateAmount && input.AnnualPromotionalInterestRate.CompareTo(BigDecimal.Zero) == 0) ||
             (input.PromotionalPeriodMonths == 0 &&
-             input.AnnualPromotionalInterestRate > MinAnnualPromoInterestRateAmount))
+             input.AnnualPromotionalInterestRate.CompareTo(new BigDecimal(MinAnnualPromoInterestRateAmount)) > 0))
         {
             throw new ArgumentException(ErrorPromotionalFields);
         }
@@ -61,7 +63,7 @@ public class CreditService : ICreditService
             throw new ArgumentOutOfRangeException(nameof(input.GracePeriodMonths), ErrorGracePeriodMonths);
         }
 
-        decimal totalInitialFees =
+        BigDecimal totalInitialFees =
             this._feeCalculationService.CalculateFee(input.ApplicationFee, input.ApplicationFeeType, input.LoanAmount)
             + this._feeCalculationService.CalculateFee(input.ProcessingFee, input.ProcessingFeeType, input.LoanAmount)
             + this._feeCalculationService.CalculateFee(input.OtherInitialFees, input.OtherInitialFeesType, input.LoanAmount);
@@ -74,7 +76,7 @@ public class CreditService : ICreditService
             ? input.PromotionalPeriodMonths - input.GracePeriodMonths
             : 0;
 
-        Tuple<decimal, decimal> resultPayments;
+        Tuple<BigDecimal, BigDecimal> resultPayments;
         if (repaymentTerm > 0)
         {
             if (remainingPromotionalMonths > 0)
@@ -89,7 +91,7 @@ public class CreditService : ICreditService
                         input.AnnualInterestRate,
                         repaymentTerm),
 
-                    PaymentType.Decreasing => new Tuple<decimal, decimal>(input.LoanAmount / repaymentTerm, 0.0m),
+                    PaymentType.Decreasing => new Tuple<BigDecimal, BigDecimal>(input.LoanAmount / new BigDecimal(repaymentTerm), BigDecimal.Zero),
 
                     _ => throw new ArgumentException("Invalid payment type.")
                 };
@@ -104,7 +106,7 @@ public class CreditService : ICreditService
                         input.AnnualInterestRate,
                         repaymentTerm),
 
-                    PaymentType.Decreasing => new Tuple<decimal, decimal>(input.LoanAmount / repaymentTerm, 0.0m),
+                    PaymentType.Decreasing => new Tuple<BigDecimal, BigDecimal>(input.LoanAmount / new BigDecimal(repaymentTerm), BigDecimal.Zero),
 
                     _ => throw new ArgumentException("Invalid payment type.")
                 };
@@ -112,7 +114,7 @@ public class CreditService : ICreditService
         }
         else
         {
-            resultPayments = new Tuple<decimal, decimal>(0m, 0m);
+            resultPayments = new Tuple<BigDecimal, BigDecimal>(BigDecimal.Zero, BigDecimal.Zero);
         }
 
         return this._amortizationSchedule.GenerateAmortizationSchedule(

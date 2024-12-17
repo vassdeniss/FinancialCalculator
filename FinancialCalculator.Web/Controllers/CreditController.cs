@@ -20,7 +20,6 @@ public class CreditController : Controller
         return this.View();
     }
     
-    
     [HttpPost]
     public IActionResult Calculate(CreditInputDto input)
     {
@@ -28,16 +27,16 @@ public class CreditController : Controller
     
         CreditResult creditResult = new()
         {
-            TotalPayments = Math.Round(creditResultDto.TotalPayments, 2),      
-            TotalInterest = Math.Round(creditResultDto.TotalInterest, 2),     
-            TotalPrincipal = Math.Round(creditResultDto.TotalPrincipal, 2),
-            TotalInitialFees = Math.Round(creditResultDto.TotalInitialFees, 2),
-            TotalFees = Math.Round(creditResultDto.TotalFees, 2),
-            AverageMonthlyPayment = Math.Round(creditResultDto.AverageMonthlyPayment, 2),
+            TotalPayments = creditResultDto.TotalPayments.Round(2),      
+            TotalInterest = creditResultDto.TotalInterest.Round(2),  
+            TotalPrincipal = creditResultDto.TotalPrincipal.Round(2),
+            TotalInitialFees = creditResultDto.TotalInitialFees.Round(2),
+            TotalFees = creditResultDto.TotalFees.Round(2),
+            AverageMonthlyPayment = creditResultDto.AverageMonthlyPayment.Round(2),
             AmortizationSchedule = creditResultDto.AmortizationSchedule,
-            Apr = Math.Round(creditResultDto.Apr, 2)
+            Apr = creditResultDto.Apr.Round(2)
         };
-
+    
         return this.View("Result", creditResult);
     }
 }

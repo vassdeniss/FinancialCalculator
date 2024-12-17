@@ -1,4 +1,5 @@
-﻿using FinancialCalculator.Common;
+﻿using System.Numerics;
+using FinancialCalculator.Common;
 using FinancialCalculator.Common.Enums;
 using FinancialCalculator.Services.Contracts;
 using FinancialCalculator.Services.DTO;
@@ -16,16 +17,16 @@ class AmortizationSchedule : IAmortizationSchedule
     
     /// <inheritdoc />
     public CreditResultDto GenerateAmortizationSchedule(
-        decimal loanAmount,
+        BigDecimal loanAmount,
         int loanTermInMonths,
         int gracePeriodMonths,
         int remainingPromotionalMonths,
-        double annualPromotionalInterestRate,
-        double annualInterestRate,
-        decimal monthlyPaymentPromo,
-        decimal monthlyPaymentNormal,
+        BigDecimal annualPromotionalInterestRate,
+        BigDecimal annualInterestRate,
+        BigDecimal monthlyPaymentPromo,
+        BigDecimal monthlyPaymentNormal,
         CreditInputDto input,
-        decimal totalInitialFees)
+        BigDecimal totalInitialFees)
     {
         List<AmortizationEntry> schedule =
         [
@@ -34,35 +35,35 @@ class AmortizationSchedule : IAmortizationSchedule
                 Month = 0,
                 Date = DateTime.Today.ToString("dd.MM.yyyy"),
                 RemainingBalance = loanAmount,
-                Payment = 0m,
-                Principal = 0m,
-                Interest = 0m,
+                Payment = BigDecimal.Zero,
+                Principal = BigDecimal.Zero,
+                Interest = BigDecimal.Zero,
                 Fees = totalInitialFees
             }
         ];
 
-        decimal balance = loanAmount;
-        decimal totalPayments = 0m;
-        decimal totalInterest = 0m;
-        decimal totalPrincipal = 0m;
-        decimal totalFees = totalInitialFees; // Start with initial fees
+        BigDecimal balance = loanAmount;
+        BigDecimal totalPayments = BigDecimal.Zero;
+        BigDecimal totalInterest = BigDecimal.Zero;
+        BigDecimal totalPrincipal = BigDecimal.Zero;
+        BigDecimal totalFees = totalInitialFees; // Start with initial fees
 
-        decimal monthlyInterestRatePromo = (decimal)(annualPromotionalInterestRate / 100 / 12);
-        decimal monthlyInterestRateNormal = (decimal)(annualInterestRate / 100 / 12);
+        BigDecimal monthlyInterestRatePromo = annualPromotionalInterestRate / new BigDecimal(100) / new BigDecimal(12);
+        BigDecimal monthlyInterestRateNormal = annualInterestRate / new BigDecimal(100) / new BigDecimal(12);
         
-        decimal fixedPrincipalPayment = input.PaymentType == PaymentType.Decreasing 
-            ? balance / (loanTermInMonths - gracePeriodMonths) 
-            : 0m;
+        BigDecimal fixedPrincipalPayment = input.PaymentType == PaymentType.Decreasing 
+            ? balance / new BigDecimal(loanTermInMonths - gracePeriodMonths) 
+            : BigDecimal.Zero;
         
         for (int month = 1; month <= loanTermInMonths; month++)
         {
-            decimal interestRate = 0m;
-            decimal monthlyPayment = 0m;
-            decimal interestPayment = 0m;
-            decimal principalPayment = 0m;
-            decimal fees = 0.0m;
+            BigDecimal interestRate = BigDecimal.Zero;
+            BigDecimal monthlyPayment = BigDecimal.Zero;
+            BigDecimal interestPayment = BigDecimal.Zero;
+            BigDecimal principalPayment = BigDecimal.Zero;
+            BigDecimal fees = BigDecimal.Zero;
 
-            decimal tempBalance = balance; // For fee calculations
+            BigDecimal tempBalance = balance; // For fee calculations
 
             if (month <= gracePeriodMonths)
             {
@@ -72,7 +73,7 @@ class AmortizationSchedule : IAmortizationSchedule
                     : monthlyInterestRateNormal;
 
                 interestPayment = balance * interestRate;
-                principalPayment = 0m;
+                principalPayment = BigDecimal.Zero;
                 monthlyPayment = interestPayment;
             }
             else
@@ -98,7 +99,7 @@ class AmortizationSchedule : IAmortizationSchedule
                     principalPayment = monthlyPayment - interestPayment;
 
                     // Ensure balance doesn't go negative
-                    if (balance - principalPayment < 0m)
+                    if ((balance - principalPayment).CompareTo(BigDecimal.Zero) < 0)
                     {
                         principalPayment = balance;
                         monthlyPayment = principalPayment + interestPayment;
@@ -158,8 +159,8 @@ class AmortizationSchedule : IAmortizationSchedule
             });
         }
 
-        decimal averageMonthlyPayment = totalPayments / loanTermInMonths;
-        decimal apr = this.CalculateApr(input.LoanAmount, totalInitialFees, schedule);
+        BigDecimal averageMonthlyPayment = totalPayments / new BigDecimal(loanTermInMonths);
+        BigDecimal apr = this.CalculateApr(input.LoanAmount, totalInitialFees, schedule);
 
         return new CreditResultDto
         {
@@ -185,7 +186,7 @@ class AmortizationSchedule : IAmortizationSchedule
     /// A list of <see cref="AmortizationEntry"/> representing the loan's payment schedule.
     /// </param>
     /// <returns>
-    /// The calculated APR as a <c>decimal</c> percentage (e.g., 5.5 for 5.5%).
+    /// The calculated APR as a <c>BigDecimal</c> percentage (e.g., 5.5 for 5.5%).
     /// </returns>
     /// <remarks>
     /// <para>
@@ -223,50 +224,50 @@ class AmortizationSchedule : IAmortizationSchedule
     /// the APR.
     /// </para>
     /// </remarks>
-    private decimal CalculateApr(decimal loanAmount, decimal totalInitialFees, List<AmortizationEntry> schedule)
+    private BigDecimal CalculateApr(BigDecimal loanAmount, BigDecimal totalInitialFees, List<AmortizationEntry> schedule)
     {
         // Define the function for Net Present Value
-        Func<decimal, decimal> npvFunc = rate =>
+        Func<BigDecimal, BigDecimal> npvFunc = rate =>
         {
             // Net loan amount received is loanAmount - totalInitialFees
-            decimal netLoanAmountReceived = loanAmount - totalInitialFees;
+            BigDecimal netLoanAmountReceived = loanAmount - totalInitialFees;
 
             // Start with the negative net loan amount received
-            decimal npv = -netLoanAmountReceived;
+            BigDecimal npv = -netLoanAmountReceived;
 
             // Sum the present value of each payment
             for (int i = 0; i < schedule.Count; i++)
             {
-                decimal payment = schedule[i].Payment + schedule[i].Fees;
-                decimal t = i + 1; // Time period in months
+                BigDecimal payment = schedule[i].Payment + schedule[i].Fees;
+                int t = i + 1; // Time period in months
                 // Discount each payment back to present value
-                npv += payment / (decimal)Math.Pow((double)(1 + rate), (double)t);
+                npv += payment / (BigDecimal.One + rate).Power(new BigInteger(t));
             }
 
             return npv;
         };
 
         // Use the bisection method to find the rate that makes NPV zero
-        decimal lowerBound = 0.0m; // Lower bound of the interest rate
-        decimal upperBound = 1.0m; // Upper bound (100% monthly rate is unrealistically high)
-        decimal tolerance = 1e-9m; // Desired precision
-        decimal internalRateOfReturn = 0.0m; // Internal Rate of Return (monthly rate)
+        BigDecimal lowerBound = BigDecimal.Zero; // Lower bound of the interest rate
+        BigDecimal upperBound = BigDecimal.One; // Upper bound (100% monthly rate is unrealistically high)
+        BigDecimal tolerance = BigDecimal.Parse("0.000000001"); // Desired precision
+        BigDecimal internalRateOfReturn = BigDecimal.Zero; // Internal Rate of Return (monthly rate)
 
         while (upperBound - lowerBound > tolerance)
         {
-            decimal rate = (lowerBound + upperBound) / 2; // Midpoint of the interval
-            decimal npv = npvFunc(rate); // Calculate NPV at this rate
-            if (npv > 0)
+            BigDecimal rate = (lowerBound + upperBound) / BigDecimal.Two; // Midpoint of the interval
+            BigDecimal npv = npvFunc(rate); // Calculate NPV at this rate
+            if (npv > BigDecimal.Zero)
                 lowerBound = rate; // NPV positive, rate is too low
             else
                 upperBound = rate; // NPV negative, rate is too high
         }
 
         // The IRR is the rate where NPV is zero
-        internalRateOfReturn = (lowerBound + upperBound) / 2;
+        internalRateOfReturn = (lowerBound + upperBound) / BigDecimal.Two;
 
         // Convert monthly rate to annual percentage rate using compound interest
-        decimal apr = ((decimal)Math.Pow((double)(1 + internalRateOfReturn), 12) - 1) * 100;
+        BigDecimal apr = ((BigDecimal.One + internalRateOfReturn).Power(new BigInteger(12)) - BigDecimal.One) * new BigDecimal(100);
 
         return apr;
     }

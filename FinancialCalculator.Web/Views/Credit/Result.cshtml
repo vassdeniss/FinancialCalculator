@@ -30,7 +30,7 @@
     </tr>
     <tr>
         <td><strong>Contributions (Total Principal Repaid):</strong></td>
-        <td>@Math.Round(Model.TotalPrincipal + Model.TotalInterest, 2)</td>
+        <td>@(Model.TotalPrincipal + Model.TotalInterest)</td>
     </tr>
 </table>
 <h2>Amortization Schedule</h2>
@@ -49,11 +49,11 @@
     <tr>
         <td>@entry.Month</td>
         <td>@entry.Date</td>
-        <td>@Math.Round(entry.RemainingBalance, 2)</td>
-        <td>@Math.Round(entry.Payment, 2)</td>
-        <td>@Math.Round(entry.Principal, 2)</td>
-        <td>@Math.Round(entry.Interest, 2)</td>
-        <td>@Math.Round(entry.Fees, 2)</td>
+        <td>@entry.RemainingBalance.Round(2)</td>
+        <td>@entry.Payment.Round(2)</td>
+        <td>@entry.Principal.Round(2)</td>
+        <td>@entry.Interest.Round(2)</td>
+        <td>@entry.Fees.Round(2)</td>
     </tr>
     }
 </table>

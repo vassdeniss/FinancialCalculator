@@ -1,4 +1,5 @@
-﻿using FinancialCalculator.Services.DTO;
+﻿using FinancialCalculator.Common;
+using FinancialCalculator.Services.DTO;
 
 namespace FinancialCalculator.Services.Contracts;
 
@@ -19,14 +20,14 @@ interface IAmortizationSchedule
     /// <param name="totalInitialFees">The total initial fees paid upfront.</param>
     /// <returns>A <see cref="CreditResultDto"/> containing the amortization results.</returns>
     CreditResultDto GenerateAmortizationSchedule(
-        decimal loanAmount,
+        BigDecimal loanAmount,
         int loanTermInMonths,
         int gracePeriodMonths,
         int remainingPromotionalMonths,
-        double annualPromotionalInterestRate,
-        double annualInterestRate,
-        decimal monthlyPaymentPromo,
-        decimal monthlyPaymentNormal,
+        BigDecimal annualPromotionalInterestRate,
+        BigDecimal annualInterestRate,
+        BigDecimal monthlyPaymentPromo,
+        BigDecimal monthlyPaymentNormal,
         CreditInputDto input,
-        decimal totalInitialFees);
+        BigDecimal totalInitialFees);
 }

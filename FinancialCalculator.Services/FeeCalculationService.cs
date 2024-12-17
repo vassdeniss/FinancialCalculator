@@ -1,4 +1,5 @@
-﻿using FinancialCalculator.Common.Enums;
+﻿using FinancialCalculator.Common;
+using FinancialCalculator.Common.Enums;
 using FinancialCalculator.Services.Contracts;
 
 namespace FinancialCalculator.Services;
@@ -6,10 +7,10 @@ namespace FinancialCalculator.Services;
 class FeeCalculationService : IFeeCalculationService
 {
     /// <inheritdoc />
-    public decimal CalculateFee(decimal feeValue, FeeType feeType, decimal loanAmount)
+    public BigDecimal CalculateFee(BigDecimal feeValue, FeeType feeType, BigDecimal loanAmount)
     {
         return feeType == FeeType.Percentage
-            ? loanAmount * (feeValue / 100m)
+            ? loanAmount * feeValue / new BigDecimal(100)
             : feeValue;
     }
 }

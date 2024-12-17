@@ -6,13 +6,13 @@ public class AmortizationEntry
     
     public string Date { get; init; }
     
-    public decimal Payment { get; init; }
+    public BigDecimal Payment { get; init; }
     
-    public decimal Principal { get; init; }
+    public BigDecimal Principal { get; init; }
     
-    public decimal Interest { get; init; }
+    public BigDecimal Interest { get; init; }
     
-    public decimal RemainingBalance { get; init; }
+    public BigDecimal RemainingBalance { get; init; }
     
-    public decimal Fees { get; init; }
+    public BigDecimal Fees { get; init; }
 }

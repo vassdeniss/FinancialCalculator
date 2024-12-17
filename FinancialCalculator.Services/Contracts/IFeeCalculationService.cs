@@ -1,4 +1,5 @@
-﻿using FinancialCalculator.Common.Enums;
+﻿using FinancialCalculator.Common;
+using FinancialCalculator.Common.Enums;
 
 namespace FinancialCalculator.Services.Contracts;
 
@@ -11,5 +12,5 @@ interface IFeeCalculationService
     /// <param name="feeType">The type of the fee (Amount or Percentage).</param>
     /// <param name="loanAmount">The original loan amount.</param>
     /// <returns>The calculated fee amount as a <c>decimal</c>.</returns>
-    decimal CalculateFee(decimal feeValue, FeeType feeType, decimal loanAmount);
+    BigDecimal CalculateFee(BigDecimal feeValue, FeeType feeType, BigDecimal loanAmount);
 }
