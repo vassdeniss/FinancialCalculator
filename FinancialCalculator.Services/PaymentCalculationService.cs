@@ -39,6 +39,11 @@ public class PaymentCalculationService : IPaymentCalculationService
         BigDecimal annualInterestRate, 
         int payments)
     {
+        if (annualInterestRate == BigDecimal.Zero)
+        {
+            return loanAmount / new BigDecimal(payments);
+        }
+        
         BigDecimal monthlyInterestRate = annualInterestRate / new BigDecimal(100) / new BigDecimal(12);
 
         BigDecimal num = BigDecimal.One + monthlyInterestRate;
