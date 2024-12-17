@@ -1,0 +1,71 @@
+﻿@{
+    ViewData["Title"] = "Contact";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/contact.css" />
+}
+
+@section Scripts {
+    <script src="~/js/contact.js"></script>
+}
+
+<header>
+    <h1>Контакти</h1>
+</header>
+<section>
+    <div class="content-main-1">
+        <div class="section-1">
+            <div class="form-align">
+                <div class="container mt-5">
+                    <form>
+                        <div class="col-md-6">
+                            <h1 class="form-head">
+                                Свържете се с нашия любезен екип още днес!
+                            </h1>
+                            <p>Моля, попълнете контактната форма</p>
+                            <hr />
+
+                            <label for="name"><b>Име</b></label>
+                            <input
+                                type="text"
+                                placeholder="Иван"
+                                name="name"
+                                id="name"
+                                required
+                            />
+                            <label for="surname"><b>Фамилия</b></label>
+                            <input
+                                type="text"
+                                placeholder="Иванов"
+                                name="surname"
+                                id="surname"
+                                required
+                            />
+                            <label for="email"><b>Email</b></label>
+                            <input
+                                type="text"
+                                placeholder="exaple@example.com"
+                                name="email"
+                                id="email"
+                                required
+                            />
+
+                            <label for="subject">Съобщение:</label>
+                            <textarea
+                                id="subject"
+                                name="subject"
+                                placeholder="Напишете нещо..."
+                                style="height: 200px"
+                                required
+                            ></textarea>
+                            <hr />
+
+                            <button type="submit" class="registerbtn">Изпрати</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

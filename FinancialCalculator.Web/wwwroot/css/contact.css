@@ -1,0 +1,155 @@
+﻿header {
+    background: #5b7f7f;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+form {
+    width: 50%;
+}
+.form-align {
+    display: flex;
+    justify-content: center;
+}
+.container {
+    text-align: -webkit-center;
+    padding: 16px;
+}
+
+/* Full-width input fields */
+input[type='text'],
+input[type='password'],
+input[type='date'],
+input[type='time'],
+textarea {
+    width: 100%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    display: inline-block;
+    border: none;
+    background: #f1f1f1;
+}
+
+input[type='text']:focus,
+input[type='password']:focus {
+    background-color: #ddd;
+    outline: none;
+}
+
+/* Overwrite default styles of hr */
+hr {
+    border: 1px solid #f1f1f1;
+    margin-bottom: 25px;
+}
+
+/* Set a style for the submit button */
+.registerbtn {
+    background-color: #5b8989;
+    color: black;
+    padding: 16px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.9;
+}
+
+.registerbtn:hover {
+    color: white;
+    background-color: #5b5b5b;
+    opacity: 1;
+}
+.section-1 {
+    text-align: center;
+}
+
+.terms {
+    color: #fad100;
+    transition: 0.1s;
+}
+.terms:hover {
+    color: #0177da;
+    transition: 0.1s;
+}
+
+/* The message box is shown when the user clicks on the password field */
+#message {
+    display: none;
+    background: #f1f1f1;
+    color: #000;
+    position: relative;
+    padding: 20px;
+    margin-top: 10px;
+}
+
+#message p {
+    padding: 10px 35px;
+    font-size: 18px;
+}
+
+/* Add a green text color and a checkmark when the requirements are right */
+.valid {
+    color: green;
+}
+
+.valid:before {
+    position: relative;
+    left: -35px;
+    content: '✔';
+}
+
+/* Add a red text color and an "x" when the requirements are wrong */
+.invalid {
+    color: red;
+}
+
+.invalid:before {
+    position: relative;
+    left: -35px;
+    content: '✖';
+}
+
+footer {
+    text-align: center;
+    background-color: #333;
+    color: white;
+    padding: 10px;
+}
+
+footer p {
+    font-size: 14px;
+}
+.content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.text {
+    flex: 1;
+    padding: 20px;
+}
+
+.image {
+    width: 40%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.text h2 {
+    margin-bottom: 15px;
+}
+
+.text p {
+    line-height: 1.6;
+}
+
+/* Редуване на позицията на изображенията */
+section:nth-child(odd) .image {
+    order: 1; /* За изображенията отдясно */
+}
+
+section:nth-child(even) .image {
+    order: -1; /* За изображенията отляво */
+}
