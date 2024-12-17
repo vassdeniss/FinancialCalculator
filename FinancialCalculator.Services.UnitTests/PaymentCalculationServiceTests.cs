@@ -62,4 +62,17 @@ namespace FinancialCalculator.Tests
             Assert.That(result, Is.EqualTo(expectedMonthlyPayment));
         }
     }
+
+    [TestFixture]
+    public class CalculateRemainingBalanceTests
+    {
+
+        private PaymentCalculationService service;
+
+        [SetUp]
+        public void Setup()
+        {
+            service = new PaymentCalculationService();
+        }
+    }
 }
