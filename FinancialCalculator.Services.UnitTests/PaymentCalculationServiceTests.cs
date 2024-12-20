@@ -85,4 +85,24 @@ public class CalculateRemainingBalanceTests
     {
         service = new PaymentCalculationService();
     }
+
+    [Test]
+[TestCase("999999999", "1259.82", 960, "1049849998.95", "999999999")] // Edge case: max loan, max months, max interest rate
+[TestCase("100", "1301.47", 960, "108.46", "100")] // Edge case: min loan, max months, max interest rate
+[TestCase("100", "9999999", 1, "833433.25", "0.00")]  // Edge case: min loan, min months, max interest rate
+[TestCase("999999999", "9999999", 1, "8334332491665.67", "0.00")] // Edge case: max loan, min months, max interest rate
+public void CalculateRemainingBalance_ShouldReturnCorrectValue(string loanAmountStr, string annualInterestRateStr, int payments, string monthlyPaymentStr, string expectedRemainingBalanceStr)
+{
+    // Arrange
+    BigDecimal loanAmount = BigDecimal.Parse(loanAmountStr);
+    BigDecimal annualInterestRate = BigDecimal.Parse(annualInterestRateStr);
+    BigDecimal monthlyPayment = BigDecimal.Parse(monthlyPaymentStr);
+    BigDecimal expectedRemainingBalance = BigDecimal.Parse(expectedRemainingBalanceStr);
+
+    // Act
+    BigDecimal result = service.CalculateRemainingBalance(loanAmount, annualInterestRate, payments, monthlyPayment).Round(2);
+
+    // Assert
+    Assert.That(result, Is.EqualTo(expectedRemainingBalance));
+}
 }
