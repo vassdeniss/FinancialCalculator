@@ -6,7 +6,10 @@
     <link rel="stylesheet" href="~/css/credit.css" />
 }
 
-@*TODO: footer is broken on this page*@
+@section Scripts {
+    <script src="~/js/credit.js"></script>
+}
+
 <section>
     <form method="post" asp-action="Calculate" class="calculator">
         <!-- Заглавие над формуляра -->
@@ -27,29 +30,30 @@
                 <input type="number" id="annualInterestRate" name="AnnualInterestRate" step="0.01" min="0" required placeholder=" " />
                 <label for="annualInterestRate">Лихва(%)*</label>
             </div>
-            @*TODO: needs custiom field for a select only*@
-            @* <div class="field"> *@
-            @*     <label for="paymentType">Избери</label> *@
-            @*     <select id="paymentType" name="PaymentType" required> *@
-            @*         <option value="annuity">Annuity (Fixed Payments)</option> *@
-            @*         <option value="decreasing">Decreasing Payments</option> *@
-            @*     </select> *@
-            @* </div> *@
+            <div class="dropdown-field">
+                <input type="hidden" id="hiddenPaymentType" name="PaymentType">
+                <input type="text" id="paymentType" placeholder=" " required readonly>
+                <label for="paymentType">Избор</label>
+                <div class="dropdown-menu" id="dropdown-menu">
+                    <div data-value="annuity" data-text="Анюитетни вноски">Анюитетни вноски</div>
+                    <div data-value="decreasing" data-text="Намаляващи вноски">Намаляващи вноски</div>
+                </div>
+            </div>
         </div>
 
         <!-- Останалите полета, разположени вертикално -->
         <span class="toggle-btn" onclick="toggleFields('group2')">▼ Промоционален период(месеци)</span>
         <div id="group2" class="field-group hidden">
             <div class="field full-width">
-                <input type="number" id="promotionalPeriod" name="PromotionalPeriodMonths" min="0" max="300" required placeholder=" " />
+                <input type="number" id="promotionalPeriod" name="PromotionalPeriodMonths" min="0" max="300" placeholder=" " />
                 <label for="promotionalPeriod">Промоционален период(месеци)</label>
             </div>
             <div class="field full-width">
-                <input type="number" id="annualPromotionalInterestRate" name="AnnualPromotionalInterestRate" step="0.01" min="0" required placeholder=" " />
+                <input type="number" id="annualPromotionalInterestRate" name="AnnualPromotionalInterestRate" step="0.01" min="0" placeholder=" " />
                 <label for="annualPromotionalInterestRate">Промоционална лихва(%)</label>
             </div>
             <div class="field-with-select full-width">
-                <input type="number" id="gracePeriod" name="GracePeriodMonths" min="0" required placeholder=" " />
+                <input type="number" id="gracePeriod" name="GracePeriodMonths" min="0" placeholder=" " />
                 <label for="gracePeriod">Гратисен период(месеци)</label>
             </div>
         </div>
@@ -126,6 +130,6 @@
             </div>
         </div>
         <p>*Задължителни полета</p><br />
-        <button type="submit">Изчисли</button>
+        <button id="submit-button" type="submit">Изчисли</button>
     </form>
 </section>
