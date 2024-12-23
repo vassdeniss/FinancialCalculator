@@ -1,5 +1,7 @@
-﻿using FinancialCalculator.Services.Contracts;
+﻿using AutoMapper;
+using FinancialCalculator.Services.Contracts;
 using FinancialCalculator.Services.DTO;
+using FinancialCalculator.Web.Dto;
 using FinancialCalculator.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,10 +10,12 @@ namespace FinancialCalculator.Web.Controllers;
 public class CreditController : Controller
 {
     private readonly ICreditService _creditService;
+    private readonly IMapper _mapper;
 
-    public CreditController(ICreditService creditService)
+    public CreditController(ICreditService creditService, IMapper mapper)
     {
         this._creditService = creditService;
+        this._mapper = mapper;
     }
     
     [HttpGet]
@@ -23,7 +27,14 @@ public class CreditController : Controller
     [HttpPost]
     public IActionResult Calculate(CreditInputDto input)
     {
-        CreditResultDto creditResultDto = this._creditService.CalculateCreditResult(input);
+        if (!this.ModelState.IsValid)
+        {
+            this.TempData["ShowError"] = true;
+            return this.View(nameof(Index), input);
+        }
+        
+        CreditServiceInputDto dto = this._mapper.Map<CreditServiceInputDto>(input);
+        CreditResultDto creditResultDto = this._creditService.CalculateCreditResult(dto);
     
         CreditResult creditResult = new()
         {

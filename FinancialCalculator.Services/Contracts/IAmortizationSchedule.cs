@@ -16,7 +16,7 @@ interface IAmortizationSchedule
     /// <param name="annualInterestRate">The annual interest rate after the promotional period (as a percentage).</param>
     /// <param name="monthlyPaymentPromo">The monthly payment during the promotional period.</param>
     /// <param name="monthlyPaymentNormal">The monthly payment after the promotional period.</param>
-    /// <param name="input">An instance of <see cref="CreditInputDto"/> containing all loan parameters and fees.</param>
+    /// <param name="serviceInput">An instance of <see cref="CreditServiceInputDto"/> containing all loan parameters and fees.</param>
     /// <param name="totalInitialFees">The total initial fees paid upfront.</param>
     /// <returns>A <see cref="CreditResultDto"/> containing the amortization results.</returns>
     CreditResultDto GenerateAmortizationSchedule(
@@ -28,6 +28,6 @@ interface IAmortizationSchedule
         BigDecimal annualInterestRate,
         BigDecimal monthlyPaymentPromo,
         BigDecimal monthlyPaymentNormal,
-        CreditInputDto input,
+        CreditServiceInputDto serviceInput,
         BigDecimal totalInitialFees);
 }

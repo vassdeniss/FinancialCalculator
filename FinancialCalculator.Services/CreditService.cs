@@ -14,66 +14,66 @@ public class CreditService : ICreditService
     private readonly IAmortizationSchedule _amortizationSchedule = new AmortizationSchedule();
 
     /// <inheritdoc />
-    public CreditResultDto CalculateCreditResult(CreditInputDto input)
+    public CreditResultDto CalculateCreditResult(CreditServiceInputDto serviceInput)
     {
-        if (input.LoanAmount.CompareTo(new BigDecimal(MinLoanAmount)) < 0)
+        if (serviceInput.LoanAmount.CompareTo(new BigDecimal(MIN_LOAN_AMOUNT)) < 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(input.LoanAmount), ErrorLoanAmount);
+            throw new ArgumentOutOfRangeException(nameof(serviceInput.LoanAmount), ERROR_LOAN_AMOUNT);
         }
 
-        if (input.LoanTermInMonths < MinLoanTermInMonths 
-            || input.LoanTermInMonths > MaxLoanTermInMonths)
+        if (serviceInput.LoanTermInMonths < MIN_LOAN_TERM_IN_MONTHS 
+            || serviceInput.LoanTermInMonths > MAX_LOAN_TERM_IN_MONTHS)
         {
-            throw new ArgumentOutOfRangeException(nameof(input.LoanTermInMonths), ErrorLoanTermInMonths);
+            throw new ArgumentOutOfRangeException(nameof(serviceInput.LoanTermInMonths), ERROR_LOAN_TERM_IN_MONTHS);
         }
 
-        if (input.AnnualInterestRate.CompareTo(new BigDecimal(MinAnnualInterestRateAmount)) < 0)
+        if (serviceInput.AnnualInterestRate.CompareTo(new BigDecimal(MIN_ANNUAL_INTEREST_RATE_AMOUNT)) < 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(input.AnnualInterestRate), ErrorAnnualInterestRateAmount);
+            throw new ArgumentOutOfRangeException(nameof(serviceInput.AnnualInterestRate), ERROR_ANNUAL_INTEREST_RATE_AMOUNT);
         }
 
-        if (input.PromotionalPeriodMonths < MinPromoLoanTermInMonths ||
-            input.PromotionalPeriodMonths > MaxPromoLoanTermInMonths)
+        if (serviceInput.PromotionalPeriodMonths < MIN_PROMO_LOAN_TERM_IN_MONTHS ||
+            serviceInput.PromotionalPeriodMonths > MAX_PROMO_LOAN_TERM_IN_MONTHS)
         {
-            throw new ArgumentOutOfRangeException(nameof(input.PromotionalPeriodMonths), ErrorPromoLoanTermInMonths);
+            throw new ArgumentOutOfRangeException(nameof(serviceInput.PromotionalPeriodMonths), ERROR_PROMO_LOAN_TERM_IN_MONTHS);
         }
 
-        if (input.PromotionalPeriodMonths >= input.LoanTermInMonths)
+        if (serviceInput.PromotionalPeriodMonths >= serviceInput.LoanTermInMonths)
         {
-            throw new ArgumentOutOfRangeException(nameof(input.PromotionalPeriodMonths),
-                ErrorPromoLoanTermInMonthsTooHigh);
+            throw new ArgumentOutOfRangeException(nameof(serviceInput.PromotionalPeriodMonths),
+                ERROR_PROMO_LOAN_TERM_IN_MONTHS_TOO_HIGH);
         }
 
-        if (input.AnnualPromotionalInterestRate.CompareTo(new BigDecimal(MinAnnualPromoInterestRateAmount)) < 0)
+        if (serviceInput.AnnualPromotionalInterestRate.CompareTo(new BigDecimal(MIN_ANNUAL_PROMO_INTEREST_RATE_AMOUNT)) < 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(input.AnnualPromotionalInterestRate),
-                ErrorAnnualPromoInterestRateAmount);
+            throw new ArgumentOutOfRangeException(nameof(serviceInput.AnnualPromotionalInterestRate),
+                ERROR_ANNUAL_PROMO_INTEREST_RATE_AMOUNT);
         }
 
-        if ((input.PromotionalPeriodMonths > MinAnnualInterestRateAmount && input.AnnualPromotionalInterestRate.CompareTo(BigDecimal.Zero) == 0) ||
-            (input.PromotionalPeriodMonths == 0 &&
-             input.AnnualPromotionalInterestRate.CompareTo(new BigDecimal(MinAnnualPromoInterestRateAmount)) > 0))
+        if ((serviceInput.PromotionalPeriodMonths > MIN_ANNUAL_INTEREST_RATE_AMOUNT && serviceInput.AnnualPromotionalInterestRate.CompareTo(BigDecimal.Zero) == 0) ||
+            (serviceInput.PromotionalPeriodMonths == 0 &&
+             serviceInput.AnnualPromotionalInterestRate.CompareTo(new BigDecimal(MIN_ANNUAL_PROMO_INTEREST_RATE_AMOUNT)) > 0))
         {
-            throw new ArgumentException(ErrorPromotionalFields);
+            throw new ArgumentException(ERROR_PROMOTIONAL_FIELDS);
         }
 
-        if (input.GracePeriodMonths < MinGracePeriodMonths ||
-            input.GracePeriodMonths > MaxGracePeriodMonths)
+        if (serviceInput.GracePeriodMonths < MIN_GRACE_PERIOD_MONTHS ||
+            serviceInput.GracePeriodMonths > MAX_GRACE_PERIOD_MONTHS)
         {
-            throw new ArgumentOutOfRangeException(nameof(input.GracePeriodMonths), ErrorGracePeriodMonths);
+            throw new ArgumentOutOfRangeException(nameof(serviceInput.GracePeriodMonths), ERROR_GRACE_PERIOD_MONTHS);
         }
 
         BigDecimal totalInitialFees =
-            this._feeCalculationService.CalculateFee(input.ApplicationFee, input.ApplicationFeeType, input.LoanAmount)
-            + this._feeCalculationService.CalculateFee(input.ProcessingFee, input.ProcessingFeeType, input.LoanAmount)
-            + this._feeCalculationService.CalculateFee(input.OtherInitialFees, input.OtherInitialFeesType, input.LoanAmount);
+            this._feeCalculationService.CalculateFee(serviceInput.ApplicationFee, serviceInput.ApplicationFeeType, serviceInput.LoanAmount)
+            + this._feeCalculationService.CalculateFee(serviceInput.ProcessingFee, serviceInput.ProcessingFeeType, serviceInput.LoanAmount)
+            + this._feeCalculationService.CalculateFee(serviceInput.OtherInitialFees, serviceInput.OtherInitialFeesType, serviceInput.LoanAmount);
 
         // Adjust repayment term after grace period
-        int repaymentTerm = input.LoanTermInMonths - input.GracePeriodMonths;
+        int repaymentTerm = serviceInput.LoanTermInMonths - serviceInput.GracePeriodMonths;
 
         // Determine remaining promotional months after grace period
-        int remainingPromotionalMonths = input.PromotionalPeriodMonths > input.GracePeriodMonths
-            ? input.PromotionalPeriodMonths - input.GracePeriodMonths
+        int remainingPromotionalMonths = serviceInput.PromotionalPeriodMonths > serviceInput.GracePeriodMonths
+            ? serviceInput.PromotionalPeriodMonths - serviceInput.GracePeriodMonths
             : 0;
 
         Tuple<BigDecimal, BigDecimal> resultPayments;
@@ -82,16 +82,16 @@ public class CreditService : ICreditService
             if (remainingPromotionalMonths > 0)
             {
                 // Calculate payments with remaining promotional period
-                resultPayments = input.PaymentType switch
+                resultPayments = serviceInput.PaymentType switch
                 {
                     PaymentType.Annuity => this._paymentCalculationService.CalculateMonthlyPaymentWithPromotional(
-                        input.LoanAmount,
+                        serviceInput.LoanAmount,
                         remainingPromotionalMonths,
-                        input.AnnualPromotionalInterestRate,
-                        input.AnnualInterestRate,
+                        serviceInput.AnnualPromotionalInterestRate,
+                        serviceInput.AnnualInterestRate,
                         repaymentTerm),
 
-                    PaymentType.Decreasing => new Tuple<BigDecimal, BigDecimal>(input.LoanAmount / new BigDecimal(repaymentTerm), BigDecimal.Zero),
+                    PaymentType.Decreasing => new Tuple<BigDecimal, BigDecimal>(serviceInput.LoanAmount / new BigDecimal(repaymentTerm), BigDecimal.Zero),
 
                     _ => throw new ArgumentException("Invalid payment type.")
                 };
@@ -99,14 +99,14 @@ public class CreditService : ICreditService
             else
             {
                 // No promotional period after grace period
-                resultPayments = input.PaymentType switch
+                resultPayments = serviceInput.PaymentType switch
                 {
                     PaymentType.Annuity => this._paymentCalculationService.CalculateMonthlyPaymentWithoutPromotional(
-                        input.LoanAmount,
-                        input.AnnualInterestRate,
+                        serviceInput.LoanAmount,
+                        serviceInput.AnnualInterestRate,
                         repaymentTerm),
 
-                    PaymentType.Decreasing => new Tuple<BigDecimal, BigDecimal>(input.LoanAmount / new BigDecimal(repaymentTerm), BigDecimal.Zero),
+                    PaymentType.Decreasing => new Tuple<BigDecimal, BigDecimal>(serviceInput.LoanAmount / new BigDecimal(repaymentTerm), BigDecimal.Zero),
 
                     _ => throw new ArgumentException("Invalid payment type.")
                 };
@@ -118,15 +118,15 @@ public class CreditService : ICreditService
         }
 
         return this._amortizationSchedule.GenerateAmortizationSchedule(
-            input.LoanAmount,
-            input.LoanTermInMonths,
-            input.GracePeriodMonths,
+            serviceInput.LoanAmount,
+            serviceInput.LoanTermInMonths,
+            serviceInput.GracePeriodMonths,
             remainingPromotionalMonths,
-            input.AnnualPromotionalInterestRate,
-            input.AnnualInterestRate,
+            serviceInput.AnnualPromotionalInterestRate,
+            serviceInput.AnnualInterestRate,
             resultPayments.Item1,
             resultPayments.Item2,
-            input,
+            serviceInput,
             totalInitialFees);
     }
 }

@@ -1,5 +1,8 @@
-﻿@{
+﻿@model FinancialCalculator.Web.Dto.CreditInputDto
+
+@{
     ViewData["Title"] = "Credit Calculator";
+    bool showError = this.TempData["ShowError"] as bool? ?? false;
 }
 
 @section Styles {
@@ -16,6 +19,14 @@
         <div class="calculator-title">Кредитен калкулатор</div>
         <h4>Пресметнете месечни вноски и ГПР (годишен процент на разходите)</h4><br>
 
+        @if (showError)
+        {
+            <div>
+                <div asp-validation-summary="All" class="alert alert-danger" role="alert">
+                </div>
+            </div>   
+        }
+        
         <!-- Първите четири полета, разположени две по две -->
         <div class="field-group two-columns">
             <div class="field">
@@ -31,8 +42,8 @@
                 <label for="annualInterestRate">Лихва(%)*</label>
             </div>
             <div class="dropdown-field">
-                <input type="hidden" id="hiddenPaymentType" name="PaymentType">
-                <input type="text" id="paymentType" placeholder=" " required readonly>
+                <input type="hidden" id="hiddenPaymentType" name="PaymentType" required value="annuity">
+                <input type="text" id="paymentType" placeholder=" " value="Анюитетни вноски" readonly>
                 <label for="paymentType">Избор</label>
                 <div class="dropdown-menu" id="dropdown-menu">
                     <div data-value="annuity" data-text="Анюитетни вноски">Анюитетни вноски</div>

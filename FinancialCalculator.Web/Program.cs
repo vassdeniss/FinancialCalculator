@@ -1,10 +1,12 @@
 using FinancialCalculator.Services;
 using FinancialCalculator.Services.Contracts;
+using FinancialCalculator.Web.Profiles;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<ICreditService, CreditService>();
+builder.Services.AddAutoMapper(typeof(CreditMappingProfile));
      
 WebApplication app = builder.Build();
 

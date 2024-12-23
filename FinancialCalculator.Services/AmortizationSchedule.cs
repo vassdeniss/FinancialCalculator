@@ -25,7 +25,7 @@ class AmortizationSchedule : IAmortizationSchedule
         BigDecimal annualInterestRate,
         BigDecimal monthlyPaymentPromo,
         BigDecimal monthlyPaymentNormal,
-        CreditInputDto input,
+        CreditServiceInputDto serviceInput,
         BigDecimal totalInitialFees)
     {
         List<AmortizationEntry> schedule =
@@ -51,7 +51,7 @@ class AmortizationSchedule : IAmortizationSchedule
         BigDecimal monthlyInterestRatePromo = annualPromotionalInterestRate / new BigDecimal(100) / new BigDecimal(12);
         BigDecimal monthlyInterestRateNormal = annualInterestRate / new BigDecimal(100) / new BigDecimal(12);
         
-        BigDecimal fixedPrincipalPayment = input.PaymentType == PaymentType.Decreasing 
+        BigDecimal fixedPrincipalPayment = serviceInput.PaymentType == PaymentType.Decreasing 
             ? balance / new BigDecimal(loanTermInMonths - gracePeriodMonths) 
             : BigDecimal.Zero;
         
@@ -68,7 +68,7 @@ class AmortizationSchedule : IAmortizationSchedule
             if (month <= gracePeriodMonths)
             {
                 // Grace Period: Interest-only payments
-                interestRate = month <= input.PromotionalPeriodMonths 
+                interestRate = month <= serviceInput.PromotionalPeriodMonths 
                     ? monthlyInterestRatePromo 
                     : monthlyInterestRateNormal;
 
@@ -80,7 +80,7 @@ class AmortizationSchedule : IAmortizationSchedule
             {
                 // Repayment Period
                 int monthsSinceGrace = month - gracePeriodMonths;
-                if (input.PaymentType == PaymentType.Annuity)
+                if (serviceInput.PaymentType == PaymentType.Annuity)
                 {
                     if (monthsSinceGrace <= remainingPromotionalMonths)
                     {
@@ -105,7 +105,7 @@ class AmortizationSchedule : IAmortizationSchedule
                         monthlyPayment = principalPayment + interestPayment;
                     }
                 }
-                else if (input.PaymentType == PaymentType.Decreasing)
+                else if (serviceInput.PaymentType == PaymentType.Decreasing)
                 {
                     // Decreasing Payment Calculation
                     principalPayment = fixedPrincipalPayment;
@@ -134,12 +134,12 @@ class AmortizationSchedule : IAmortizationSchedule
             balance -= principalPayment;
 
             // Calculate fees
-            fees += this._feeCalculationService.CalculateFee(input.MonthlyManagementFee, input.MonthlyManagementFeeType, tempBalance)
-                   + this._feeCalculationService.CalculateFee(input.OtherMonthlyFees, input.OtherMonthlyFeesType, tempBalance);
+            fees += this._feeCalculationService.CalculateFee(serviceInput.MonthlyManagementFee, serviceInput.MonthlyManagementFeeType, tempBalance)
+                   + this._feeCalculationService.CalculateFee(serviceInput.OtherMonthlyFees, serviceInput.OtherMonthlyFeesType, tempBalance);
             if (month - 1 > 0 && (month - 1) % 12 == 0)
             {
-                fees += this._feeCalculationService.CalculateFee(input.AnnualManagementFee, input.AnnualManagementFeeType, tempBalance)
-                        + this._feeCalculationService.CalculateFee(input.OtherAnnualFees, input.OtherAnnualFeesType, tempBalance);
+                fees += this._feeCalculationService.CalculateFee(serviceInput.AnnualManagementFee, serviceInput.AnnualManagementFeeType, tempBalance)
+                        + this._feeCalculationService.CalculateFee(serviceInput.OtherAnnualFees, serviceInput.OtherAnnualFeesType, tempBalance);
             }
             
             totalPayments += monthlyPayment;
@@ -160,7 +160,7 @@ class AmortizationSchedule : IAmortizationSchedule
         }
 
         BigDecimal averageMonthlyPayment = totalPayments / new BigDecimal(loanTermInMonths);
-        BigDecimal apr = this.CalculateApr(input.LoanAmount, totalInitialFees, schedule);
+        BigDecimal apr = this.CalculateApr(serviceInput.LoanAmount, totalInitialFees, schedule);
 
         return new CreditResultDto
         {
