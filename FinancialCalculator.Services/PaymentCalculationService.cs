@@ -68,7 +68,7 @@ public class PaymentCalculationService : IPaymentCalculationService
         {
             BigDecimal interestPayment = balance * monthlyInterestRate;
             BigDecimal principalPayment = monthlyPayment - interestPayment;
-            balance -= principalPayment;
+            balance -= principalPayment.Round(2);
         }
 
         return balance;
