@@ -20,7 +20,7 @@ public class PaymentCalculationService : IPaymentCalculationService
         int remainingTerm = loanTermInMonths - promotionalPeriodMonths;
         BigDecimal normalMonthlyPayment = this.CalculateMonthlyPayment(remainingBalance, annualInterestRate, remainingTerm);
 
-        return new Tuple<BigDecimal, BigDecimal>(promoMonthlyPayment, normalMonthlyPayment);
+        return new Tuple<BigDecimal, BigDecimal>(promoMonthlyPayment.Round(2), normalMonthlyPayment.Round(2));
     }
     
     /// <inheritdoc />
