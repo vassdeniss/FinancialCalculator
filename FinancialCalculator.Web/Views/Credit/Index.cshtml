@@ -29,18 +29,16 @@
 
         <!-- Първите четири полета, разположени две по две -->
         <div class="field-group two-columns">
-            <!--TODO: Add max for loan amount, which is 999999999 -->
             <div class="field">
-                <input type="number" id="loanAmount" name="LoanAmount" step="0.01" min="100" required placeholder=" " oninput="validateMaxLength(this, 9)" />
+                <input type="number" id="loanAmount" name="LoanAmount" step="0.01" min="100" max="999999999" required placeholder=" " oninput="validateMaxLength(this, 9)" />
                 <label for="loanAmount">Размер на кредита*</label>
             </div>
             <div class="field">
                 <input type="number" id="loanTerm" name="LoanTermInMonths" min="1" max="960" required placeholder=" " oninput="validateMaxLength(this, 3)" />
                 <label for="loanTerm">Срок(месеци)*</label>
             </div>
-            <!--TODO: Add max for annual intrest rate, which is 9999999 -->
             <div class="field">
-                <input type="number" id="annualInterestRate" name="AnnualInterestRate" step="0.01" min="0" required placeholder=" " oninput="validateMaxLength(this, 7)"/>
+                <input type="number" id="annualInterestRate" name="AnnualInterestRate" step="0.01" min="0" max="9999999" required placeholder=" " oninput="validateMaxLength(this, 7)"/>
                 <label for="annualInterestRate">Лихва(%)*</label>
             </div>
             <div class="dropdown-field">
@@ -61,14 +59,12 @@
                 <input type="number" id="promotionalPeriod" name="PromotionalPeriodMonths" min="0" max="300" placeholder=" " oninput="validateMaxLength(this, 3)" />
                 <label for="promotionalPeriod">Промоционален период(месеци)</label>
             </div>
-            <!--TODO: Add max for annual promotion intrest rate, which is 40 -->
             <div class="field full-width">
-                <input type="number" id="annualPromotionalInterestRate" name="AnnualPromotionalInterestRate" step="0.01" min="0" placeholder=" " oninput="validateMaxLength(this, 7)"/>
+                <input type="number" id="annualPromotionalInterestRate" name="AnnualPromotionalInterestRate" step="0.01" min="0" max="40" placeholder=" " oninput="validateMaxLength(this, 7)"/>
                 <label for="annualPromotionalInterestRate">Промоционална лихва(%)</label>
             </div>
-            <!--TODO: Add max for gracePeriod, which is 300-->
             <div class="field-with-select full-width">
-                <input type="number" id="gracePeriod" name="GracePeriodMonths" min="0" placeholder=" " oninput="validateMaxLength(this, 3)"/>
+                <input type="number" id="gracePeriod" name="GracePeriodMonths" min="0" max="300" placeholder=" " oninput="validateMaxLength(this, 3)"/>
                 <label for="gracePeriod">Гратисен период(месеци)</label>
             </div>
         </div>

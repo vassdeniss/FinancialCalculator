@@ -16,7 +16,8 @@ public class CreditService : ICreditService
     /// <inheritdoc />
     public CreditResultDto CalculateCreditResult(CreditServiceInputDto serviceInput)
     {
-        if (serviceInput.LoanAmount.CompareTo(new BigDecimal(MIN_LOAN_AMOUNT)) < 0)
+        if (serviceInput.LoanAmount.CompareTo(new BigDecimal(MIN_LOAN_AMOUNT)) < 0 ||
+            serviceInput.LoanAmount.CompareTo(new BigDecimal(MAX_LOAN_AMOUNT)) > 0)
         {
             throw new ArgumentOutOfRangeException(nameof(serviceInput.LoanAmount), ERROR_LOAN_AMOUNT);
         }
@@ -27,7 +28,8 @@ public class CreditService : ICreditService
             throw new ArgumentOutOfRangeException(nameof(serviceInput.LoanTermInMonths), ERROR_LOAN_TERM_IN_MONTHS);
         }
 
-        if (serviceInput.AnnualInterestRate.CompareTo(new BigDecimal(MIN_ANNUAL_INTEREST_RATE_AMOUNT)) < 0)
+        if (serviceInput.AnnualInterestRate.CompareTo(new BigDecimal(MIN_ANNUAL_INTEREST_RATE_AMOUNT)) < 0
+            || serviceInput.AnnualInterestRate.CompareTo(new BigDecimal(MAX_ANNUAL_INTEREST_RATE_AMOUNT)) > 0)
         {
             throw new ArgumentOutOfRangeException(nameof(serviceInput.AnnualInterestRate), ERROR_ANNUAL_INTEREST_RATE_AMOUNT);
         }
@@ -44,7 +46,8 @@ public class CreditService : ICreditService
                 ERROR_PROMO_LOAN_TERM_IN_MONTHS_TOO_HIGH);
         }
 
-        if (serviceInput.AnnualPromotionalInterestRate.CompareTo(new BigDecimal(MIN_ANNUAL_PROMO_INTEREST_RATE_AMOUNT)) < 0)
+        if (serviceInput.AnnualPromotionalInterestRate.CompareTo(new BigDecimal(MIN_ANNUAL_PROMO_INTEREST_RATE_AMOUNT)) < 0
+            || serviceInput.AnnualPromotionalInterestRate.CompareTo(new BigDecimal(MAX_ANNUAL_PROMO_INTEREST_RATE_AMOUNT)) > 0)
         {
             throw new ArgumentOutOfRangeException(nameof(serviceInput.AnnualPromotionalInterestRate),
                 ERROR_ANNUAL_PROMO_INTEREST_RATE_AMOUNT);

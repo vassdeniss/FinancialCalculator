@@ -12,13 +12,16 @@ public static class CreditConstraints
     public const string ERROR_PROMO_LOAN_TERM_IN_MONTHS_TOO_HIGH = "Promotional loan month must be lower than the loan term in months.";
     
     public const int MIN_LOAN_AMOUNT = 100;
-    public const string ERROR_LOAN_AMOUNT = "Loan amount must be at least 100 BGN.";
+    public const int MAX_LOAN_AMOUNT = 999999999;
+    public const string ERROR_LOAN_AMOUNT = "Loan amount must be between 1 and 999999999 BGN.";
     
     public const int MIN_ANNUAL_INTEREST_RATE_AMOUNT = 0;
-    public const string ERROR_ANNUAL_INTEREST_RATE_AMOUNT = "Annual interest rate cannot be negative.";
+    public const int MAX_ANNUAL_INTEREST_RATE_AMOUNT = 9999999;
+    public const string ERROR_ANNUAL_INTEREST_RATE_AMOUNT = "Annual interest rate must be between 1 and 9999999%.";
     
     public const int MIN_ANNUAL_PROMO_INTEREST_RATE_AMOUNT = 0;
-    public const string ERROR_ANNUAL_PROMO_INTEREST_RATE_AMOUNT = "Annual promo interest rate cannot be negative.";
+    public const int MAX_ANNUAL_PROMO_INTEREST_RATE_AMOUNT = 40;
+    public const string ERROR_ANNUAL_PROMO_INTEREST_RATE_AMOUNT = "Annual promo interest rate must be between 1 and 40%.";
     
     public const int MIN_GRACE_PERIOD_MONTHS = 0;
     public const int MAX_GRACE_PERIOD_MONTHS = 300;
