@@ -30,7 +30,7 @@ public class PaymentCalculationService : IPaymentCalculationService
         int loanTermInMonths)
     {
         BigDecimal normalMonthlyPayment = this.CalculateMonthlyPayment(loanAmount, annualInterestRate, loanTermInMonths);
-        return new Tuple<BigDecimal, BigDecimal>(BigDecimal.Zero, normalMonthlyPayment);
+        return new Tuple<BigDecimal, BigDecimal>(BigDecimal.Zero, normalMonthlyPayment.Round(2));
     }
     
     /// <inheritdoc />

@@ -219,7 +219,7 @@ public class CalculateMonthlyPaymentWithPromotionalTests
 
 [TestFixture]
 [Category("PaymentCalculationService")]
-public class CalculateMonthlyPaymentWithoutPromotional
+public class CalculateMonthlyPaymentWithoutPromotionalTests
 {
     private PaymentCalculationService service;
 
@@ -227,5 +227,45 @@ public class CalculateMonthlyPaymentWithoutPromotional
     public void Setup()
     {
         service = new PaymentCalculationService();
+    }
+
+    [Test]
+    [TestCase("999999999", "1259.82", 960, "0.00", "1049849998.95")] // Edge case: max loan, max months, max interest rate
+    [TestCase("100", "1301.47", 960, "0.00", "108.46")] // Edge case: min loan, max months, max interest rate
+    [TestCase("100", "9999999", 1, "0.00", "833433.25")]  // Edge case: min loan, min months, max interest rate
+    [TestCase("999999999", "9999999", 1, "0.00", "8334332491665.67")] // Edge case: max loan, min months, max interest rate
+    public void CalculateMonthlyPaymentWithoutPromotional_ShouldReturnCorrectValue(
+            string loanAmountStr, string annualInterestRateStr, int loanTermInMonths,
+            string expectedPromoPaymentStr, string expectedNormalPaymentStr)
+    {
+        // Arrange
+        BigDecimal loanAmount = BigDecimal.Parse(loanAmountStr);
+        BigDecimal annualInterestRate = BigDecimal.Parse(annualInterestRateStr);
+
+        // Act
+        var result = service.CalculateMonthlyPaymentWithoutPromotional(loanAmount, annualInterestRate, loanTermInMonths);
+
+        // Assert
+        Assert.That(result.Item1, Is.EqualTo(BigDecimal.Parse(expectedPromoPaymentStr).Round(2)));
+        Assert.That(result.Item2, Is.EqualTo(BigDecimal.Parse(expectedNormalPaymentStr).Round(2)));
+    }
+
+    [Test]
+    [TestCase("999999999", 960, "0.00", "1041666.67")]
+    [TestCase("100", 960, "0.00", "0.10")]
+    [TestCase("100", 1, "0.00", "100")]
+    [TestCase("999999999", 1, "0.00", "999999999.00")]
+    public void CalculateMonthlyPaymentWithoutPromotional_ShouldReturnCorrectValue_WhenInterestRateIsZero(
+    string loanAmountStr, int loanTermInMonths, string expectedPromoPaymentStr, string expectedNormalPaymentStr)
+    {
+        // Arrange
+        BigDecimal loanAmount = BigDecimal.Parse(loanAmountStr);
+
+        // Act
+        var result = service.CalculateMonthlyPaymentWithoutPromotional(loanAmount, BigDecimal.Zero, loanTermInMonths);
+
+        // Assert
+        Assert.That(result.Item1, Is.EqualTo(BigDecimal.Parse(expectedPromoPaymentStr)));
+        Assert.That(result.Item2, Is.EqualTo(BigDecimal.Parse(expectedNormalPaymentStr)));
     }
 }
