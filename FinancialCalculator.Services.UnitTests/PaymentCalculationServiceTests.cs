@@ -157,8 +157,39 @@ public class CalculateMonthlyPaymentWithPromotionalTests
     [Test]
     [TestCase("999999999", 300, "40", "0", 960, "33333333.30", "1515151.51")]
     [TestCase("999999999", 300, "40", "2208.76", 960, "33333333.30", "1840633331.49")]
-    [TestCase("100", 300, "40", "2293.03", 960, "3.33", "191.09")]
+    [TestCase("999999999", 300, "40", "8912.21", 301, "33335057.27", "271834096.67")] //fail diff 15532.61
+    [TestCase("999999999", 300, "40", "0", 301, "33335057.27", "32258123.20")] //fail diff 1843.23
     [TestCase("100", 300, "40", "0", 960, "3.33", "0.15")]
+    [TestCase("100", 300, "40", "2293.03", 960, "3.33", "191.09")]
+    [TestCase("100", 300, "40", "8635.35", 301, "3.33", "819.61")]
+    [TestCase("100", 300, "40", "0", 301, "3.33", "100")]
+
+    [TestCase("999999999", 1, "0", "0", 960, "1041666.67", "1041666.67")]
+    [TestCase("999999999", 1, "0", "1261.67", 960, "1041666.67", "1050296465.96")]
+    [TestCase("999999999", 1, "0", "9999999", 2, "499999999.50", "4167166245832.83")]
+    [TestCase("999999999", 1, "0", "0", 2, "499999999.50", "499999999.50")]
+    [TestCase("100", 1, "0", "0", 960, "0.10", "0.10")]
+    [TestCase("100", 1, "0", "1303.39", 960, "0.1", "108.51")]
+    [TestCase("100", 1, "0", "9999999", 2, "50", "416716.62")] //fail diff 0.01
+    [TestCase("100", 1, "0", "0", 2, "50", "50")]
+
+    [TestCase("999999999", 300, "0", "0", 960, "1041666.67", "1041666.66")]
+    [TestCase("999999999", 300, "0", "2210.70", 960, "1041666.67", "1266546871.32")]
+    [TestCase("999999999", 300, "0", "1505.01", 301, "3322259.13", "7488955.44")]
+    [TestCase("999999999", 300, "0", "0", 301, "3322259.13", "3322260.00")]
+    [TestCase("100", 300, "0", "0", 960, "0.10", "0.11")]
+    [TestCase("100", 300, "0", "2294.92", 960, "0.10", "133.87")]
+    [TestCase("100", 300, "0", "1493.25", 301, "0.33", "2.24")]
+    [TestCase("100", 300, "0", "0", 301, "0.33", "1")]
+
+    [TestCase("999999999", 1, "40", "0", 960, "33333333.30", "1042752.87")]
+    [TestCase("999999999", 1, "40", "1261.67", 960, "33333333.30", "1051391665.62")]
+    [TestCase("999999999", 1, "40", "9999999", 2, "525136611.50", "4235480446556.87")]
+    [TestCase("999999999", 1, "40", "0", 2, "525136611.50", "508196720.80")]
+    [TestCase("100", 1, "40", "0", 960, "3.33", "0.10")]
+    [TestCase("100", 1, "40", "1303.39", 960, "3.33", "108.62")]
+    [TestCase("100", 1, "40", "9999999", 2, "52.51", "423550.78")]
+    [TestCase("100", 1, "40", "0", 2, "52.51", "50.82")]
     public void CalculateMonthlyPaymentWithPromotional_ShouldReturnCorrectValues_WhenPromotionIsAtMax(string loanAmountStr, int promotionalPeriodMonths, string annualPromotionalInterestRateStr, string annualInterestRateStr, int loanTermInMonths, string expectedPromoMonthlyPaymentStr, string expectedNormalMonthlyPaymentStr)
     {
         // Arrange
@@ -179,8 +210,8 @@ public class CalculateMonthlyPaymentWithPromotionalTests
         // Assert
         Assert.Multiple(() =>
         {
-            Assert.That(result.Item1, Is.EqualTo(expectedPromoMonthlyPayment));
-            Assert.That(result.Item2, Is.EqualTo(expectedNormalMonthlyPayment));
+            Assert.That(result.Item1, Is.EqualTo(expectedPromoMonthlyPayment.Round(2)));
+            Assert.That(result.Item2, Is.EqualTo(expectedNormalMonthlyPayment.Round(2)));
         });
 
     }
