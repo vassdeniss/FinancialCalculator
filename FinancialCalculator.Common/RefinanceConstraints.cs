@@ -15,7 +15,6 @@ public static class RefinanceConstraints
     public const string ERROR_ANNUAL_INTEREST_RATE_AMOUNT = "Annual interest rate must be between 1 and 99%.";
 
     public const int MIN_CONTRIBUTIONS_MADE = 1;
-    // TODO: check if exceed loan term
     public const string ERROR_CONTRIBUTIONS_MADE = "Contibutions must be a positive number.";
     public const string ERROR_CONTRIBUTIONS_MADE_TOO_HIGH = "Contibutions must be lower than the loan term in months.";
     
