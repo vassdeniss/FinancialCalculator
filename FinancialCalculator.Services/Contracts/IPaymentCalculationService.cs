@@ -90,4 +90,19 @@ interface IPaymentCalculationService
         BigDecimal annualInterestRate, 
         int payments,
         BigDecimal monthlyPayment);
+    
+    /// <summary>
+    /// Calculates the remaining principal after a certain number of 
+    /// installments have already been paid on a standard amortized loan.
+    /// </summary>
+    /// <param name="loanAmount">The original loan amount.</param>
+    /// <param name="annualInterestRate">The annual interest rate in percent.</param>
+    /// <param name="payments">The total number of months of the loan term.</param>
+    /// <param name="paymentsMade">The number of payments that have already been made.</param>
+    /// <returns>The current outstanding principal.</returns>
+    BigDecimal CalculateRemainingRefinanceBalance(
+        BigDecimal loanAmount, 
+        BigDecimal annualInterestRate, 
+        int payments,
+        int paymentsMade);
 }

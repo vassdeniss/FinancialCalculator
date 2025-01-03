@@ -73,4 +73,45 @@ public class PaymentCalculationService : IPaymentCalculationService
 
         return balance;
     }
+    
+    /// <inheritdoc />
+    public BigDecimal CalculateRemainingRefinanceBalance(
+        BigDecimal loanAmount, 
+        BigDecimal annualInterestRate, 
+        int payments,
+        int paymentsMade)
+    {
+        // Fully paid
+        if (paymentsMade >= payments)
+        {
+            return BigDecimal.Zero;
+        }
+        
+        // Get the full monthly payment for the entire original term
+        BigDecimal payment = this.CalculateMonthlyPayment(loanAmount, annualInterestRate, payments);
+        
+        BigDecimal monthlyInterestRate = annualInterestRate / new BigDecimal(100) / new BigDecimal(12);
+        int remainingMonths = payments - paymentsMade;
+        
+        // Remaining principal formula
+        //   = Payment * (1 - (1 + i)^(-remainingMonths)) / i
+        if (monthlyInterestRate == BigDecimal.Zero)
+        {
+            // If there's no interest, remaining principal is simply 
+            // the fraction of principal not yet covered 
+            // (assuming equal monthly payments).
+            BigDecimal paidSoFar = payment * new BigDecimal(paymentsMade);
+            BigDecimal leftover = loanAmount - paidSoFar;
+            return leftover < BigDecimal.Zero ? BigDecimal.Zero : leftover;
+        }
+        
+        BigDecimal num = BigDecimal.One + monthlyInterestRate;
+        BigDecimal positivePower = num.Power(new BigInteger(remainingMonths));
+        BigDecimal fraction = BigDecimal.One / positivePower; 
+        BigDecimal expression = BigDecimal.One - fraction;
+        
+        BigDecimal remainingPrincipal = payment * expression / monthlyInterestRate;
+
+        return remainingPrincipal;
+    }
 }
