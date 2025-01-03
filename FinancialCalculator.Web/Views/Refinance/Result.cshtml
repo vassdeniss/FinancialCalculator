@@ -1,6 +1,83 @@
-﻿@{
+﻿@model RefinanceResult
+
+@{
     ViewBag.Title = "Refinance Results";
     Layout = null;
 }
 
-<h1>Refinance Results</h1>
+<style>
+    table {
+        border-collapse: collapse;
+        margin: 20px auto;
+        width: 80%;
+    }
+    th, td {
+        border: 1px solid #cccccc;
+        padding: 8px;
+        text-align: center;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    h2 {
+        text-align: center;
+        margin-top: 20px;
+    }
+    .message {
+        margin: 20px auto;
+        width: 80%;
+        text-align: center;
+        font-weight: bold;
+    }
+</style>
+
+<h2>Refinance Result</h2>
+<table>
+    <thead>
+        <tr>
+            <th style="width: 25%;">Category</th>
+            <th style="width: 25%;">Current Credit</th>
+            <th style="width: 25%;">New Loan</th>
+            <th style="width: 25%;">+ / - (Savings)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Interest</td>
+            <td>@(Model.CurrentAnnualInterestRate + "%")</td>
+            <td>@(Model.NewAnnualInterestRate + "%")</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Loan terms</td>
+            <td>@Model.LoanTerm</td>
+            <td>@Model.NewLoanTerm</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Fees</td>
+            <td>@Model.CurrentEarlyRepaymentFee (Early Repayment Fee)</td>
+            <td>@Model.NewInitialFees (Initial Fees)</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Monthly Installment</td>
+            <td>@Model.CurrentMonthlyInstallment</td>
+            <td>@Model.NewMonthlyInstallment</td>
+            <td>
+                @(Model.CurrentMonthlyInstallment - Model.NewMonthlyInstallment)
+            </td>
+        </tr>
+        <tr>
+            <td>Total Paid</td>
+            <td>@Model.CurrentTotalPaid</td>
+            <td>@Model.NewTotalPaid</td>
+            <td>
+                @(Model.CurrentTotalPaid - Model.NewTotalPaid)
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div class="message">
+    @Model.Message
+</div>
