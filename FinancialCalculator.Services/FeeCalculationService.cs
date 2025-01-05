@@ -4,7 +4,7 @@ using FinancialCalculator.Services.Contracts;
 
 namespace FinancialCalculator.Services;
 
-class FeeCalculationService : IFeeCalculationService
+public class FeeCalculationService : IFeeCalculationService
 {
     /// <inheritdoc />
     public BigDecimal CalculateFee(BigDecimal feeValue, FeeType feeType, BigDecimal loanAmount)
