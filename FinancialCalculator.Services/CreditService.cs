@@ -52,7 +52,7 @@ public class CreditService : ICreditService
             throw new ArgumentOutOfRangeException(nameof(serviceInput.AnnualPromotionalInterestRate),
                 ERROR_ANNUAL_PROMO_INTEREST_RATE_AMOUNT);
         }
-
+        ///////////////////////////////////////////////////////////////////////////
         if ((serviceInput.PromotionalPeriodMonths > MIN_ANNUAL_INTEREST_RATE_AMOUNT && serviceInput.AnnualPromotionalInterestRate.CompareTo(BigDecimal.Zero) == 0) ||
             (serviceInput.PromotionalPeriodMonths == 0 &&
              serviceInput.AnnualPromotionalInterestRate.CompareTo(new BigDecimal(MIN_ANNUAL_PROMO_INTEREST_RATE_AMOUNT)) > 0))

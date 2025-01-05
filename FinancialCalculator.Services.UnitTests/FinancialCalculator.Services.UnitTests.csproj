@@ -18,6 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\FinancialCalculator.Common\FinancialCalculator.Common.csproj" />
       <ProjectReference Include="..\FinancialCalculator.Services\FinancialCalculator.Services.csproj" />
       <ProjectReference Include="..\FinancialCalculator.Web\FinancialCalculator.Web.csproj" />
     </ItemGroup>
