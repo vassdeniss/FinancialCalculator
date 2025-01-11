@@ -618,4 +618,59 @@ public readonly struct BigDecimal:
 		}
 	}
 
+    public BigDecimal BankersRounding(BigInteger decimals)
+    {
+        if (decimals < 0)
+            throw new ArgumentOutOfRangeException(nameof(decimals));
+
+        if (_decimalSeparatorIndexFromEnd == decimals)
+            return this;
+
+        if (_decimalSeparatorIndexFromEnd < decimals)
+        {
+            // Adding trailing zeros
+            BigInteger diff = decimals - _decimalSeparatorIndexFromEnd;
+            BigInteger multiplier = BigInteger.One;
+            for (BigInteger i = 0; i < diff; i++)
+                multiplier *= 10;
+
+            var newRaw = _rawValue * multiplier;
+            if (_isNegative)
+                newRaw = -newRaw;
+
+            return new BigDecimal(newRaw, decimals);
+        }
+        else
+        {
+            // Rounding to fewer decimals
+            BigInteger diff = _decimalSeparatorIndexFromEnd - decimals;
+            BigInteger divisor = BigInteger.One;
+            for (BigInteger i = 0; i < diff; i++)
+                divisor *= 10;
+
+            BigInteger truncated = _rawValue / divisor;
+            BigInteger remainder = _rawValue % divisor;
+
+            // "Round half-to-even" rule
+            BigInteger midpoint = divisor / 2;
+            if (remainder > midpoint || (remainder == midpoint && (truncated % 2 != 0)))
+                truncated += 1;
+
+            if (_isNegative)
+                truncated = -truncated;
+
+            return new BigDecimal(truncated, decimals);
+        }
+    }
+
+    public bool Within(BigDecimal other, BigDecimal tolerance)
+    {
+        BigDecimal difference = this - other;
+        return difference.Abs() <= tolerance;
+    }
+
+    public BigDecimal Abs()
+    {
+        return _isNegative ? new BigDecimal(-_rawValue, _decimalSeparatorIndexFromEnd) : this;
+    }
 }

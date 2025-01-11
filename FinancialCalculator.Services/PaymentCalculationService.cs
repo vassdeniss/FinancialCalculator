@@ -14,13 +14,13 @@ public class PaymentCalculationService : IPaymentCalculationService
         BigDecimal annualInterestRate, 
         int loanTermInMonths)
     {
-        BigDecimal promoMonthlyPayment = this.CalculateMonthlyPayment(loanAmount, annualPromotionalInterestRate, loanTermInMonths);
+        BigDecimal promoMonthlyPayment = this.CalculateMonthlyPayment(loanAmount, annualPromotionalInterestRate, loanTermInMonths).BankersRounding(2);
         
-        BigDecimal remainingBalance = this.CalculateRemainingBalance(loanAmount, annualPromotionalInterestRate, promotionalPeriodMonths, promoMonthlyPayment);
+        BigDecimal remainingBalance = this.CalculateRemainingBalance(loanAmount, annualPromotionalInterestRate, promotionalPeriodMonths, promoMonthlyPayment).BankersRounding(2);
         int remainingTerm = loanTermInMonths - promotionalPeriodMonths;
-        BigDecimal normalMonthlyPayment = this.CalculateMonthlyPayment(remainingBalance, annualInterestRate, remainingTerm);
+        BigDecimal normalMonthlyPayment = this.CalculateMonthlyPayment(remainingBalance, annualInterestRate, remainingTerm).BankersRounding(2);
 
-        return new Tuple<BigDecimal, BigDecimal>(promoMonthlyPayment.Round(2), normalMonthlyPayment.Round(2));
+        return new Tuple<BigDecimal, BigDecimal>(promoMonthlyPayment.BankersRounding(2), normalMonthlyPayment.BankersRounding(2));
     }
     
     /// <inheritdoc />
@@ -30,7 +30,7 @@ public class PaymentCalculationService : IPaymentCalculationService
         int loanTermInMonths)
     {
         BigDecimal normalMonthlyPayment = this.CalculateMonthlyPayment(loanAmount, annualInterestRate, loanTermInMonths);
-        return new Tuple<BigDecimal, BigDecimal>(BigDecimal.Zero, normalMonthlyPayment.Round(2));
+        return new Tuple<BigDecimal, BigDecimal>(BigDecimal.Zero, normalMonthlyPayment.BankersRounding(2));
     }
     
     /// <inheritdoc />
@@ -51,7 +51,7 @@ public class PaymentCalculationService : IPaymentCalculationService
         BigDecimal numerator = loanAmount * monthlyInterestRate * compoundInterestFactor;
         BigDecimal denominator = compoundInterestFactor - BigDecimal.One;
 
-        return numerator / denominator;
+        return (numerator / denominator).BankersRounding(2);
     }
 
     /// <inheritdoc />
@@ -66,12 +66,12 @@ public class PaymentCalculationService : IPaymentCalculationService
         BigDecimal balance = loanAmount;
         for (int i = 0; i < payments; i++)
         {
-            BigDecimal interestPayment = balance * monthlyInterestRate;
+            BigDecimal interestPayment = (balance * monthlyInterestRate).BankersRounding(2);
             BigDecimal principalPayment = monthlyPayment - interestPayment;
-            balance -= principalPayment.Round(2);
+            balance -= principalPayment;
         }
 
-        return balance;
+        return balance.BankersRounding(2);
     }
     
     /// <inheritdoc />
