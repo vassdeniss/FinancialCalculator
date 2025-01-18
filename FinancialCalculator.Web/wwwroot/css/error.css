@@ -1,0 +1,42 @@
+﻿.error-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin: 1rem;
+}
+
+h1 {
+    font-size: 64px;
+    color: #ff6b6b;
+}
+
+p {
+    font-size: 20px;
+    color: #555;
+}
+
+a {
+    margin-top: 20px;
+    display: inline-block;
+    text-decoration: none;
+    background-color: #006e6e;
+    color: white;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+a:hover {
+    background-color: #0056b3;
+}
+
+.animation {
+    margin-top: 20px;
+    width: 300px;
+    height: 300px;
+    background: url('../error.jpg') no-repeat center;
+    background-size: contain;
+}
