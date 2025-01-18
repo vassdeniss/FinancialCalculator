@@ -25,7 +25,7 @@ public static class CreditConstraints
     
     public const int MIN_GRACE_PERIOD_MONTHS = 0;
     public const int MAX_GRACE_PERIOD_MONTHS = 300;
-    public const string ERROR_GRACE_PERIOD_MONTHS = $"Grace period months have to be between 0 and 300.";
+    public const string ERROR_GRACE_PERIOD_MONTHS = "Grace period months have to be between 0 and 300.";
     
     public const string ERROR_PROMOTIONAL_FIELDS = "Both promotional fields need to be higher than 0 if used.";
 }

@@ -30,25 +30,25 @@
         
         <div class="input-group-wrapper">
             <div class="input-group">
-                <input type="number" id="loanAmount" name="LoanAmount" step="1" min="1" max="999999999" required placeholder=" " />
+                <input type="text" id="loanAmount" name="LoanAmount" required placeholder=" " />
                 <label for="loanAmount">Размер на кредита*</label>
             </div>
             <div class="input-group">
-                <input type="number" id="annualInterestRate" name="AnnualInterestRate" step="1" min="1" max="99" required placeholder=" " />
+                <input type="text" id="annualInterestRate" name="AnnualInterestRate" required placeholder=" " />
                 <label for="annualInterestRate">Лихва(%)*</label>
             </div>
             <div class="input-group">
-                <input type="text" id="loanTerm" name="LoanTermInMonths" min="1" max="999" required placeholder=" " />
+                <input type="text" id="loanTerm" name="LoanTermInMonths" required placeholder=" " />
                 <label for="loanTerm">Срок на кредита(месеци)*</label>
             </div>
         </div>
         <div class="input-group-wrapper">
             <div class="input-group">
-                <input type="number" id="contributionsMade" name="ContributionsMade" step="1" min="1" required placeholder=" " />
+                <input type="text" id="contributionsMade" name="ContributionsMade" required placeholder=" " />
                 <label for="contributionsMade">Брой на направените вноски</label>
             </div>
             <div class="input-group">
-                <input type="text" id="earlyRepaymentFee" name="EarlyRepaymentFee" step="1" min="0" max="99" required placeholder=" " />
+                <input type="text" id="earlyRepaymentFee" name="EarlyRepaymentFee" required placeholder=" " />
                 <label for="earlyRepaymentFee">Такса за предсрочно погасяване(%)*</label>
             </div>
         </div>
@@ -57,15 +57,15 @@
         </div>
         <div class="additional-fields" id="additionalFields">
             <div class="input-group">
-                <input type="number" id="newAnnualInterestRate" name="NewAnnualInterestRate" step="1" min="1" max="99" required placeholder=" " />
+                <input type="text" id="newAnnualInterestRate" name="NewAnnualInterestRate" required placeholder=" " />
                 <label for="newAnnualInterestRate">Лихва(%)*</label>
             </div>
             <div class="input-group">
-                <input type="number" id="initialFee" name="InitialFee" step="1" min="0" max="999999999" required placeholder=" " />
+                <input type="text" id="initialFee" name="InitialFee" required placeholder=" " />
                 <label for="initialFee">Първоначални такси(%)*</label>
             </div>
             <div class="input-group">
-                <input type="number" id="initialFeeCurrency" name="InitialFeeCurrency" step="1" min="0" max="999999999" required placeholder=" " />
+                <input type="text" id="initialFeeCurrency" name="InitialFeeCurrency" required placeholder=" " />
                 <label for="initialFeeCurrency">Първоначални такси(валута)*</label>
             </div>
         </div>
@@ -73,8 +73,3 @@
         <button type="submit" class="calculate-button">Изчисли</button>
     </form>
 </section>
-@* *@
-@* <h1>Refinance Calculator</h1> *@
-@* <h4>Calculate whether refinancing your debts is profitable</h4> *@
-@* <form method="post" asp-action="Calculate"> *@
-@* </form> *@

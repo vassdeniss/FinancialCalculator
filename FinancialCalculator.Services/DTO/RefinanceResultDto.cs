@@ -4,15 +4,15 @@ namespace FinancialCalculator.Services.DTO;
 
 public class RefinanceResultDto
 {
-    public BigDecimal CurrentMonthlyInstallment { get; set; }
-    public BigDecimal CurrentTotalPaid { get; set; }
-    public BigDecimal CurrentEarlyRepaymentFee { get; set; }
+    public BigDecimal CurrentMonthlyInstallment { get; init; }
+    public BigDecimal CurrentTotalPaid { get; init; }
+    public BigDecimal CurrentEarlyRepaymentFee { get; init; }
 
-    public BigDecimal NewMonthlyInstallment { get; set; }
-    public BigDecimal NewTotalPaid { get; set; }
-    public BigDecimal NewInitialFees { get; set; }
+    public BigDecimal NewMonthlyInstallment { get; init; }
+    public BigDecimal NewTotalPaid { get; init; }
+    public BigDecimal NewInitialFees { get; init; }
 
-    public BigDecimal SavingsDifference { get; set; }
+    public BigDecimal SavingsDifference { get; init; }
 
-    public string Message { get; set; } = null!;
+    public string Message { get; init; } = null!;
 }

@@ -30,15 +30,15 @@
         <!-- Първите четири полета, разположени две по две -->
         <div class="field-group two-columns">
             <div class="field">
-                <input type="number" id="loanAmount" name="LoanAmount" step="0.01" min="100" max="999999999" required placeholder=" " oninput="validateMaxLength(this, 9)" />
+                <input type="text" id="loanAmount" name="LoanAmount" required placeholder=" " oninput="validate(this, 9)" />
                 <label for="loanAmount">Размер на кредита*</label>
             </div>
             <div class="field">
-                <input type="number" id="loanTerm" name="LoanTermInMonths" min="1" max="960" required placeholder=" " oninput="validateMaxLength(this, 3)" />
+                <input type="text" id="loanTerm" name="LoanTermInMonths" required placeholder=" " oninput="validate(this, 3)" />
                 <label for="loanTerm">Срок(месеци)*</label>
             </div>
             <div class="field">
-                <input type="number" id="annualInterestRate" name="AnnualInterestRate" step="0.01" min="0" max="9999999" required placeholder=" " oninput="validateMaxLength(this, 7)"/>
+                <input type="text" id="annualInterestRate" name="AnnualInterestRate" required placeholder=" " oninput="validate(this, 7)"/>
                 <label for="annualInterestRate">Лихва(%)*</label>
             </div>
             <div class="dropdown-field">
@@ -56,15 +56,15 @@
         <span class="toggle-btn" onclick="toggleFields('group2')">▼ Промоционален период(месеци)</span>
         <div id="group2" class="field-group hidden">
             <div class="field full-width">
-                <input type="number" id="promotionalPeriod" name="PromotionalPeriodMonths" min="0" max="300" placeholder=" " oninput="validateMaxLength(this, 3)" />
+                <input type="text" id="promotionalPeriod" name="PromotionalPeriodMonths" placeholder=" " oninput="validate(this, 3)" />
                 <label for="promotionalPeriod">Промоционален период(месеци)</label>
             </div>
             <div class="field full-width">
-                <input type="number" id="annualPromotionalInterestRate" name="AnnualPromotionalInterestRate" step="0.01" min="0" max="40" placeholder=" " oninput="validateMaxLength(this, 7)"/>
+                <input type="text" id="annualPromotionalInterestRate" name="AnnualPromotionalInterestRate" placeholder=" " oninput="validate(this, 7)"/>
                 <label for="annualPromotionalInterestRate">Промоционална лихва(%)</label>
             </div>
             <div class="field-with-select full-width">
-                <input type="number" id="gracePeriod" name="GracePeriodMonths" min="0" max="300" placeholder=" " oninput="validateMaxLength(this, 3)"/>
+                <input type="text" id="gracePeriod" name="GracePeriodMonths" placeholder=" " oninput="validate(this, 3)"/>
                 <label for="gracePeriod">Гратисен период(месеци)</label>
             </div>
         </div>
@@ -76,7 +76,7 @@
             </div>
             <!-- Три вертикални полета -->
             <div class="field-with-select full-width">
-                <input type="number" id="applicationFee" name="ApplicationFee" step="0.01" min="0" placeholder=" " />
+                <input type="text" id="applicationFee" name="ApplicationFee" placeholder=" " />
                 <label for="applicationFee">Такса кандидатстване</label>
                 <select id="applicationFeeType" name="ApplicationFeeType">
                     <option value="Currency">Валута</option>
@@ -84,7 +84,7 @@
                 </select>
             </div>
             <div class="field-with-select full-width">
-                <input type="number" id="processingFee" name="ProcessingFee" step="0.01" min="0" placeholder=" " />
+                <input type="text" id="processingFee" name="ProcessingFee" placeholder=" " />
                 <label for="processingFee">Такса обработка</label>
                 <select id="processingFeeType" name="ProcessingFeeType">
                     <option value="Currency">Валута</option>
@@ -92,7 +92,7 @@
                 </select>
             </div>
             <div class="field-with-select full-width">
-                <input type="number" id="otherInitialFees" name="OtherInitialFees" step="0.01" min="0" placeholder=" " />
+                <input type="text" id="otherInitialFees" name="OtherInitialFees" placeholder=" " />
                 <label for="otherInitialFees">Други такси</label>
                 <select id="otherInitialFeesType" name="OtherInitialFeesType">
                     <option value="Currency">Валута</option>
@@ -105,7 +105,7 @@
             </div>
             <!-- Две по две полета -->
             <div class="field-with-select">
-                <input type="number" id="annualManagementFee" name="AnnualManagementFee" step="0.01" min="0" placeholder=" " />
+                <input type="text" id="annualManagementFee" name="AnnualManagementFee" placeholder=" " />
                 <label for="annualManagementFee">Годишна такса управление</label>
                 <select id="annualManagementFeeType" name="AnnualManagementFeeType">
                     <option value="Currency">Валута</option>
@@ -113,7 +113,7 @@
                 </select>
             </div>
             <div class="field-with-select">
-                <input type="number" id="otherAnnualFees" name="OtherAnnualFees" step="0.01" min="0" placeholder=" " />
+                <input type="text" id="otherAnnualFees" name="OtherAnnualFees" placeholder=" " />
                 <label for="otherAnnualFees">Други годишни такси</label>
                 <select id="otherAnnualFeesType" name="OtherAnnualFeesType">
                     <option value="Currency">Валута</option>
@@ -124,7 +124,7 @@
                 <div class="full-width"><p style="font-size: 16px; font-weight: bold;">Месечни такси</p></div>
             </div>
             <div class="field-with-select">
-                <input type="number" id="monthlyManagementFee" name="MonthlyManagementFee" step="0.01" min="0" placeholder=" " />
+                <input type="text" id="monthlyManagementFee" name="MonthlyManagementFee" placeholder=" " />
                 <label for="monthlyManagementFee">Месечна такса управление</label>
                 <select id="monthlyManagementFeeType" name="MonthlyManagementFeeType">
                     <option value="Currency">Валута</option>
@@ -132,7 +132,7 @@
                 </select>
             </div>
             <div class="field-with-select">
-                <input ttype="number" id="otherMonthlyFees" name="OtherMonthlyFees" step="0.01" min="0" placeholder=" " />
+                <input ttype="text" id="otherMonthlyFees" name="OtherMonthlyFees" placeholder=" " />
                 <label for="otherMonthlyFees">Други месечни такси</label>
                 <select id="otherMonthlyFeesType" name="OtherMonthlyFeesType">
                     <option value="Currency">Валута</option>
