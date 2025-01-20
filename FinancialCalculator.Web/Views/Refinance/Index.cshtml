@@ -30,15 +30,15 @@
         
         <div class="input-group-wrapper">
             <div class="input-group">
-                <input type="text" id="loanAmount" name="LoanAmount" required placeholder=" " />
+                <input type="text" id="loanAmount" name="LoanAmount" required placeholder=" " oninput="validate(this, 9)" />
                 <label for="loanAmount">Размер на кредита*</label>
             </div>
             <div class="input-group">
-                <input type="text" id="annualInterestRate" name="AnnualInterestRate" required placeholder=" " />
+                <input type="text" id="annualInterestRate" name="AnnualInterestRate" required placeholder=" " oninput="validate(this, 2)" />
                 <label for="annualInterestRate">Лихва(%)*</label>
             </div>
             <div class="input-group">
-                <input type="text" id="loanTerm" name="LoanTermInMonths" required placeholder=" " />
+                <input type="text" id="loanTerm" name="LoanTermInMonths" required placeholder=" " oninput="validate(this, 3)" />
                 <label for="loanTerm">Срок на кредита(месеци)*</label>
             </div>
         </div>
@@ -48,7 +48,7 @@
                 <label for="contributionsMade">Брой на направените вноски</label>
             </div>
             <div class="input-group">
-                <input type="text" id="earlyRepaymentFee" name="EarlyRepaymentFee" required placeholder=" " />
+                <input type="text" id="earlyRepaymentFee" name="EarlyRepaymentFee" required placeholder=" " oninput="validate(this, 2)" />
                 <label for="earlyRepaymentFee">Такса за предсрочно погасяване(%)*</label>
             </div>
         </div>
