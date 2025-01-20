@@ -251,7 +251,6 @@ class AmortizationSchedule : IAmortizationSchedule
         BigDecimal lowerBound = BigDecimal.Zero; // Lower bound of the interest rate
         BigDecimal upperBound = BigDecimal.One; // Upper bound (100% monthly rate is unrealistically high)
         BigDecimal tolerance = BigDecimal.Parse("0.000000001"); // Desired precision
-        BigDecimal internalRateOfReturn = BigDecimal.Zero; // Internal Rate of Return (monthly rate)
 
         while (upperBound - lowerBound > tolerance)
         {
@@ -264,7 +263,7 @@ class AmortizationSchedule : IAmortizationSchedule
         }
 
         // The IRR is the rate where NPV is zero
-        internalRateOfReturn = (lowerBound + upperBound) / BigDecimal.Two;
+        BigDecimal internalRateOfReturn = (lowerBound + upperBound) / BigDecimal.Two;
 
         // Convert monthly rate to annual percentage rate using compound interest
         BigDecimal apr = ((BigDecimal.One + internalRateOfReturn).Power(new BigInteger(12)) - BigDecimal.One) * new BigDecimal(100);

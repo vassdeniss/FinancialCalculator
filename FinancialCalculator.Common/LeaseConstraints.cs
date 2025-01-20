@@ -1,6 +1,6 @@
 ﻿namespace FinancialCalculator.Common;
 
-public class LeasingConstraints
+public class LeaseConstraints
 {
     public const int MIN_PRICE = 0;
     public const int MAX_PRICE = 999999999;
