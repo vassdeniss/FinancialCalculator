@@ -1,0 +1,59 @@
+﻿@model FinancialCalculator.Web.Dto.LeaseInputDto
+
+@{
+    ViewData["Title"] = "Leasing Calculator";
+    bool showError = this.TempData["ShowError"] as bool? ?? false;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/leasing.css" />
+}
+
+<section>
+    <form method="post" asp-action="Calculate" class="calculator-container">
+        <h2>Лизингов калкулатор</h2><br />
+
+        @if (showError)
+        {
+            <div>
+                <div asp-validation-summary="All" class="alert alert-danger" role="alert">
+                </div>
+            </div>
+        }
+        
+        <div class="input-group-wrapper">
+            <div class="input-group">
+                <input type="text" id="price" name="Price" required placeholder=" " oninput="validate(this, 9)" style="padding: 20px;">
+                <label for="price">Цена на стока с ДДС*</label>
+            </div>
+            <div class="input-group">
+                <input type="text" id="initialPayment" name="InitialPayment" required placeholder=" " style="padding: 20px;">
+                <label for="initialPayment">Първоначална вноска*</label>
+            </div>
+        </div>
+        <div class="input-group-wrapper">
+            <div class="input-group">
+                <input type="text" id="leaseTermInMonths" name="LeaseTermInMonths" required placeholder=" " oninput="validate(this, 3)" style="padding: 20px;">
+                <label for="leaseTermInMonths">Срок на лизинга (месеци)*</label>
+            </div>
+            <div class="input-group">
+                <input type="text" id="monthlyInstallment" name="MonthlyInstallment" required placeholder=" " oninput="validate(this, 3)" style="padding: 20px;">
+                <label for="monthlyInstallment">Месечна вноска*</label>
+            </div>
+        </div>
+        <div class="input-group-wrapper">
+            <div class="input-group" style="flex-grow: 1;">
+                <div class="input-with-select" style="position: relative;">
+                    <input type="text" id="initialProcessingFee" name="InitialProcessingFee" placeholder=" " style="width: 100%; padding-right: 50px;" />
+                    <label for="initialProcessingFee" class="field5-label">Първоначална такса за обработка</label>
+                    <select id="processingFeeType" name="ProcessingFeeType" style="position: absolute; right: 0; top: 0; height: 100%; border: none; outline: none; background: #f9f9f9; border-left: 1px solid #ddd; border-radius: 0 8px 8px 0; padding-left: 5px;">
+                        <option value="Currency">Валута</option>
+                        <option value="Percentage">%</option>
+                    </select>
+                </div>
+                <p5>*Задължителни полета</p5>
+            </div>
+            <button class="calculate-button" type="submit">Изчисли</button>
+        </div>
+    </form>
+</section>
