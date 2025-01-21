@@ -6,7 +6,7 @@ using FinancialCalculator.Services.DTO;
 
 namespace FinancialCalculator.Services;
 
-class AmortizationSchedule : IAmortizationSchedule
+public class AmortizationSchedule : IAmortizationSchedule
 {
     private readonly IFeeCalculationService _feeCalculationService;
 
@@ -224,7 +224,7 @@ class AmortizationSchedule : IAmortizationSchedule
     /// the APR.
     /// </para>
     /// </remarks>
-    private BigDecimal CalculateApr(BigDecimal loanAmount, BigDecimal totalInitialFees, List<AmortizationEntry> schedule)
+    public BigDecimal CalculateApr(BigDecimal loanAmount, BigDecimal totalInitialFees, List<AmortizationEntry> schedule)
     {
         // Define the function for Net Present Value
         Func<BigDecimal, BigDecimal> npvFunc = rate =>

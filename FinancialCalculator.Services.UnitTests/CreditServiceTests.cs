@@ -173,8 +173,16 @@ namespace FinancialCalculator.Services.UnitTests
         }
 
         [Test]
-        [TestCase(100, 45, FeeType.Percentage, 5, FeeType.Percentage, 1, FeeType.Percentage)]
-        public void FeePercentageField_ExceedsMaxPercentage_ThrowsArgumentOutOfRangeException(int loanAmount, int applicationFee, FeeType applicationFeeType, int processingFee, FeeType processingFeeType, int otherInitialFees, FeeType otherInitialFeesType)
+        [TestCase(100, 50, FeeType.Percentage, 50, FeeType.Percentage, 50, FeeType.Percentage, 50, FeeType.Percentage, 50, FeeType.Percentage, 50, FeeType.Percentage, 50, FeeType.Percentage)]
+        public void AllFeePercentageFields_ExceedMaxPercentage_ThrowsArgumentOutOfRangeException(
+     int loanAmount,
+     int applicationFee, FeeType applicationFeeType,
+     int processingFee, FeeType processingFeeType,
+     int otherInitialFees, FeeType otherInitialFeesType,
+     int monthlyManagementFee, FeeType monthlyManagementFeeType,
+     int otherMonthlyFees, FeeType otherMonthlyFeesType,
+     int annualManagementFee, FeeType annualManagementFeeType,
+     int otherAnnualFees, FeeType otherAnnualFeesType)
         {
             // Arrange
             CreditServiceInputDto serviceInput = defaultServiceInput;
@@ -185,15 +193,53 @@ namespace FinancialCalculator.Services.UnitTests
             serviceInput.ProcessingFeeType = processingFeeType;
             serviceInput.OtherInitialFees = BigDecimal.Parse(otherInitialFees.ToString());
             serviceInput.OtherInitialFeesType = otherInitialFeesType;
+            serviceInput.MonthlyManagementFee = BigDecimal.Parse(monthlyManagementFee.ToString());
+            serviceInput.MonthlyManagementFeeType = monthlyManagementFeeType;
+            serviceInput.OtherMonthlyFees = BigDecimal.Parse(otherMonthlyFees.ToString());
+            serviceInput.OtherMonthlyFeesType = otherMonthlyFeesType;
+            serviceInput.AnnualManagementFee = BigDecimal.Parse(annualManagementFee.ToString());
+            serviceInput.AnnualManagementFeeType = annualManagementFeeType;
+            serviceInput.OtherAnnualFees = BigDecimal.Parse(otherAnnualFees.ToString());
+            serviceInput.OtherAnnualFeesType = otherAnnualFeesType;
 
             // Act & Assert
             var ex = Assert.Throws<ArgumentOutOfRangeException>(() => service.CalculateCreditResult(serviceInput));
-            Assert.That(ex.Message, Is.EqualTo($"A fee field exceeds 40% of the loan amount. (Parameter '{nameof(serviceInput.ApplicationFee)}' or '{nameof(serviceInput.ProcessingFee)}' or '{nameof(serviceInput.OtherInitialFees)}')"));
+            Assert.That(ex.Message, Is.EqualTo($"A single fee field shouldn't exceed 40% of the loan amount. (Parameter '{nameof(serviceInput.ApplicationFee)}' or '{nameof(serviceInput.ProcessingFee)}' or '{nameof(serviceInput.OtherInitialFees)}' or '{nameof(serviceInput.MonthlyManagementFee)}' or '{nameof(serviceInput.OtherMonthlyFees)}' or '{nameof(serviceInput.AnnualManagementFee)}' or '{nameof(serviceInput.OtherAnnualFees)}')"));
         }
 
         [Test]
-        [TestCase(100, 30, FeeType.Currency, 15, FeeType.Percentage, 20, FeeType.Percentage)]
-        public void TotalInitialFees_ExceedsHalfLoanAmount_ThrowsArgumentOutOfRangeException(int loanAmount, int applicationFee, FeeType applicationFeeType, int processingFee, FeeType processingFeeType, int otherInitialFees, FeeType otherInitialFeesType)
+        [TestCase(100, 200, FeeType.Currency, 15, FeeType.Currency, 30, FeeType.Currency, 2, FeeType.Currency)]
+        [TestCase(200, 5, FeeType.Currency, 300, FeeType.Currency, 5, FeeType.Currency, 9999999, FeeType.Currency)]
+        [TestCase(50, 5, FeeType.Currency, 2, FeeType.Currency, 10, FeeType.Currency, 9999999, FeeType.Currency)]
+        [TestCase(50, 5, FeeType.Currency, 2, FeeType.Currency, 10500, FeeType.Currency, 1, FeeType.Currency)]
+        public void MonthlyAndAnnualCurrencyFees_LessThanLoanAmount_ThrowsArgumentOutOfRangeException(
+    int loanAmount,
+    int monthlyManagementFee, FeeType monthlyManagementFeeType,
+    int otherMonthlyFees, FeeType otherMonthlyFeesType,
+    int annualManagementFee, FeeType annualManagementFeeType,
+    int otherAnnualFees, FeeType otherAnnualFeesType)
+        {
+            // Arrange
+            CreditServiceInputDto serviceInput = defaultServiceInput;
+            serviceInput.LoanAmount = BigDecimal.Parse(loanAmount.ToString());
+            serviceInput.MonthlyManagementFee = BigDecimal.Parse(monthlyManagementFee.ToString());
+            serviceInput.MonthlyManagementFeeType = monthlyManagementFeeType;
+            serviceInput.OtherMonthlyFees = BigDecimal.Parse(otherMonthlyFees.ToString());
+            serviceInput.OtherMonthlyFeesType = otherMonthlyFeesType;
+            serviceInput.AnnualManagementFee = BigDecimal.Parse(annualManagementFee.ToString());
+            serviceInput.AnnualManagementFeeType = annualManagementFeeType;
+            serviceInput.OtherAnnualFees = BigDecimal.Parse(otherAnnualFees.ToString());
+            serviceInput.OtherAnnualFeesType = otherAnnualFeesType;
+
+            // Act & Assert
+            var ex = Assert.Throws<ArgumentOutOfRangeException>(() => service.CalculateCreditResult(serviceInput));
+            Assert.That(ex.Message, Is.EqualTo($"Currency fields (monthly and annual fees) must be less than the loan amount. (Parameter '{nameof(serviceInput.MonthlyManagementFee)}' or '{nameof(serviceInput.OtherMonthlyFees)}' or '{nameof(serviceInput.AnnualManagementFee)}' or '{nameof(serviceInput.OtherAnnualFees)}')"));
+        }
+
+
+        [Test]
+        [TestCase(100, 30, FeeType.Currency, 45, FeeType.Currency, 30, FeeType.Currency)]
+        public void CombinedInitialFees_ExceedLoanAmount_ThrowsArgumentOutOfRangeException(int loanAmount, int applicationFee, FeeType applicationFeeType, int processingFee, FeeType processingFeeType, int otherInitialFees, FeeType otherInitialFeesType)
         {
             // Arrange
             CreditServiceInputDto serviceInput = defaultServiceInput;
@@ -207,9 +253,25 @@ namespace FinancialCalculator.Services.UnitTests
 
             // Act & Assert
             var ex = Assert.Throws<ArgumentOutOfRangeException>(() => service.CalculateCreditResult(serviceInput));
-            Assert.That(ex.Message, Is.EqualTo($"Total initial fees exceed half of the loan amount. (Parameter '{nameof(serviceInput.ApplicationFee)}' or '{nameof(serviceInput.ProcessingFee)}' or '{nameof(serviceInput.OtherInitialFees)}')"));
+            Assert.That(ex.Message, Is.EqualTo($"The combined initial fees must not exceed half of the loan amount. (Parameter '{nameof(serviceInput.ApplicationFee)}' or '{nameof(serviceInput.ProcessingFee)}' or '{nameof(serviceInput.OtherInitialFees)}')"));
         }
 
+        /*[Test]
+        [TestCase(11, 1000, "5", "100")]
+        public void AnnualFee_ThrowsException_WhenLoanTermLessThan12Months(int loanTermInMonths, int loanAmount, string annualInterestRateStr, string annualManagementFeeStr)
+        {
+            // Arrange
+            CreditServiceInputDto serviceInput = defaultServiceInput;
+            serviceInput.LoanTermInMonths = loanTermInMonths;
+            serviceInput.LoanAmount = BigDecimal.Parse(loanAmount.ToString());
+            serviceInput.AnnualInterestRate = BigDecimal.Parse(annualInterestRateStr);
+            serviceInput.AnnualManagementFee = BigDecimal.Parse(annualManagementFeeStr);
+            serviceInput.AnnualManagementFeeType = FeeType.Currency;
+
+            // Act & Assert
+            var ex = Assert.Throws<ArgumentOutOfRangeException>(() => service.CalculateCreditResult(serviceInput));
+            Assert.That(ex.Message, Is.EqualTo("Annual fees cannot be applied when the loan term is less than 12 months. (Parameter 'AnnualManagementFee')"));
+        }*/
 
         [Test]
         [TestCase(5, (PaymentType)999)]
