@@ -28,4 +28,32 @@ public static class CreditConstraints
     public const string ERROR_GRACE_PERIOD_MONTHS = "Grace period months have to be between 0 and 300.";
     
     public const string ERROR_PROMOTIONAL_FIELDS = "Both promotional fields need to be higher than 0 if used.";
+
+    public const int MIN_APPLICATION_FEE = 0;
+    public const long MAX_APPLICATION_FEE = 999999999999;
+    public const string ERROR_APPLICATION_FEE = "Application fee must to be between 0 and 999999999999 if used.";
+    
+    public const int MIN_PROCESSING_FEE = 0;
+    public const long MAX_PROCESSING_FEE = 999999999999;
+    public const string ERROR_PROCESSING_FEE = "Processing fee must be between 0 and 999999999999 if used.";
+
+    public const int MIN_OTHER_INITIAL_FEES = 0;
+    public const long MAX_OTHER_INITIAL_FEES = 999999999999;
+    public const string ERROR_OTHER_INITIAL_FEES = "Other initial fees must be between 0 and 999999999999 if used.";
+
+    public const int MIN_MONTHLY_MANAGEMENT_FEE = 0;
+    public const long MAX_MONTHLY_MANAGEMENT_FEE = 999999999999;
+    public const string ERROR_MONTHLY_MANAGEMENT_FEE = "Monthly management fee must be between 0 and 999999999999 if used.";
+
+    public const int MIN_OTHER_MONTHLY_FEES = 0;
+    public const long MAX_OTHER_MONTHLY_FEES = 999999999999;
+    public const string ERROR_OTHER_MONTHLY_FEES = "Other monthly fees must be between 0 and 999999999999 if used.";
+
+    public const int MIN_ANNUAL_MANAGEMENT_FEE = 0;
+    public const long MAX_ANNUAL_MANAGEMENT_FEE = 999999999999;
+    public const string ERROR_ANNUAL_MANAGEMENT_FEE = "Annual management fee must be between 0 and 999999999999 if used.";
+
+    public const int MIN_OTHER_ANNUAL_FEES = 0;
+    public const long MAX_OTHER_ANNUAL_FEES = 999999999999;
+    public const string ERROR_OTHER_ANNUAL_FEES = "Other annual fees must be between 0 and 999999999999 if used.";
 }

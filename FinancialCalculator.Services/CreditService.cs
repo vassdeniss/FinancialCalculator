@@ -64,6 +64,48 @@ public class CreditService : ICreditService
         {
             throw new ArgumentOutOfRangeException(nameof(serviceInput.GracePeriodMonths), ERROR_GRACE_PERIOD_MONTHS);
         }
+        
+        if (serviceInput.ApplicationFee.CompareTo(new BigDecimal(MIN_APPLICATION_FEE)) < 0 ||
+            serviceInput.ApplicationFee.CompareTo(new BigDecimal(MAX_APPLICATION_FEE)) > 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(serviceInput.ApplicationFee), ERROR_APPLICATION_FEE);
+        }
+
+        if (serviceInput.ProcessingFee.CompareTo(new BigDecimal(MIN_PROCESSING_FEE)) < 0 ||
+            serviceInput.ProcessingFee.CompareTo(new BigDecimal(MAX_PROCESSING_FEE)) > 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(serviceInput.ProcessingFee), ERROR_PROCESSING_FEE);
+        }
+
+        if (serviceInput.OtherInitialFees.CompareTo(new BigDecimal(MIN_OTHER_INITIAL_FEES)) < 0 ||
+            serviceInput.OtherInitialFees.CompareTo(new BigDecimal(MAX_OTHER_INITIAL_FEES)) > 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(serviceInput.OtherInitialFees), ERROR_OTHER_INITIAL_FEES);
+        }
+
+        if (serviceInput.MonthlyManagementFee.CompareTo(new BigDecimal(MIN_MONTHLY_MANAGEMENT_FEE)) < 0 ||
+            serviceInput.MonthlyManagementFee.CompareTo(new BigDecimal(MAX_MONTHLY_MANAGEMENT_FEE)) > 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(serviceInput.MonthlyManagementFee), ERROR_MONTHLY_MANAGEMENT_FEE);
+        }
+
+        if (serviceInput.OtherMonthlyFees.CompareTo(new BigDecimal(MIN_OTHER_MONTHLY_FEES)) < 0 ||
+            serviceInput.OtherMonthlyFees.CompareTo(new BigDecimal(MAX_OTHER_MONTHLY_FEES)) > 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(serviceInput.OtherMonthlyFees), ERROR_OTHER_MONTHLY_FEES);
+        }
+
+        if (serviceInput.AnnualManagementFee.CompareTo(new BigDecimal(MIN_ANNUAL_MANAGEMENT_FEE)) < 0 ||
+            serviceInput.AnnualManagementFee.CompareTo(new BigDecimal(MAX_ANNUAL_MANAGEMENT_FEE)) > 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(serviceInput.AnnualManagementFee), ERROR_ANNUAL_MANAGEMENT_FEE);
+        }
+
+        if (serviceInput.OtherAnnualFees.CompareTo(new BigDecimal(MIN_OTHER_ANNUAL_FEES)) < 0 ||
+            serviceInput.OtherAnnualFees.CompareTo(new BigDecimal(MAX_OTHER_ANNUAL_FEES)) > 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(serviceInput.OtherAnnualFees), ERROR_OTHER_ANNUAL_FEES);
+        }
 
         BigDecimal totalInitialFees =
             this._feeCalculationService.CalculateFee(serviceInput.ApplicationFee, serviceInput.ApplicationFeeType, serviceInput.LoanAmount)
