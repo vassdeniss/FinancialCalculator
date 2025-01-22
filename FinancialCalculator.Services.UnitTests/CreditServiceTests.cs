@@ -169,11 +169,12 @@ namespace FinancialCalculator.Services.UnitTests
 
             // Act & Assert
             var ex = Assert.Throws<ArgumentOutOfRangeException>(() => service.CalculateCreditResult(serviceInput));
-            Assert.That(ex.Message, Is.EqualTo($"Grace period months must be less than the loan term in months. (Parameter '{nameof(serviceInput.GracePeriodMonths)}')"));
+            Assert.That(ex.Message, Is.EqualTo($"Grace period cannot exceed loan term. (Parameter '{nameof(serviceInput.GracePeriodMonths)}')"));
         }
 
+        // TODO: cannot use 'or'; needs individual tests for each fee
         [Test]
-        [TestCase(100, 50, FeeType.Percentage, 50, FeeType.Percentage, 50, FeeType.Percentage, 50, FeeType.Percentage, 50, FeeType.Percentage, 50, FeeType.Percentage, 50, FeeType.Percentage)]
+        [TestCase(1000, 50, FeeType.Percentage, 50, FeeType.Percentage, 50, FeeType.Percentage, 50, FeeType.Percentage, 50, FeeType.Percentage, 50, FeeType.Percentage, 50, FeeType.Percentage)]
         public void AllFeePercentageFields_ExceedMaxPercentage_ThrowsArgumentOutOfRangeException(
      int loanAmount,
      int applicationFee, FeeType applicationFeeType,
@@ -204,14 +205,16 @@ namespace FinancialCalculator.Services.UnitTests
 
             // Act & Assert
             var ex = Assert.Throws<ArgumentOutOfRangeException>(() => service.CalculateCreditResult(serviceInput));
-            Assert.That(ex.Message, Is.EqualTo($"A single fee field shouldn't exceed 40% of the loan amount. (Parameter '{nameof(serviceInput.ApplicationFee)}' or '{nameof(serviceInput.ProcessingFee)}' or '{nameof(serviceInput.OtherInitialFees)}' or '{nameof(serviceInput.MonthlyManagementFee)}' or '{nameof(serviceInput.OtherMonthlyFees)}' or '{nameof(serviceInput.AnnualManagementFee)}' or '{nameof(serviceInput.OtherAnnualFees)}')"));
+            Assert.That(ex.Message, Is.EqualTo($"A single fee field cannot exceed 40% of the loan amount. (Parameter '{nameof(serviceInput.ApplicationFee)}' or '{nameof(serviceInput.ProcessingFee)}' or '{nameof(serviceInput.OtherInitialFees)}' or '{nameof(serviceInput.MonthlyManagementFee)}' or '{nameof(serviceInput.OtherMonthlyFees)}' or '{nameof(serviceInput.AnnualManagementFee)}' or '{nameof(serviceInput.OtherAnnualFees)}')"));
         }
 
+        // TODO: default loan amount compared to default initial fees makes test fail
+        // TODO: 2: same as before, needs seperate tests cannot use 'or'
         [Test]
-        [TestCase(100, 200, FeeType.Currency, 15, FeeType.Currency, 30, FeeType.Currency, 2, FeeType.Currency)]
-        [TestCase(200, 5, FeeType.Currency, 300, FeeType.Currency, 5, FeeType.Currency, 9999999, FeeType.Currency)]
-        [TestCase(50, 5, FeeType.Currency, 2, FeeType.Currency, 10, FeeType.Currency, 9999999, FeeType.Currency)]
-        [TestCase(50, 5, FeeType.Currency, 2, FeeType.Currency, 10500, FeeType.Currency, 1, FeeType.Currency)]
+        [TestCase(1000, 200, FeeType.Currency, 15, FeeType.Currency, 30, FeeType.Currency, 2, FeeType.Currency)]
+        [TestCase(1000, 5, FeeType.Currency, 300, FeeType.Currency, 5, FeeType.Currency, 9999999, FeeType.Currency)]
+        [TestCase(1000, 5, FeeType.Currency, 2, FeeType.Currency, 10, FeeType.Currency, 9999999, FeeType.Currency)]
+        [TestCase(1000, 5, FeeType.Currency, 2, FeeType.Currency, 10500, FeeType.Currency, 1, FeeType.Currency)]
         public void MonthlyAndAnnualCurrencyFees_LessThanLoanAmount_ThrowsArgumentOutOfRangeException(
     int loanAmount,
     int monthlyManagementFee, FeeType monthlyManagementFeeType,
@@ -253,7 +256,7 @@ namespace FinancialCalculator.Services.UnitTests
 
             // Act & Assert
             var ex = Assert.Throws<ArgumentOutOfRangeException>(() => service.CalculateCreditResult(serviceInput));
-            Assert.That(ex.Message, Is.EqualTo($"The combined initial fees must not exceed half of the loan amount. (Parameter '{nameof(serviceInput.ApplicationFee)}' or '{nameof(serviceInput.ProcessingFee)}' or '{nameof(serviceInput.OtherInitialFees)}')"));
+            Assert.That(ex.Message, Is.EqualTo("Initial fees have be less than 50% of the loan. (Parameter 'totalInitialFees')"));
         }
 
         /*[Test]

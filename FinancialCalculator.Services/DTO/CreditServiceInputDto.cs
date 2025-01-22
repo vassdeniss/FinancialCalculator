@@ -36,38 +36,38 @@ public class CreditServiceInputDto
         this.OtherAnnualFeesType = otherAnnualFeesType;
     }
 
-    public BigDecimal LoanAmount { get; init; }
+    public BigDecimal LoanAmount { get; set; }
     
-    public int LoanTermInMonths { get; init; }
+    public int LoanTermInMonths { get; set; }
     
-    public int PromotionalPeriodMonths { get; init; }
+    public int PromotionalPeriodMonths { get; set; }
     
-    public BigDecimal AnnualPromotionalInterestRate { get; init; }
+    public BigDecimal AnnualPromotionalInterestRate { get; set; }
     
-    public BigDecimal AnnualInterestRate { get; init; }
+    public BigDecimal AnnualInterestRate { get; set; }
 
-    public int GracePeriodMonths { get; init; }
+    public int GracePeriodMonths { get; set; }
     
-    public PaymentType PaymentType { get; init; }
+    public PaymentType PaymentType { get; set; }
     
-    public BigDecimal ApplicationFee { get; init; }
-    public FeeType ApplicationFeeType { get; init; }
+    public BigDecimal ApplicationFee { get; set; }
+    public FeeType ApplicationFeeType { get; set; }
     
-    public BigDecimal ProcessingFee { get; init; }
-    public FeeType ProcessingFeeType { get; init; }
+    public BigDecimal ProcessingFee { get; set; }
+    public FeeType ProcessingFeeType { get; set; }
     
-    public BigDecimal OtherInitialFees { get; init; }
-    public FeeType OtherInitialFeesType { get; init; }
+    public BigDecimal OtherInitialFees { get; set; }
+    public FeeType OtherInitialFeesType { get; set; }
     
-    public BigDecimal MonthlyManagementFee { get; init; }
-    public FeeType MonthlyManagementFeeType { get; init; }
+    public BigDecimal MonthlyManagementFee { get; set; }
+    public FeeType MonthlyManagementFeeType { get; set; }
     
-    public BigDecimal OtherMonthlyFees { get; init; }
-    public FeeType OtherMonthlyFeesType { get; init; }
+    public BigDecimal OtherMonthlyFees { get; set; }
+    public FeeType OtherMonthlyFeesType { get; set; }
     
-    public BigDecimal AnnualManagementFee { get; init; }
-    public FeeType AnnualManagementFeeType { get; init; }
+    public BigDecimal AnnualManagementFee { get; set; }
+    public FeeType AnnualManagementFeeType { get; set; }
     
-    public BigDecimal OtherAnnualFees { get; init; }
-    public FeeType OtherAnnualFeesType { get; init; }
+    public BigDecimal OtherAnnualFees { get; set; }
+    public FeeType OtherAnnualFeesType { get; set; }
 }
