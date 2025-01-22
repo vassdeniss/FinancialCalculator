@@ -50,7 +50,7 @@ namespace FinancialCalculator.Services.UnitTests
             BigDecimal loanAmount = BigDecimal.Parse(loanAmountStr);
 
             // Act
-            BigDecimal result = service.CalculateMonthlyPayment(loanAmount, BigDecimal.Zero, payments).Round(2);
+            BigDecimal result = service.CalculateMonthlyPayment(loanAmount, BigDecimal.Zero, payments).BankersRounding(2);
 
             // Assert
             Assert.That(result, Is.EqualTo(BigDecimal.Parse(expectedMonthlyPaymentStr)));
@@ -68,7 +68,7 @@ namespace FinancialCalculator.Services.UnitTests
             BigDecimal annualInterestRate = BigDecimal.Parse(annualInterestRateStr);
 
             // Act
-            BigDecimal result = service.CalculateMonthlyPayment(loanAmount, annualInterestRate, payments).Round(2);
+            BigDecimal result = service.CalculateMonthlyPayment(loanAmount, annualInterestRate, payments).BankersRounding(2);
 
             // Assert
             Assert.That(result, Is.EqualTo(BigDecimal.Parse(expectedMonthlyPaymentStr)));
@@ -154,8 +154,8 @@ namespace FinancialCalculator.Services.UnitTests
         [Test]
         [TestCase("999999999", 300, "40", "0", 960, "33333333.30", "1515151.51")]
         [TestCase("999999999", 300, "40", "2208.76", 960, "33333333.30", "1840633331.49")]
-        [TestCase("999999999", 300, "40", "8912.21", 301, "33335057.27", "271834096.67")] //fail diff 15532.61
-        [TestCase("999999999", 300, "40", "0", 301, "33335057.27", "32258123.20")] //fail diff 1843.23
+        [TestCase("999999999", 300, "40", "8912.21", 301, "33335057.27", "271834096.67")]
+        [TestCase("999999999", 300, "40", "0", 301, "33335057.27", "32258123.20")]
         [TestCase("100", 300, "40", "0", 960, "3.33", "0.15")]
         [TestCase("100", 300, "40", "2293.03", 960, "3.33", "191.09")]
         [TestCase("100", 300, "40", "8635.35", 301, "3.33", "819.61")]
@@ -241,8 +241,8 @@ namespace FinancialCalculator.Services.UnitTests
             var result = service.CalculateMonthlyPaymentWithoutPromotional(loanAmount, annualInterestRate, loanTermInMonths);
 
             // Assert
-            Assert.That(result.Item1, Is.EqualTo(BigDecimal.Parse(expectedPromoPaymentStr).Round(2)));
-            Assert.That(result.Item2, Is.EqualTo(BigDecimal.Parse(expectedNormalPaymentStr).Round(2)));
+            Assert.That(result.Item1, Is.EqualTo(BigDecimal.Parse(expectedPromoPaymentStr).BankersRounding(2)));
+            Assert.That(result.Item2, Is.EqualTo(BigDecimal.Parse(expectedNormalPaymentStr).BankersRounding(2)));
         }
 
         [Test]

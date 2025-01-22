@@ -51,7 +51,8 @@ public class PaymentCalculationService : IPaymentCalculationService
         BigDecimal numerator = loanAmount * monthlyInterestRate * compoundInterestFactor;
         BigDecimal denominator = compoundInterestFactor - BigDecimal.One;
 
-        return (numerator / denominator).BankersRounding(2);
+        //return (numerator / denominator).BankersRounding(2);
+        return (numerator / denominator).BankersRounding(4);
     }
 
     /// <inheritdoc />

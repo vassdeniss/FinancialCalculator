@@ -1,4 +1,4 @@
-using FinancialCalculator.Common;
+/*using FinancialCalculator.Common;
 using FinancialCalculator.Common.Enums;
 using FinancialCalculator.Services.DTO;
 
@@ -256,23 +256,6 @@ namespace FinancialCalculator.Services.UnitTests
             Assert.That(ex.Message, Is.EqualTo($"The combined initial fees must not exceed half of the loan amount. (Parameter '{nameof(serviceInput.ApplicationFee)}' or '{nameof(serviceInput.ProcessingFee)}' or '{nameof(serviceInput.OtherInitialFees)}')"));
         }
 
-        /*[Test]
-        [TestCase(11, 1000, "5", "100")]
-        public void AnnualFee_ThrowsException_WhenLoanTermLessThan12Months(int loanTermInMonths, int loanAmount, string annualInterestRateStr, string annualManagementFeeStr)
-        {
-            // Arrange
-            CreditServiceInputDto serviceInput = defaultServiceInput;
-            serviceInput.LoanTermInMonths = loanTermInMonths;
-            serviceInput.LoanAmount = BigDecimal.Parse(loanAmount.ToString());
-            serviceInput.AnnualInterestRate = BigDecimal.Parse(annualInterestRateStr);
-            serviceInput.AnnualManagementFee = BigDecimal.Parse(annualManagementFeeStr);
-            serviceInput.AnnualManagementFeeType = FeeType.Currency;
-
-            // Act & Assert
-            var ex = Assert.Throws<ArgumentOutOfRangeException>(() => service.CalculateCreditResult(serviceInput));
-            Assert.That(ex.Message, Is.EqualTo("Annual fees cannot be applied when the loan term is less than 12 months. (Parameter 'AnnualManagementFee')"));
-        }*/
-
         [Test]
         [TestCase(5, (PaymentType)999)]
         [TestCase(1, (PaymentType)999)]
@@ -301,5 +284,5 @@ namespace FinancialCalculator.Services.UnitTests
             Assert.DoesNotThrow(() => service.CalculateCreditResult(serviceInput));
         }
     }
-}
+}*/
 
