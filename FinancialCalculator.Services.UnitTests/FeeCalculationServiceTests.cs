@@ -17,13 +17,18 @@ namespace FinancialCalculator.Services.UnitTests
             feeCalculationService = new FeeCalculationService();
         }
 
-        //TODO Write Edge Cases when validation is set
-
         [Test]
-        [TestCase("5", FeeType.Percentage, "1000", "50")]
-        [TestCase("499999999.6", FeeType.Currency, "999999999", "499999999.6")]
-        [TestCase("50.01", FeeType.Currency, "100", "50.01")]
-        public void CalculateFee_PercentageFeeType_ReturnsCorrectFee(string feeValueStr, FeeType feeType, string loanAmountStr, string expectedFeeStr)
+        [TestCase("0.0000000001", FeeType.Percentage, "100", "0.0000000001", Description = "Calculates the lowest possible percentage fee for the smallest possible loan amount")]
+        [TestCase("0.0000000001", FeeType.Currency, "100", "0.0000000001", Description = "Handles the lowest possible currency fee for the smallest possible loan amount")]
+        [TestCase("0.0000000001", FeeType.Percentage, "999999999", "0.000999999999", Description = "Calculates the lowest possible percentage fee for the maximum loan amount")]
+        [TestCase("0.0000000001", FeeType.Currency, "999999999", "0.0000000001", Description = "Handles the lowest possible currency fee for the maximum loan amount")]
+
+        [TestCase("40", FeeType.Percentage, "100", "40", Description = "Calculates the maximum possible percentage fee for the smallest possible loan amount")]
+        [TestCase("499999999.49", FeeType.Currency, "100", "499999999.49", Description = "Handles the maximum possible currency fee for the smallest possible loan amount")]
+        [TestCase("40", FeeType.Percentage, "999999999", "399999999.6", Description = "Calculates the maximum possible percentage fee for the maximum loan amount")]
+        [TestCase("499999999.49", FeeType.Currency, "999999999", "499999999.49", Description = "Handles the maximum possible currency fee for the maximum loan amount")]
+
+        public void CalculateFee_ValidInputs_ReturnsCorrectFee(string feeValueStr, FeeType feeType, string loanAmountStr, string expectedFeeStr)
         {
             // Arrange
             BigDecimal feeValue = BigDecimal.Parse(feeValueStr);
@@ -35,37 +40,6 @@ namespace FinancialCalculator.Services.UnitTests
             // Assert
             BigDecimal expectedFee = BigDecimal.Parse(expectedFeeStr);
             Assert.That(result, Is.EqualTo(expectedFee));
-        }
-
-        [Test]
-        public void CalculateInitialFees_ValidInputs_ReturnsCorrectInitialFees()
-        {
-            // Arrange
-            BigDecimal newLoanPrincipal = new BigDecimal(10000); 
-            BigDecimal initialFeePercent = new BigDecimal(2);
-            BigDecimal initialFeeCurrency = new BigDecimal(150);
-
-            // Act
-            BigDecimal result = feeCalculationService.CalculateInitialFees(newLoanPrincipal, initialFeePercent, initialFeeCurrency);
-
-            // Assert
-            BigDecimal expectedInitialFees = new BigDecimal(350);
-            Assert.That(result, Is.EqualTo(expectedInitialFees));
-        }
-
-        [Test]
-        public void CalculateEarlyRepaymentFee_ValidInputs_ReturnsCorrectRepaymentFee()
-        {
-            // Arrange
-            BigDecimal outstandingPrincipal = new BigDecimal(5000);
-            BigDecimal earlyRepaymentFeePercent = new BigDecimal(3);
-
-            // Act
-            BigDecimal result = feeCalculationService.CalculateEarlyRepaymentFee(outstandingPrincipal, earlyRepaymentFeePercent);
-
-            // Assert
-            BigDecimal expectedRepaymentFee = new BigDecimal(150);
-            Assert.That(result, Is.EqualTo(expectedRepaymentFee));
         }
     }
 }

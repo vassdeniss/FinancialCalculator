@@ -192,7 +192,7 @@ public class CreditService : ICreditService
             totalInitialFees);
     }
 
-    private void ValidateFees(CreditServiceInputDto serviceInput)
+    public void ValidateFees(CreditServiceInputDto serviceInput)
     {
         if (serviceInput.ApplicationFeeType == FeeType.Percentage
             && serviceInput.ApplicationFee > new BigDecimal(40))
@@ -229,7 +229,7 @@ public class CreditService : ICreditService
         if (serviceInput.OtherMonthlyFeesType == FeeType.Percentage
             && serviceInput.OtherMonthlyFees > new BigDecimal(40))
         {
-            throw new ArgumentOutOfRangeException(nameof(serviceInput.OtherMonthlyFees), ERROR_FEE_FIELD_CURRENCY);
+            throw new ArgumentOutOfRangeException(nameof(serviceInput.OtherMonthlyFees), ERROR_FEE_FIELD_PERCENT);
         }
         
         if (serviceInput.AnnualManagementFeeType == FeeType.Currency
