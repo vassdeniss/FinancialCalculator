@@ -7,8 +7,10 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<ICreditService, CreditService>();
 builder.Services.AddTransient<IRefinanceService, RefinanceService>();
+builder.Services.AddTransient<ILeaseService, LeaseService>();
 builder.Services.AddAutoMapper(typeof(CreditMappingProfile));
 builder.Services.AddAutoMapper(typeof(RefinanceMappingProfile));
+builder.Services.AddAutoMapper(typeof(LeaseMappingProfile));
      
 WebApplication app = builder.Build();
 

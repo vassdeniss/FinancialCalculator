@@ -53,17 +53,12 @@ public class LeaseService : ILeaseService
             };
         }
         
-        BigDecimal monthlyIrr = CalculateMonthlyIrr(
+        BigDecimal annualCostPercent = this.CalculateApr(
             financedAmount,
             input.MonthlyInstallment,
             input.InitialProcessingFee,
             input.LeaseTermInMonths);
-        
-        // Debug lines:
-        Console.WriteLine($"Monthly IRR {monthlyIrr}");
-        
-        BigDecimal annualCostPercent = ((monthlyIrr + BigDecimal.One).Power(12) - BigDecimal.One) * new BigDecimal(100);
-        
+
         return new LeaseResultDto
         {
             AnnualCostPercent = annualCostPercent,
@@ -76,7 +71,7 @@ public class LeaseService : ILeaseService
     /// Uses a simple binary-search approach to find the monthly IRR 
     /// that sets the Net Present Value (NPV) = 0.
     /// </summary>
-    private BigDecimal CalculateMonthlyIrr(
+    private BigDecimal CalculateApr(
         BigDecimal financedAmount,
         BigDecimal monthlyInstallment,
         BigDecimal initialFee,
@@ -105,15 +100,19 @@ public class LeaseService : ILeaseService
             BigDecimal mid = (lower + upper) / new BigDecimal(2);
             BigDecimal npv = npvFunc(mid);
             
-            // Debug lines:
-            Console.WriteLine($"Iteration {i}: rate={mid}, NPV={npv}");
-            
             if (npv > BigDecimal.Zero)
                 upper = mid;   // need higher rate
             else
                 lower = mid;   // need lower rate
         }
         
-        return (lower + upper) / new BigDecimal(2);
+        // 3. Final approximate monthly IRR is midpoint
+        BigDecimal monthlyIrr = (lower + upper) / new BigDecimal(2);
+
+        // 4. Convert monthly IRR -> APR = ((1 + r)^12 - 1) * 100
+        BigDecimal apr = ((BigDecimal.One + monthlyIrr).Power(12) - BigDecimal.One)
+                         * new BigDecimal(100);
+        
+        return apr;
     }
 }
