@@ -71,7 +71,7 @@ public class LeaseService : ILeaseService
     /// Uses a simple binary-search approach to find the monthly IRR 
     /// that sets the Net Present Value (NPV) = 0.
     /// </summary>
-    private BigDecimal CalculateApr(
+    public BigDecimal CalculateApr(
         BigDecimal financedAmount,
         BigDecimal monthlyInstallment,
         BigDecimal initialFee,
