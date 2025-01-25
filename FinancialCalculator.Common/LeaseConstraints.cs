@@ -17,5 +17,5 @@ public class LeaseConstraints
  
     public const int MIN_MONTHLY_INSTALLMENT = 1;
     public const int MAX_MONTHLY_INSTALLMENT = 999;
-    public const string ERROR_MONTHLY_INSTALLMENT = "Montly installment month must be between 1 and 999.";
+    public const string ERROR_MONTHLY_INSTALLMENT = "Montly installment must be between 1 and 999.";
 }
