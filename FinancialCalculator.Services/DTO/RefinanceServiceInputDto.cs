@@ -4,19 +4,19 @@ namespace FinancialCalculator.Services.DTO;
 
 public class RefinanceServiceInputDto
 {
-    public BigDecimal LoanAmount { get; init; }
+    public BigDecimal LoanAmount { get; set; }
     
-    public int LoanTermInMonths { get; init; }
+    public int LoanTermInMonths { get; set; }
     
-    public BigDecimal AnnualInterestRate { get; init; }
+    public BigDecimal AnnualInterestRate { get; set; }
     
-    public int ContributionsMade { get; init; }
+    public int ContributionsMade { get; set; }
     
-    public BigDecimal EarlyRepaymentFee { get; init; }
+    public BigDecimal EarlyRepaymentFee { get; set; }
     
-    public BigDecimal NewAnnualInterestRate { get; init; }
+    public BigDecimal NewAnnualInterestRate { get; set; }
     
-    public BigDecimal InitialFee { get; init; }
+    public BigDecimal InitialFee { get; set; }
     
-    public BigDecimal InitialFeeCurrency { get; init; }
+    public BigDecimal InitialFeeCurrency { get; set; }
 }
