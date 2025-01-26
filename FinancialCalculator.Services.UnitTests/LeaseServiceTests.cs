@@ -208,8 +208,8 @@ namespace FinancialCalculator.Services.UnitTests
         }
 
 
-        [TestCase("15000", "30", Description = "Sum of initial payment and processing fee equals the price")]
-        [TestCase("15000", "50", Description = "Sum of initial payment and processing fee greater than the price")]
+        [TestCase("15000", "25", Description = "Sum of initial payment and processing fee equals the price")]
+        [TestCase("15000", "26", Description = "Sum of initial payment and processing fee greater than the price")]
         public void InitialPaymentAndProcessingFee_SumGreaterThanOrEqualToPrice_ThrowsArgumentOutOfRangeException(string initialPaymentStr, string initialProcessingFeePercentageStr)
         {
             // Arrange
