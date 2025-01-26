@@ -1,4 +1,5 @@
 ﻿using FinancialCalculator.Common;
+using FinancialCalculator.Common.Enums;
 using FinancialCalculator.Services.Contracts;
 using FinancialCalculator.Services.DTO;
 using static FinancialCalculator.Common.LeaseConstraints;
@@ -48,9 +49,32 @@ public class LeaseService : ILeaseService
             throw new ArgumentException(ERROR_MONTHLY_INSTALLMENT_AGAINST_PRICE);
         }
 
+        if (input.ProcessingFeeType == FeeType.Percentage
+            && (input.InitialProcessingFee.CompareTo(new BigDecimal(MIN_INITIAL_PROCESSING_FEE_PERCENT)) < 0
+                || input.InitialProcessingFee.CompareTo(new BigDecimal(MAX_INITIAL_PROCESSING_FEE_PERCENT)) > 0))
+        {
+            throw new ArgumentException(ERROR_INITIAL_PROCESSING_FEE_PERCENT);
+        }
+        
+        if (input.ProcessingFeeType == FeeType.Currency
+            && input.InitialProcessingFee.CompareTo(new BigDecimal(MIN_INITIAL_PROCESSING_FEE_CURRENCY)) < 0)
+        {
+            throw new ArgumentException(ERROR_INITIAL_PROCESSING_FEE_CURRENCY);
+        }
+
         input.InitialProcessingFee = this._feeCalculationService.CalculateFee(input.InitialProcessingFee,
             input.ProcessingFeeType,
             input.Price);
+
+        if (input.InitialProcessingFee >= input.Price)
+        {
+            throw new ArgumentException(ERROR_INITIAL_PROCESSING_FEE_AGAINST_PRICE);
+        }
+
+        if (input.InitialPayment + input.InitialProcessingFee >= input.Price)
+        {
+            throw new ArgumentException(ERROR_INITIAL_PAYMENT_PROCESSING_FEE_AGAINST_PRICE);
+        }
         
         // Assume total paid is initial payment + monthly installments over the term + any initial fee
         BigDecimal totalPaid = input.InitialPayment + input.MonthlyInstallment * new BigDecimal(input.LeaseTermInMonths) + input.InitialProcessingFee;

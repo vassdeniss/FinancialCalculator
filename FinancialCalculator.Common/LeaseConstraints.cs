@@ -18,4 +18,15 @@ public class LeaseConstraints
     public const int MAX_MONTHLY_INSTALLMENT = 999;
     public const string ERROR_MONTHLY_INSTALLMENT = "Monthly installment must be between 1 and 999.";
     public const string ERROR_MONTHLY_INSTALLMENT_AGAINST_PRICE = "Monthly installment must be less than the price.";
+
+    public const int MIN_INITIAL_PROCESSING_FEE_PERCENT = 0;
+    public const int MAX_INITIAL_PROCESSING_FEE_PERCENT = 49;
+    public const string ERROR_INITIAL_PROCESSING_FEE_PERCENT = "Initial processing fee must be between 0 and 49 percent.";
+    
+    public const int MIN_INITIAL_PROCESSING_FEE_CURRENCY = 0;
+    public const string ERROR_INITIAL_PROCESSING_FEE_CURRENCY = "Initial processing fee must be a valid currency amount and not less than 0.";
+    
+    public const string ERROR_INITIAL_PROCESSING_FEE_AGAINST_PRICE = "Initial processing fee cannot equal to or be greater than the price.";
+    
+    public const string ERROR_INITIAL_PAYMENT_PROCESSING_FEE_AGAINST_PRICE = "The sum of initial payment and processing fee must be less than the price.";
 }

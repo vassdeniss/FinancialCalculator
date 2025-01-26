@@ -93,7 +93,7 @@ namespace FinancialCalculator.Services.UnitTests
                 ProcessingFeeType = FeeType.Currency
             };
 
-            string expectedErrorMessage = "Initial processing fee cannot equal to or be greater than the price including VAT.";
+            string expectedErrorMessage = "Initial processing fee cannot equal to or be greater than the price.";
 
             // Act & Assert
             ArgumentException ex = Assert.Throws<ArgumentException>(() => service.CalculateLeaseResult(input));
@@ -109,7 +109,7 @@ namespace FinancialCalculator.Services.UnitTests
             LeaseServiceInputDto input = new LeaseServiceInputDto
             {
                 Price = new BigDecimal(20000),
-                InitialPayment = new BigDecimal(2000),
+                InitialPayment = new BigDecimal(500),
                 MonthlyInstallment = new BigDecimal(500),
                 LeaseTermInMonths = int.Parse(leaseTermStr),
                 InitialProcessingFee = new BigDecimal(100)
@@ -187,7 +187,7 @@ namespace FinancialCalculator.Services.UnitTests
         }
 
         [TestCase("-0.01", Description = "Initial processing fee below minimum")]
-        public void InitialProcessingFee_Currency_BelowMinimum_ThrowsArgumentOutOfRangeException(string initialProcessingFeeStr)
+        public void InitialProcessingFee_Currency_BelowMinimum_ThrowsArgumentException(string initialProcessingFeeStr)
         {
             // Arrange
             LeaseServiceInputDto input = new LeaseServiceInputDto
@@ -203,7 +203,7 @@ namespace FinancialCalculator.Services.UnitTests
             string expectedErrorMessage = "Initial processing fee must be a valid currency amount and not less than 0.";
 
             // Act & Assert
-            ArgumentOutOfRangeException ex = Assert.Throws<ArgumentOutOfRangeException>(() => service.CalculateLeaseResult(input));
+            ArgumentException ex = Assert.Throws<ArgumentException>(() => service.CalculateLeaseResult(input));
             Assert.That(ex.Message, Is.EqualTo(expectedErrorMessage));
         }
 

@@ -13,6 +13,10 @@ public static class RefinanceConstraints
     public const int MIN_ANNUAL_INTEREST_RATE_AMOUNT = 1;
     public const int MAX_ANNUAL_INTEREST_RATE_AMOUNT = 99;
     public const string ERROR_ANNUAL_INTEREST_RATE_AMOUNT = "Annual interest rate must be between 1 and 99%.";
+    
+    public const int MIN_NEW_ANNUAL_INTEREST_RATE_AMOUNT = 1;
+    public const int MAX_NEW_ANNUAL_INTEREST_RATE_AMOUNT = 99;
+    public const string ERROR_NEW_ANNUAL_INTEREST_RATE_AMOUNT = "New annual interest rate must be between 1 and 99%.";
 
     public const int MIN_CONTRIBUTIONS_MADE = 1;
     public const string ERROR_CONTRIBUTIONS_MADE = "Need to have at least one contribution.";

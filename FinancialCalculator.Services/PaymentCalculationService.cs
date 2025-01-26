@@ -44,6 +44,8 @@ public class PaymentCalculationService : IPaymentCalculationService
             return loanAmount / new BigDecimal(payments);
         }
         
+        // Standard loan payment formula
+        
         BigDecimal monthlyInterestRate = annualInterestRate / new BigDecimal(100) / new BigDecimal(12);
 
         BigDecimal num = BigDecimal.One + monthlyInterestRate;
@@ -51,7 +53,6 @@ public class PaymentCalculationService : IPaymentCalculationService
         BigDecimal numerator = loanAmount * monthlyInterestRate * compoundInterestFactor;
         BigDecimal denominator = compoundInterestFactor - BigDecimal.One;
 
-        //return (numerator / denominator).BankersRounding(2);
         return (numerator / denominator).BankersRounding(4);
     }
 
@@ -93,21 +94,9 @@ public class PaymentCalculationService : IPaymentCalculationService
         
         BigDecimal monthlyInterestRate = annualInterestRate / new BigDecimal(100) / new BigDecimal(12);
         int remainingMonths = payments - paymentsMade;
-
-        //Are you sure that monthlyInterestRate can ever be zero
-
-        //We can't have paymentsMade >= because validation won't allow it when I add it :d
-        // Remaining principal formula
-        //   = Payment * (1 - (1 + i)^(-remainingMonths)) / i
-        if (monthlyInterestRate == BigDecimal.Zero)
-        {
-            // If there's no interest, remaining principal is simply 
-            // the fraction of principal not yet covered 
-            // (assuming equal monthly payments).
-            BigDecimal paidSoFar = payment * new BigDecimal(paymentsMade);
-            BigDecimal leftover = loanAmount - paidSoFar;
-            return leftover < BigDecimal.Zero ? BigDecimal.Zero : leftover;
-        }
+        
+        // Present Value of an Annuity formula
+        // PV = Payment * 1 - (1 + interest)^-remaining / interest
         
         BigDecimal num = BigDecimal.One + monthlyInterestRate;
         BigDecimal positivePower = num.Power(new BigInteger(remainingMonths));

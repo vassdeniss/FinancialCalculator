@@ -38,12 +38,18 @@ public class RefinanceService : IRefinanceService
             throw new ArgumentException(ERROR_ANNUAL_INTEREST_RATE_AMOUNT);
         }
         
+        if (input.NewAnnualInterestRate.CompareTo(new BigDecimal(MIN_NEW_ANNUAL_INTEREST_RATE_AMOUNT)) < 0 ||
+            input.NewAnnualInterestRate.CompareTo(new BigDecimal(MAX_NEW_ANNUAL_INTEREST_RATE_AMOUNT)) > 0)
+        {
+            throw new ArgumentException(ERROR_NEW_ANNUAL_INTEREST_RATE_AMOUNT);
+        }
+        
         if (input.ContributionsMade < MIN_CONTRIBUTIONS_MADE)
         {
             throw new ArgumentException(ERROR_CONTRIBUTIONS_MADE);
         }
         
-        if (input.ContributionsMade > input.LoanTermInMonths)
+        if (input.ContributionsMade >= input.LoanTermInMonths)
         {
             throw new ArgumentException(ERROR_CONTRIBUTIONS_MADE_TOO_HIGH);
         }
