@@ -1,4 +1,5 @@
 using FinancialCalculator.Common;
+using FinancialCalculator.Common.Enums;
 using FinancialCalculator.Services.DTO;
 
 
@@ -15,7 +16,7 @@ namespace FinancialCalculator.Services.UnitTests
             service = new LeaseService();
         }
 
-        [TestCase("0", Description = "Price at minimum")]
+        [TestCase("99", Description = "Price at minimum")]
         [TestCase("1000000000", Description = "Price above maximum")]
         public void Price_OutOfRange_ThrowsArgumentOutOfRangeException(string priceStr)
         {
@@ -70,12 +71,35 @@ namespace FinancialCalculator.Services.UnitTests
                 InitialProcessingFee = new BigDecimal(100)
             };
 
-            string expectedErrorMessage = "Initial payment cannot equal to the price.";
+            string expectedErrorMessage = "Initial payment cannot equal to the price or be greter.";
 
             // Act & Assert
             ArgumentOutOfRangeException ex = Assert.Throws<ArgumentOutOfRangeException>(() => service.CalculateLeaseResult(input));
             Assert.That(ex.Message, Is.EqualTo(expectedErrorMessage));
         }
+
+        [TestCase("100", "100", Description = "Initial processing fee equals the price including VAT")]
+        [TestCase("101", "100", Description = "Initial processing fee greater than the price including VAT")]
+        public void InitialProcessingFee_EqualOrGreaterThanPriceWithVAT_ThrowsArgumentOutOfRangeException(string initialProcessingFeeStr, string priceStr)
+        {
+            // Arrange
+            LeaseServiceInputDto input = new LeaseServiceInputDto
+            {
+                Price = BigDecimal.Parse(priceStr),
+                InitialPayment = new BigDecimal(2000),
+                MonthlyInstallment = new BigDecimal(500),
+                LeaseTermInMonths = 24,
+                InitialProcessingFee = BigDecimal.Parse(initialProcessingFeeStr),
+                ProcessingFeeType = FeeType.Currency
+            };
+
+            string expectedErrorMessage = "Initial processing fee cannot equal to or be greater than the price including VAT.";
+
+            // Act & Assert
+            ArgumentOutOfRangeException ex = Assert.Throws<ArgumentOutOfRangeException>(() => service.CalculateLeaseResult(input));
+            Assert.That(ex.Message, Is.EqualTo(expectedErrorMessage));
+        }
+
 
         [TestCase("0", Description = "Lease term below minimum")]
         [TestCase("121", Description = "Lease term above maximum")]
@@ -112,7 +136,7 @@ namespace FinancialCalculator.Services.UnitTests
                 InitialProcessingFee = new BigDecimal(100)
             };
 
-            string expectedErrorMessage = "Monthly installment must be between 1 and 999.";
+            string expectedErrorMessage = "Monthly installment must be between 0.1 and 999.";
 
             // Act & Assert
             ArgumentOutOfRangeException ex = Assert.Throws<ArgumentOutOfRangeException>(() => service.CalculateLeaseResult(input));
@@ -142,7 +166,7 @@ namespace FinancialCalculator.Services.UnitTests
 
         [TestCase("-0.01", Description = "Initial processing fee below minimum")]
         [TestCase("50", Description = "Initial processing fee above maximum")]
-        public void InitialProcessingFee_OutOfRange_ThrowsArgumentOutOfRangeException(string initialProcessingFeeStr)
+        public void InitialProcessingFee_Percentage_OutOfRange_ThrowsArgumentOutOfRangeException(string initialProcessingFeeStr)
         {
             // Arrange
             LeaseServiceInputDto input = new LeaseServiceInputDto
@@ -151,7 +175,8 @@ namespace FinancialCalculator.Services.UnitTests
                 InitialPayment = new BigDecimal(2000),
                 MonthlyInstallment = new BigDecimal(500),
                 LeaseTermInMonths = 24,
-                InitialProcessingFee = BigDecimal.Parse(initialProcessingFeeStr)
+                InitialProcessingFee = BigDecimal.Parse(initialProcessingFeeStr),
+                ProcessingFeeType = FeeType.Percentage
             };
 
             string expectedErrorMessage = "Initial processing fee must be between 0 and 49 percent.";
@@ -160,6 +185,28 @@ namespace FinancialCalculator.Services.UnitTests
             ArgumentOutOfRangeException ex = Assert.Throws<ArgumentOutOfRangeException>(() => service.CalculateLeaseResult(input));
             Assert.That(ex.Message, Is.EqualTo(expectedErrorMessage));
         }
+
+        [TestCase("-0.01", Description = "Initial processing fee below minimum")]
+        public void InitialProcessingFee_Currency_BelowMinimum_ThrowsArgumentOutOfRangeException(string initialProcessingFeeStr)
+        {
+            // Arrange
+            LeaseServiceInputDto input = new LeaseServiceInputDto
+            {
+                Price = new BigDecimal(20000),
+                InitialPayment = new BigDecimal(2000),
+                MonthlyInstallment = new BigDecimal(500),
+                LeaseTermInMonths = 24,
+                InitialProcessingFee = BigDecimal.Parse(initialProcessingFeeStr),
+                ProcessingFeeType = FeeType.Currency
+            };
+
+            string expectedErrorMessage = "Initial processing fee must be a valid currency amount and not less than 0.";
+
+            // Act & Assert
+            ArgumentOutOfRangeException ex = Assert.Throws<ArgumentOutOfRangeException>(() => service.CalculateLeaseResult(input));
+            Assert.That(ex.Message, Is.EqualTo(expectedErrorMessage));
+        }
+
 
         [TestCase("15000", "30", Description = "Sum of initial payment and processing fee equals the price")]
         [TestCase("15000", "50", Description = "Sum of initial payment and processing fee greater than the price")]
