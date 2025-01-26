@@ -39,7 +39,12 @@ public class LeaseService : ILeaseService
         
         // Assume total paid is initial payment + monthly installments over the term + any initial fee
         BigDecimal totalPaid = input.InitialPayment + input.MonthlyInstallment * new BigDecimal(input.LeaseTermInMonths) + input.InitialProcessingFee;
+
+        // Total fees should be the percentage of InitialProcessingFee from the Price
+
         BigDecimal totalFees = totalPaid - input.Price;
+
+        // QUESTION: Why do we have this check if we already validate that initial payment cannot be greater than or equal to the price?
 
         // Determine how much is actually financed.
         BigDecimal financedAmount = input.Price - input.InitialPayment;
