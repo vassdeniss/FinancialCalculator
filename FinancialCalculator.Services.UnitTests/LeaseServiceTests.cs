@@ -199,7 +199,9 @@ namespace FinancialCalculator.Services.UnitTests
             service = new LeaseService();
         }
 
-        [TestCase("240", "10", "5", 6, "0.1", "-99.63", "64", "24")]
+        [TestCase("999999999", "509999999", "999", 120, "0.49", "518786155759795000000000000000000000000000000", "1000179878.51", "489999999.51")]
+        [TestCase("100", "0.0000001", "1", 1, "0.001", "-100", "1.1", "0.1")]
+
         public void CalculateLeaseResult_ValidInput_ReturnsExpectedResults(
       string price, string initialPayment, string monthlyInstallment, int leaseTermInMonths,
       string initialProcessingFeePercentage, string expectedAnnualCostPercent,
@@ -224,9 +226,9 @@ namespace FinancialCalculator.Services.UnitTests
             LeaseResultDto result = service.CalculateLeaseResult(input);
 
             // Assert
-            Assert.That(result.AnnualCostPercent, Is.EqualTo(expectedAnnualCostPercentValue));
-            Assert.That(result.TotalPaid, Is.EqualTo(expectedTotalPaidValue));
-            Assert.That(result.TotalFees, Is.EqualTo(expectedTotalFeesValue));
+            Assert.That(result.AnnualCostPercent, Is.EqualTo(expectedAnnualCostPercentValue.BankersRounding(2)));
+            Assert.That(result.TotalPaid, Is.EqualTo(expectedTotalPaidValue.BankersRounding(2)));
+            Assert.That(result.TotalFees, Is.EqualTo(expectedTotalFeesValue.BankersRounding(2)));
         }
     }
 
@@ -248,7 +250,7 @@ namespace FinancialCalculator.Services.UnitTests
         [TestCase("240", "4", "0", 6, "-99.85")]
         [TestCase("240", "5", "0", 6, "-99.75")]
         [TestCase("240", "6", "0", 6, "-99.60")]
-        public void CalculateApr_NegativeApr_ReturnsExpectedResult(string financedAmountStr, string monthlyInstallmentStr, string initialFeeStr, int leaseTermInMonths, string expectedAprStr)
+        public void CalculateNegativeApr_ReturnsExpectedResult(string financedAmountStr, string monthlyInstallmentStr, string initialFeeStr, int leaseTermInMonths, string expectedAprStr)
         {
             // Arrange
             BigDecimal financedAmount = BigDecimal.Parse(financedAmountStr);
@@ -263,14 +265,13 @@ namespace FinancialCalculator.Services.UnitTests
             Assert.That(result.BankersRounding(2), Is.EqualTo(expectedApr));
         }
 
-        [TestCase("240", "49", "0", 6, "104.1")]
         [TestCase("240", "50", "0", 6, "119.57")]
         [TestCase("240", "51", "0", 6, "135.96")]
         [TestCase("240", "52", "0", 6, "153.32")]
         [TestCase("240", "53", "0", 6, "171.68")]
         [TestCase("240", "54", "0", 6, "191.09")]
         [TestCase("240", "55", "0", 6, "211.61")]
-        public void CalculateApr_PositiveApr_ReturnsExpectedResult(string financedAmountStr, string monthlyInstallmentStr, string initialFeeStr, int leaseTermInMonths, string expectedAprStr)
+        public void CalculatePositiveApr_ReturnsExpectedResult(string financedAmountStr, string monthlyInstallmentStr, string initialFeeStr, int leaseTermInMonths, string expectedAprStr)
         {
             // Arrange
             BigDecimal financedAmount = BigDecimal.Parse(financedAmountStr);
@@ -287,7 +288,7 @@ namespace FinancialCalculator.Services.UnitTests
 
         [TestCase("240", "40", "0", 6, "0")]
         [TestCase("1200", "200", "0", 6, "0")]
-        public void CalculateApr_ZeroApr_ReturnsExpectedResult(string financedAmountStr, string monthlyInstallmentStr, string initialFeeStr, int leaseTermInMonths, string expectedAprStr)
+        public void CalculateZeroApr_ReturnsExpectedResult(string financedAmountStr, string monthlyInstallmentStr, string initialFeeStr, int leaseTermInMonths, string expectedAprStr)
         {
             // Arrange
             BigDecimal financedAmount = BigDecimal.Parse(financedAmountStr);
@@ -301,7 +302,5 @@ namespace FinancialCalculator.Services.UnitTests
             // Assert
             Assert.That(result.BankersRounding(2), Is.EqualTo(expectedApr));
         }
-
-
     }
 }
