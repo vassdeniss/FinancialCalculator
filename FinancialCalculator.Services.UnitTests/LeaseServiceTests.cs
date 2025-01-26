@@ -273,9 +273,9 @@ namespace FinancialCalculator.Services.UnitTests
             LeaseResultDto result = service.CalculateLeaseResult(input);
 
             // Assert
-            Assert.That(result.AnnualCostPercent, Is.EqualTo(expectedAnnualCostPercentValue.BankersRounding(2)));
-            Assert.That(result.TotalPaid, Is.EqualTo(expectedTotalPaidValue.BankersRounding(2)));
-            Assert.That(result.TotalFees, Is.EqualTo(expectedTotalFeesValue.BankersRounding(2)));
+            Assert.That(result.AnnualCostPercent.BankersRounding(2), Is.EqualTo(expectedAnnualCostPercentValue.BankersRounding(2)));
+            Assert.That(result.TotalPaid.BankersRounding(2), Is.EqualTo(expectedTotalPaidValue.BankersRounding(2)));
+            Assert.That(result.TotalFees.BankersRounding(2), Is.EqualTo(expectedTotalFeesValue.BankersRounding(2)));
         }
     }
 

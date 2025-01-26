@@ -93,7 +93,10 @@ public class PaymentCalculationService : IPaymentCalculationService
         
         BigDecimal monthlyInterestRate = annualInterestRate / new BigDecimal(100) / new BigDecimal(12);
         int remainingMonths = payments - paymentsMade;
-        
+
+        //Are you sure that monthlyInterestRate can ever be zero
+
+        //We can't have paymentsMade >= because validation won't allow it when I add it :d
         // Remaining principal formula
         //   = Payment * (1 - (1 + i)^(-remainingMonths)) / i
         if (monthlyInterestRate == BigDecimal.Zero)

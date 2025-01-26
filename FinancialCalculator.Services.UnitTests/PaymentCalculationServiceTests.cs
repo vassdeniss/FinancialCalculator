@@ -75,7 +75,7 @@ namespace FinancialCalculator.Services.UnitTests
         }
     }
 
-
+    [TestFixture]
     public class CalculateRemainingBalanceTests
     {
 
@@ -140,7 +140,7 @@ namespace FinancialCalculator.Services.UnitTests
         }
     }
 
-
+    [TestFixture]
     public class CalculateMonthlyPaymentWithPromotionalTests
     {
         private PaymentCalculationService service;
@@ -213,7 +213,7 @@ namespace FinancialCalculator.Services.UnitTests
         }
     }
 
-
+    [TestFixture]
     public class CalculateMonthlyPaymentWithoutPromotionalTests
     {
         private PaymentCalculationService service;
@@ -262,6 +262,40 @@ namespace FinancialCalculator.Services.UnitTests
             // Assert
             Assert.That(result.Item1, Is.EqualTo(BigDecimal.Parse(expectedPromoPaymentStr)));
             Assert.That(result.Item2, Is.EqualTo(BigDecimal.Parse(expectedNormalPaymentStr)));
+        }
+    }
+
+    [TestFixture]
+    public class RefinanceRemainingBalanceTests
+    {
+        private PaymentCalculationService service;
+
+        [SetUp]
+        public void Setup()
+        {
+            service = new PaymentCalculationService();
+        }
+
+        [Test]
+        [TestCase("999999999", "99", 999, 998, "82499999.92")]
+        [TestCase("900000000", "99", 999, 998, "74250000.00")]
+        [TestCase("888888888", "88", 888, 887, "65185185.12")]
+
+        [TestCase("1", "0.0000001", 2, 1, "0.50")]
+        [TestCase("2", "2", 2, 1, "1")]
+        public void CalculateRemainingRefinanceBalance_ValidData_ReturnsExpectedResult(
+    string loanAmountStr, string annualInterestRateStr, int payments, int paymentsMade, string expectedResultStr)
+        {
+            // Arrange
+            BigDecimal loanAmount = BigDecimal.Parse(loanAmountStr);
+            BigDecimal annualInterestRate = BigDecimal.Parse(annualInterestRateStr);
+            BigDecimal expectedResult = BigDecimal.Parse(expectedResultStr);
+
+            // Act
+            var result = service.CalculateRemainingRefinanceBalance(loanAmount, annualInterestRate, payments, paymentsMade);
+
+            // Assert
+            Assert.That(result.BankersRounding(2), Is.EqualTo(expectedResult));
         }
     }
 }

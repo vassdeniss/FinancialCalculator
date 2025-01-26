@@ -126,7 +126,7 @@ public class RefinanceService : IRefinanceService
         
         // Build a user-friendly message
         string msg = difference > BigDecimal.Zero 
-            ? $"Refinancing is beneficial. You save {difference.Round(2)} BGN." 
+            ? $"Refinancing is beneficial. You save {difference.BankersRounding(2)} BGN." 
             : "Refinancing is NOT beneficial. The cost of refinancing is higher than the expected savings.";
         
         // 5) Return the result in a data structure

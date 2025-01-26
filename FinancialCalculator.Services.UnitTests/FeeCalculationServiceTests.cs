@@ -41,5 +41,48 @@ namespace FinancialCalculator.Services.UnitTests
             BigDecimal expectedFee = BigDecimal.Parse(expectedFeeStr);
             Assert.That(result, Is.EqualTo(expectedFee));
         }
+
+        [Test]
+        [TestCase("1000", "1", "10", Description = "Calculates early repayment fee for 1% of 1000")]
+        [TestCase("1000", "5", "50", Description = "Calculates early repayment fee for 5% of 1000")]
+        [TestCase("1000", "10", "100", Description = "Calculates early repayment fee for 10% of 1000")]
+        [TestCase("1000", "0", "0", Description = "Calculates early repayment fee for 0% of 1000")]
+        [TestCase("0", "10", "0", Description = "Calculates early repayment fee for 10% of 0")]
+        public void CalculateEarlyRepaymentFee_ValidInputs_ReturnsCorrectFee(string outstandingPrincipalStr, string earlyRepaymentFeePercentStr, string expectedFeeStr)
+        {
+            // Arrange
+            BigDecimal outstandingPrincipal = BigDecimal.Parse(outstandingPrincipalStr);
+            BigDecimal earlyRepaymentFeePercent = BigDecimal.Parse(earlyRepaymentFeePercentStr);
+            BigDecimal expectedFee = BigDecimal.Parse(expectedFeeStr);
+
+            // Act
+            BigDecimal result = feeCalculationService.CalculateEarlyRepaymentFee(outstandingPrincipal, earlyRepaymentFeePercent);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expectedFee));
+        }
+
+        [Test]
+        [TestCase("1000", "0", "0", "0", Description = "Initial fee is 0% and 0 currency")]
+        [TestCase("1000", "1", "0", "10", Description = "Initial fee is 1% and 0 currency")]
+        [TestCase("1000", "5", "0", "50", Description = "Initial fee is 5% and 0 currency")]
+        [TestCase("1000", "0", "10", "10", Description = "Initial fee is 0% and 10 currency")]
+        [TestCase("1000", "1", "10", "20", Description = "Initial fee is 1% and 10 currency")]
+        [TestCase("1000", "5", "10", "60", Description = "Initial fee is 5% and 10 currency")]
+
+        public void CalculateInitialFees_ValidInputs_ReturnsCorrectFee(string newLoanPrincipalStr, string initialFeePercentStr, string initialFeeCurrencyStr, string expectedFeeStr)
+        {
+            // Arrange
+            BigDecimal newLoanPrincipal = BigDecimal.Parse(newLoanPrincipalStr);
+            BigDecimal initialFeePercent = BigDecimal.Parse(initialFeePercentStr);
+            BigDecimal initialFeeCurrency = BigDecimal.Parse(initialFeeCurrencyStr);
+            BigDecimal expectedFee = BigDecimal.Parse(expectedFeeStr);
+
+            // Act
+            BigDecimal result = feeCalculationService.CalculateInitialFees(newLoanPrincipal, initialFeePercent, initialFeeCurrency);
+
+            // Assert
+            Assert.That(result, Is.EqualTo(expectedFee));
+        }
     }
 }
