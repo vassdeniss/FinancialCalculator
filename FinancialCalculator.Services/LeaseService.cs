@@ -7,6 +7,13 @@ namespace FinancialCalculator.Services;
 
 public class LeaseService : ILeaseService
 {
+    private readonly IFeeCalculationService _feeCalculationService;
+
+    public LeaseService()
+    {
+        this._feeCalculationService = new FeeCalculationService();
+    }
+    
     /// <inheritdoc />
     public LeaseResultDto CalculateLeaseResult(LeaseServiceInputDto input)
     {
@@ -36,30 +43,23 @@ public class LeaseService : ILeaseService
         {
             throw new ArgumentException(ERROR_MONTHLY_INSTALLMENT);
         }
+        if (input.MonthlyInstallment >= input.Price)
+        {
+            throw new ArgumentException(ERROR_MONTHLY_INSTALLMENT_AGAINST_PRICE);
+        }
+
+        input.InitialProcessingFee = this._feeCalculationService.CalculateFee(input.InitialProcessingFee,
+            input.ProcessingFeeType,
+            input.Price);
         
         // Assume total paid is initial payment + monthly installments over the term + any initial fee
         BigDecimal totalPaid = input.InitialPayment + input.MonthlyInstallment * new BigDecimal(input.LeaseTermInMonths) + input.InitialProcessingFee;
 
         // Total fees should be the percentage of InitialProcessingFee from the Price
-
         BigDecimal totalFees = totalPaid - input.Price;
-
-        // QUESTION: Why do we have this check if we already validate that initial payment cannot be greater than or equal to the price?
-
-        // Determine how much is actually financed.
-        BigDecimal financedAmount = input.Price - input.InitialPayment;
-        if (financedAmount < BigDecimal.Zero)
-        {
-            return new LeaseResultDto
-            {
-                AnnualCostPercent = BigDecimal.Zero,
-                TotalPaid = totalPaid,
-                TotalFees = totalFees
-            };
-        }
         
         BigDecimal annualCostPercent = this.CalculateApr(
-            financedAmount,
+            input.Price - input.InitialPayment,
             input.MonthlyInstallment,
             input.InitialProcessingFee,
             input.LeaseTermInMonths);
@@ -98,7 +98,7 @@ public class LeaseService : ILeaseService
             return npv;
         };
         
-        BigDecimal lower = BigDecimal.Zero;
+        BigDecimal lower = BigDecimal.Parse("-0.9999");
         BigDecimal upper = BigDecimal.One;
         for (int i = 0; i < 100; i++)
         {

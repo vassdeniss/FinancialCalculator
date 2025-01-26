@@ -13,7 +13,7 @@ public class LeaseServiceInputDto
 
     public BigDecimal MonthlyInstallment { get; init; }
 
-    public BigDecimal InitialProcessingFee { get; init; }
+    public BigDecimal InitialProcessingFee { get; set; }
     
-    public FeeType? ProcessingFeeType { get; init; }
+    public FeeType ProcessingFeeType { get; init; }
 }
