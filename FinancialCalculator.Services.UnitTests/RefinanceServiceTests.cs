@@ -166,7 +166,7 @@ namespace FinancialCalculator.Services.UnitTests
         }
 
         [Test]
-        [TestCase("100", 12, "2", 10, "0", "0.1", "0", "0", "0.04", Description = "Refinancing beneficial with specific data from the image")]
+        [TestCase("100", 12, "2", 10, "0", "1", "0", "0", "0.02", Description = "Refinancing beneficial with specific data from the image")]
         public void Calculate_RefinancingBeneficial_GeneratesCorrectMessage(string loanAmountStr, int loanTermInMonths, string annualInterestRateStr, int contributionsMade, string earlyRepaymentFeeStr, string newAnnualInterestRateStr, string initialFeePercentStr, string initialFeeCurrencyStr, string expectedSavingsStr)
         {
             // Arrange

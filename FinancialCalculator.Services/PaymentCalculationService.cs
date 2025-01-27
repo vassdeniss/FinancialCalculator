@@ -83,12 +83,6 @@ public class PaymentCalculationService : IPaymentCalculationService
         int payments,
         int paymentsMade)
     {
-        // Fully paid
-        if (paymentsMade >= payments)
-        {
-            return BigDecimal.Zero;
-        }
-        
         // Get the full monthly payment for the entire original term
         BigDecimal payment = this.CalculateMonthlyPayment(loanAmount, annualInterestRate, payments);
         
