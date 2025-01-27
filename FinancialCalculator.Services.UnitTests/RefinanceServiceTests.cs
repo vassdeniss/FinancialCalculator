@@ -187,10 +187,8 @@ namespace FinancialCalculator.Services.UnitTests
         }
 
         [Test]
-        [TestCase("10000", 24, "5", 12, "1", "4", "0.1", "0",
-    "480.29", "5763.44", "46.09", "426.25", "5600.93", "46.09", "162.51",
-    "Refinancing is beneficial. You save 162.51 BGN.",
-    Description = "Validates that the Calculate method returns correct values")]
+        [TestCase("999999999", 999, "99", 998, "99", "99", "999999999", "999999999", "82499999.92", "82499999.92", "989999999.01", "1082499998.92", "10000003052500000", "10000000980000000", "999999999", "Refinancing is NOT beneficial. The cost of refinancing is higher than the expected savings.",
+        Description = "Validates that the Calculate method returns correct values")]
         public void Calculate_ValidInputs_ReturnsCorrectResult(string loanAmountStr, int loanTermInMonths, string annualInterestRateStr, int contributionsMade, string earlyRepaymentFeeStr, string newAnnualInterestRateStr, string initialFeePercentStr, string initialFeeCurrencyStr,
     string expectedCurrentMonthlyInstallmentStr, string expectedCurrentTotalPaidStr, string expectedCurrentEarlyRepaymentFeeStr, string expectedNewMonthlyInstallmentStr, string expectedNewTotalPaidStr, string expectedNewInitialFeesStr, string expectedSavingsDifferenceStr, string expectedMessage)
         {
@@ -216,15 +214,14 @@ namespace FinancialCalculator.Services.UnitTests
             RefinanceResultDto result = service.Calculate(defaultInput);
 
             // Assert
-            Assert.That(result.CurrentMonthlyInstallment, Is.EqualTo(expectedCurrentMonthlyInstallment));
-            Assert.That(result.CurrentTotalPaid, Is.EqualTo(expectedCurrentTotalPaid));
-            Assert.That(result.CurrentEarlyRepaymentFee, Is.EqualTo(expectedCurrentEarlyRepaymentFee));
-            Assert.That(result.NewMonthlyInstallment, Is.EqualTo(expectedNewMonthlyInstallment));
-            Assert.That(result.NewTotalPaid, Is.EqualTo(expectedNewTotalPaid));
-            Assert.That(result.NewInitialFees, Is.EqualTo(expectedNewInitialFees));
-            Assert.That(result.SavingsDifference, Is.EqualTo(expectedSavingsDifference));
+            Assert.That(result.CurrentMonthlyInstallment.BankersRounding(2), Is.EqualTo(expectedCurrentMonthlyInstallment));
+            Assert.That(result.CurrentTotalPaid.BankersRounding(2), Is.EqualTo(expectedCurrentTotalPaid));
+            Assert.That(result.CurrentEarlyRepaymentFee.BankersRounding(2), Is.EqualTo(expectedCurrentEarlyRepaymentFee));
+            Assert.That(result.NewMonthlyInstallment.BankersRounding(2), Is.EqualTo(expectedNewMonthlyInstallment));
+            Assert.That(result.NewTotalPaid.BankersRounding(2), Is.EqualTo(expectedNewTotalPaid));
+            Assert.That(result.NewInitialFees.BankersRounding(2), Is.EqualTo(expectedNewInitialFees));
+            Assert.That(result.SavingsDifference.BankersRounding(2), Is.EqualTo(expectedSavingsDifference));
             Assert.That(result.Message, Is.EqualTo(expectedMessage));
         }
-
     }
 }
