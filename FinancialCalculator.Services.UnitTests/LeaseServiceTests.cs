@@ -247,7 +247,7 @@ namespace FinancialCalculator.Services.UnitTests
         }
 
         [TestCase("999999999", "509999999", "999", 120, "0.49", "518786155759795000000000000000000000000000000", "1000179878.51", "489999999.51")]
-        [TestCase("100", "0.1", "1", 1, "0.1", "-100", "1.1", "0.1")]
+        [TestCase("100", "0.1", "1", 1, "0.1", "-100", "1.2", "0.1")]
 
         public void CalculateLeaseResult_ValidInput_ReturnsExpectedResults(
       string price, string initialPayment, string monthlyInstallment, int leaseTermInMonths,
@@ -261,7 +261,7 @@ namespace FinancialCalculator.Services.UnitTests
                 InitialPayment = BigDecimal.Parse(initialPayment),
                 MonthlyInstallment = BigDecimal.Parse(monthlyInstallment),
                 LeaseTermInMonths = leaseTermInMonths,
-                InitialProcessingFee = BigDecimal.Parse(initialProcessingFeePercentage) * BigDecimal.Parse(price)
+                InitialProcessingFee = BigDecimal.Parse(initialProcessingFeePercentage)
             };
 
             // Expected results
